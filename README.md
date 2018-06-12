@@ -1,7 +1,7 @@
 # MGSwipeCards
 A modern swipeable card interface inspired by Tinder and built with Facebook's Pop animation library.
 
-<img src="Screenshots/swipe_example.gif">
+<img src="https://github.com/mac-gallagher/MGSwipeCards/blob/master/Screenshots/swipe_example.gif?raw=true">
 
 ## Features
 * Modern user interface
@@ -57,7 +57,7 @@ The framework `MGSwipeCards` is comprised two main classes:
     }
     ```
     
-    | <img src="https://i.imgur.com/XLXLwaJ.gif" width="250"/> |  <img src="https://i.imgur.com/xmgznKS.gif" width="250"/> | 
+    | <img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Screenshots/one_direction_example.gif" width="250"/> |  <img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Screenshots/three_directions_example.gif" width="250"/> | 
     |:---:|:---:|
     | **Figure 1:** Overlay Transitions with<br> One Swipe Direction | **Figure 2:** Overlay Transitions with<br> Three Swipe Directions |
     
