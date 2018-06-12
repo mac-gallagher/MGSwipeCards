@@ -80,7 +80,7 @@ The framework `MGSwipeCards` is comprised two main classes:
         }
         
         override func layoutSubviews() {
-            cardStack.frame = view.bounds.insetBy(dx: 50, dy: 50)
+            cardStack.frame = view.bounds.insetBy(dx: 10, dy: 50)
         }
         
     }
