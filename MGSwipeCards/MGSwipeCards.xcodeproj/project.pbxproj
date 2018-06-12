@@ -1,0 +1,665 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A30BA49AB3EA62A793B55D3 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFFE673683286FACA9E12D38 /* Pods_Demo.framework */; };
+		766956BBCDFCFA7745A71B93 /* Pods_MGSwipeCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02FF026CCA7E8211CE79DE76 /* Pods_MGSwipeCards.framework */; };
+		AD1BA33F20C450C8005003A0 /* SampleOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1BA33E20C450C8005003A0 /* SampleOverlay.swift */; };
+		AD1BA34320C4DD91005003A0 /* SampleCardFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1BA34220C4DD91005003A0 /* SampleCardFooterView.swift */; };
+		AD3844DF20C2588200E12412 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844DE20C2588200E12412 /* AppDelegate.swift */; };
+		AD3844E120C2588200E12412 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844E020C2588200E12412 /* ViewController.swift */; };
+		AD3844E920C2588300E12412 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD3844E720C2588300E12412 /* LaunchScreen.storyboard */; };
+		AD3844FA20C25A7F00E12412 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844EF20C25A7F00E12412 /* Utilities.swift */; };
+		AD3844FB20C25A7F00E12412 /* SwipeDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F020C25A7F00E12412 /* SwipeDirection.swift */; };
+		AD3844FC20C25A7F00E12412 /* MGCardStackViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F220C25A7F00E12412 /* MGCardStackViewDelegate.swift */; };
+		AD3844FD20C25A7F00E12412 /* MGCardStackViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F320C25A7F00E12412 /* MGCardStackViewDataSource.swift */; };
+		AD3844FE20C25A7F00E12412 /* MGCardStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F420C25A7F00E12412 /* MGCardStackView.swift */; };
+		AD3844FF20C25A7F00E12412 /* MGSwipeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F620C25A7F00E12412 /* MGSwipeCard.swift */; };
+		AD38450020C25A7F00E12412 /* MGSwipeCardDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F720C25A7F00E12412 /* MGSwipeCardDelegate.swift */; };
+		AD38450120C25A7F00E12412 /* MGSwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F820C25A7F00E12412 /* MGSwipeView.swift */; };
+		ADA2636920C3031B000C13A5 /* MGSwipeCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD3844B820C2585000E12412 /* MGSwipeCards.framework */; };
+		ADA2636A20C3031B000C13A5 /* MGSwipeCards.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD3844B820C2585000E12412 /* MGSwipeCards.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		ADA2637220C35097000C13A5 /* SampleMGSwipeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA2637120C35097000C13A5 /* SampleMGSwipeCard.swift */; };
+		ADA2637420C3A882000C13A5 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA2637320C3A882000C13A5 /* Utilities.swift */; };
+		ADA2637620C3A917000C13A5 /* SampleMGSwipeCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA2637520C3A917000C13A5 /* SampleMGSwipeCardModel.swift */; };
+		ADA7FBB320C62BC700E89E70 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADA7FBB220C62BC700E89E70 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		ADA2636B20C3031B000C13A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AD3844AF20C2585000E12412 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD3844B720C2585000E12412;
+			remoteInfo = MGSwipeCards;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		ADA2636D20C3031B000C13A5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				ADA2636A20C3031B000C13A5 /* MGSwipeCards.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		02FF026CCA7E8211CE79DE76 /* Pods_MGSwipeCards.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MGSwipeCards.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0E74D78D1983C8403F6E9BF /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
+		A3274B1826BF83A62CFA2ED2 /* Pods-MGSwipeCards.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGSwipeCards.release.xcconfig"; path = "Pods/Target Support Files/Pods-MGSwipeCards/Pods-MGSwipeCards.release.xcconfig"; sourceTree = "<group>"; };
+		AD1BA33E20C450C8005003A0 /* SampleOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleOverlay.swift; sourceTree = "<group>"; };
+		AD1BA34220C4DD91005003A0 /* SampleCardFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardFooterView.swift; sourceTree = "<group>"; };
+		AD3844B820C2585000E12412 /* MGSwipeCards.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MGSwipeCards.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD3844DC20C2588200E12412 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD3844DE20C2588200E12412 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AD3844E020C2588200E12412 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		AD3844E820C2588300E12412 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AD3844EA20C2588300E12412 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AD3844EF20C25A7F00E12412 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		AD3844F020C25A7F00E12412 /* SwipeDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeDirection.swift; sourceTree = "<group>"; };
+		AD3844F220C25A7F00E12412 /* MGCardStackViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGCardStackViewDelegate.swift; sourceTree = "<group>"; };
+		AD3844F320C25A7F00E12412 /* MGCardStackViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGCardStackViewDataSource.swift; sourceTree = "<group>"; };
+		AD3844F420C25A7F00E12412 /* MGCardStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGCardStackView.swift; sourceTree = "<group>"; };
+		AD3844F620C25A7F00E12412 /* MGSwipeCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGSwipeCard.swift; sourceTree = "<group>"; };
+		AD3844F720C25A7F00E12412 /* MGSwipeCardDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGSwipeCardDelegate.swift; sourceTree = "<group>"; };
+		AD3844F820C25A7F00E12412 /* MGSwipeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGSwipeView.swift; sourceTree = "<group>"; };
+		AD3844F920C25A7F00E12412 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ADA2637120C35097000C13A5 /* SampleMGSwipeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMGSwipeCard.swift; sourceTree = "<group>"; };
+		ADA2637320C3A882000C13A5 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		ADA2637520C3A917000C13A5 /* SampleMGSwipeCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMGSwipeCardModel.swift; sourceTree = "<group>"; };
+		ADA7FBB220C62BC700E89E70 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AFFE673683286FACA9E12D38 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B09FD1FD613E308B63D42E4F /* Pods-MGSwipeCards.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGSwipeCards.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MGSwipeCards/Pods-MGSwipeCards.debug.xcconfig"; sourceTree = "<group>"; };
+		E40DC06B292D40F70DA25E55 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AD3844B420C2585000E12412 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				766956BBCDFCFA7745A71B93 /* Pods_MGSwipeCards.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD3844D920C2588200E12412 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A30BA49AB3EA62A793B55D3 /* Pods_Demo.framework in Frameworks */,
+				ADA2636920C3031B000C13A5 /* MGSwipeCards.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AD3844AE20C2585000E12412 = {
+			isa = PBXGroup;
+			children = (
+				AD3844EE20C25A7F00E12412 /* Sources */,
+				AD3844DD20C2588200E12412 /* Demo */,
+				AD3844B920C2585000E12412 /* Products */,
+				CD21071C98C7AE7B5FEEDBFE /* Pods */,
+				CB4579ED46749A40D2E1B3DA /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		AD3844B920C2585000E12412 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AD3844B820C2585000E12412 /* MGSwipeCards.framework */,
+				AD3844DC20C2588200E12412 /* Demo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AD3844DD20C2588200E12412 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				AD3844DE20C2588200E12412 /* AppDelegate.swift */,
+				AD3844E020C2588200E12412 /* ViewController.swift */,
+				ADA2637120C35097000C13A5 /* SampleMGSwipeCard.swift */,
+				ADA2637520C3A917000C13A5 /* SampleMGSwipeCardModel.swift */,
+				AD1BA33E20C450C8005003A0 /* SampleOverlay.swift */,
+				AD1BA34220C4DD91005003A0 /* SampleCardFooterView.swift */,
+				ADA2637320C3A882000C13A5 /* Utilities.swift */,
+				AD3844E720C2588300E12412 /* LaunchScreen.storyboard */,
+				AD3844EA20C2588300E12412 /* Info.plist */,
+				ADA7FBB220C62BC700E89E70 /* Assets.xcassets */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		AD3844EE20C25A7F00E12412 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AD3844F120C25A7F00E12412 /* MGCardStackView */,
+				AD3844F520C25A7F00E12412 /* MGSwipeCard */,
+				AD3844F020C25A7F00E12412 /* SwipeDirection.swift */,
+				AD3844EF20C25A7F00E12412 /* Utilities.swift */,
+				AD3844F920C25A7F00E12412 /* Info.plist */,
+			);
+			name = Sources;
+			path = ../Sources;
+			sourceTree = "<group>";
+		};
+		AD3844F120C25A7F00E12412 /* MGCardStackView */ = {
+			isa = PBXGroup;
+			children = (
+				AD3844F220C25A7F00E12412 /* MGCardStackViewDelegate.swift */,
+				AD3844F320C25A7F00E12412 /* MGCardStackViewDataSource.swift */,
+				AD3844F420C25A7F00E12412 /* MGCardStackView.swift */,
+			);
+			path = MGCardStackView;
+			sourceTree = "<group>";
+		};
+		AD3844F520C25A7F00E12412 /* MGSwipeCard */ = {
+			isa = PBXGroup;
+			children = (
+				AD3844F620C25A7F00E12412 /* MGSwipeCard.swift */,
+				AD3844F720C25A7F00E12412 /* MGSwipeCardDelegate.swift */,
+				AD3844F820C25A7F00E12412 /* MGSwipeView.swift */,
+			);
+			path = MGSwipeCard;
+			sourceTree = "<group>";
+		};
+		CB4579ED46749A40D2E1B3DA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AFFE673683286FACA9E12D38 /* Pods_Demo.framework */,
+				02FF026CCA7E8211CE79DE76 /* Pods_MGSwipeCards.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CD21071C98C7AE7B5FEEDBFE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E40DC06B292D40F70DA25E55 /* Pods-Demo.debug.xcconfig */,
+				A0E74D78D1983C8403F6E9BF /* Pods-Demo.release.xcconfig */,
+				B09FD1FD613E308B63D42E4F /* Pods-MGSwipeCards.debug.xcconfig */,
+				A3274B1826BF83A62CFA2ED2 /* Pods-MGSwipeCards.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		AD3844B520C2585000E12412 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		AD3844B720C2585000E12412 /* MGSwipeCards */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD3844C020C2585000E12412 /* Build configuration list for PBXNativeTarget "MGSwipeCards" */;
+			buildPhases = (
+				ED59169FB0DF17A63637BC0B /* [CP] Check Pods Manifest.lock */,
+				AD3844B320C2585000E12412 /* Sources */,
+				AD3844B420C2585000E12412 /* Frameworks */,
+				AD3844B520C2585000E12412 /* Headers */,
+				AD3844B620C2585000E12412 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MGSwipeCards;
+			productName = MGSwipeCards;
+			productReference = AD3844B820C2585000E12412 /* MGSwipeCards.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		AD3844DB20C2588200E12412 /* Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD3844EB20C2588300E12412 /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildPhases = (
+				AA356AD220C2B4A1A808F8AB /* [CP] Check Pods Manifest.lock */,
+				AD3844D820C2588200E12412 /* Sources */,
+				AD3844D920C2588200E12412 /* Frameworks */,
+				AD3844DA20C2588200E12412 /* Resources */,
+				ADA2636D20C3031B000C13A5 /* Embed Frameworks */,
+				527CF7A4C78BF855409F623B /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ADA2636C20C3031B000C13A5 /* PBXTargetDependency */,
+			);
+			name = Demo;
+			productName = Demo;
+			productReference = AD3844DC20C2588200E12412 /* Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AD3844AF20C2585000E12412 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0940;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = "Mac Gallagher";
+				TargetAttributes = {
+					AD3844B720C2585000E12412 = {
+						CreatedOnToolsVersion = 9.4;
+					};
+					AD3844DB20C2588200E12412 = {
+						CreatedOnToolsVersion = 9.4;
+					};
+				};
+			};
+			buildConfigurationList = AD3844B220C2585000E12412 /* Build configuration list for PBXProject "MGSwipeCards" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AD3844AE20C2585000E12412;
+			productRefGroup = AD3844B920C2585000E12412 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AD3844B720C2585000E12412 /* MGSwipeCards */,
+				AD3844DB20C2588200E12412 /* Demo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AD3844B620C2585000E12412 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD3844DA20C2588200E12412 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ADA7FBB320C62BC700E89E70 /* Assets.xcassets in Resources */,
+				AD3844E920C2588300E12412 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		527CF7A4C78BF855409F623B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/pop/pop.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/pop.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AA356AD220C2B4A1A808F8AB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Demo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ED59169FB0DF17A63637BC0B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MGSwipeCards-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AD3844B320C2585000E12412 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD3844FF20C25A7F00E12412 /* MGSwipeCard.swift in Sources */,
+				AD3844FE20C25A7F00E12412 /* MGCardStackView.swift in Sources */,
+				AD3844FB20C25A7F00E12412 /* SwipeDirection.swift in Sources */,
+				AD38450120C25A7F00E12412 /* MGSwipeView.swift in Sources */,
+				AD3844FD20C25A7F00E12412 /* MGCardStackViewDataSource.swift in Sources */,
+				AD3844FA20C25A7F00E12412 /* Utilities.swift in Sources */,
+				AD38450020C25A7F00E12412 /* MGSwipeCardDelegate.swift in Sources */,
+				AD3844FC20C25A7F00E12412 /* MGCardStackViewDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD3844D820C2588200E12412 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ADA2637220C35097000C13A5 /* SampleMGSwipeCard.swift in Sources */,
+				AD1BA33F20C450C8005003A0 /* SampleOverlay.swift in Sources */,
+				AD3844E120C2588200E12412 /* ViewController.swift in Sources */,
+				ADA2637420C3A882000C13A5 /* Utilities.swift in Sources */,
+				ADA2637620C3A917000C13A5 /* SampleMGSwipeCardModel.swift in Sources */,
+				AD3844DF20C2588200E12412 /* AppDelegate.swift in Sources */,
+				AD1BA34320C4DD91005003A0 /* SampleCardFooterView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		ADA2636C20C3031B000C13A5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD3844B720C2585000E12412 /* MGSwipeCards */;
+			targetProxy = ADA2636B20C3031B000C13A5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		AD3844E720C2588300E12412 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AD3844E820C2588300E12412 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		AD3844BE20C2585000E12412 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		AD3844BF20C2585000E12412 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		AD3844C120C2585000E12412 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B09FD1FD613E308B63D42E4F /* Pods-MGSwipeCards.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = DYZ8Y2U8DB;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/../Sources/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.macgallagher.MGSwipeCards;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AD3844C220C2585000E12412 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3274B1826BF83A62CFA2ED2 /* Pods-MGSwipeCards.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = DYZ8Y2U8DB;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/../Sources/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.macgallagher.MGSwipeCards;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AD3844EC20C2588300E12412 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E40DC06B292D40F70DA25E55 /* Pods-Demo.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DYZ8Y2U8DB;
+				INFOPLIST_FILE = Demo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.macgallagher.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AD3844ED20C2588300E12412 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A0E74D78D1983C8403F6E9BF /* Pods-Demo.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DYZ8Y2U8DB;
+				INFOPLIST_FILE = Demo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.macgallagher.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AD3844B220C2585000E12412 /* Build configuration list for PBXProject "MGSwipeCards" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD3844BE20C2585000E12412 /* Debug */,
+				AD3844BF20C2585000E12412 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AD3844C020C2585000E12412 /* Build configuration list for PBXNativeTarget "MGSwipeCards" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD3844C120C2585000E12412 /* Debug */,
+				AD3844C220C2585000E12412 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AD3844EB20C2588300E12412 /* Build configuration list for PBXNativeTarget "Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD3844EC20C2588300E12412 /* Debug */,
+				AD3844ED20C2588300E12412 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AD3844AF20C2585000E12412 /* Project object */;
+}
