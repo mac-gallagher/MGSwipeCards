@@ -1,4 +1,9 @@
 # MGSwipeCards
+![Swift-Version](https://img.shields.io/badge/Swift-4.1-orange.svg)
+![CocoaPods](https://img.shields.io/cocoapods/v/MGSwipeCards.svg)
+![license](https://img.shields.io/cocoapods/l/MGSwipeCards.svg)
+![CocoaPods](https://img.shields.io/cocoapods/p/MGSwipeCards.svg)
+
 A modern swipeable card interface inspired by Tinder and built with Facebook's Pop animation library.
 
 <img src="https://github.com/mac-gallagher/MGSwipeCards/blob/master/Images/swipe_example.gif?raw=true">
