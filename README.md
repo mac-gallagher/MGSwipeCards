@@ -1,7 +1,7 @@
 # MGSwipeCards
 A modern swipeable card interface inspired by Tinder and built with Facebook's Pop animation library.
 
-<img src="https://github.com/mac-gallagher/MGSwipeCards/blob/master/Screenshots/swipe_example.gif?raw=true">
+<img src="https://github.com/mac-gallagher/MGSwipeCards/blob/master/Images/swipe_example.gif?raw=true">
 
 ## Features
 * Modern user interface
@@ -15,14 +15,12 @@ A modern swipeable card interface inspired by Tinder and built with Facebook's P
 ### CocoaPods
 MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To install it, simply add the following line to your `Podfile`:
 
-	pod 'MGSwipeCards', '~> 1.0'
+	pod 'MGSwipeCards'
 
 
 ### Manual
-1. Download and drop the `Sources` directory into your project. 
-2. Install Facebook's [Pop](<https://github.com/facebook/pop>) library via CocoaPods by adding the following line to your `Podfile`: 
-
-	    pod 'pop', '~> 1.0'
+1. Download and drop the `Classes` directory into your project. 
+2. Install Facebook's [Pop](<https://github.com/facebook/pop>) library.
 
 ## Usage
 The framework `MGSwipeCards` is comprised two main classes:
@@ -33,7 +31,7 @@ The framework `MGSwipeCards` is comprised two main classes:
 ### Creating cards
 1. Create your own card by subclassing `MGSwipeCard`. Add any subviews you like; you have complete control over your card's appearance!
 2. Set your card's swipeable directions with the `swipeDirections` attribute.
-3. Create your overlay views and attach them using the `setOverlay` function. By default, each overlay covers the entire card. To change this behavior, simply layout your overlay in another view and attach this view your card instead.
+3. Create your overlay views and attach them using the `setOverlay` function. By default, each overlay covers the entire card. To change this behavior, simply wrap your overlay in another view and attach this view instead.
 
     ```swift
     class MyMGSwipeCard: MGSwipeCard {
@@ -57,7 +55,7 @@ The framework `MGSwipeCards` is comprised two main classes:
     }
     ```
     
-    | <img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Screenshots/one_direction_example.gif" width="250"/> |  <img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Screenshots/three_directions_example.gif" width="250"/> | 
+    | <img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/one_direction_example.gif" width="250"/> |  <img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/three_directions_example.gif" width="250"/> | 
     |:---:|:---:|
     | **Figure 1:** Overlay Transitions with<br> One Swipe Direction | **Figure 2:** Overlay Transitions with<br> Three Swipe Directions |
     
@@ -77,9 +75,6 @@ The framework `MGSwipeCards` is comprised two main classes:
         
         override func viewDidLoad() {
             view.addSubview(cardStack)
-        }
-        
-        override func layoutSubviews() {
             cardStack.frame = view.bounds.insetBy(dx: 10, dy: 50)
         }
         
@@ -114,13 +109,20 @@ The framework `MGSwipeCards` is comprised two main classes:
     }
     ```
 
+3. Set your `MGSwipeCardStackView`'s `dataSource` property.
+
+    ```swift
+    cardStack.dataSource = self
+    ```
+
+
 ## Customization
 
 ### Card appearance
 Each `MGSwipeCard` has the following built-in properties:
 
 * **Background Image** - Set with `setBackgroundImage(_ image: UIImage)`.
-* **Footer** - Set with `setFooterView(_ footer: UIView?, withHeight height: CGFloat)`. The card's background image is displayed above the footer unless the footer is transparent.
+* **Footer** - Set with `setFooterView(_ footer: UIView?)` and modify the footer's height with `footerHeight`. The card's background image is displayed above the footer unless the footer is transparent.
 * **Shadow** - Set with `setShadow(radius: CGFloat, opacity: Float, offset: CGSize, color: UIColor)`.
 
 ### Swipe recognition settings
@@ -146,7 +148,7 @@ Each `MGCardStackView` has the attributes `horizontalInset` and `verticalInset` 
 * `shift(withDistance distance: Int)` - Shifts the card stack by the given distance. The indices of any previously swiped cards are ignored.
 
 ## Requirements
-* iOS 8.0+
+* iOS 9.0+
 * Xcode 9.0+
 
 ## Sources
