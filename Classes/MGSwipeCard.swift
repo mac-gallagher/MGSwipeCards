@@ -123,9 +123,9 @@ open class MGSwipeCard: MGSwipeView {
         NSLayoutConstraint.deactivate(overlayContainerConstraints)
         overlayContainerConstraints = overlayContainer.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, right: backgroundView.rightAnchor)
         if footerView == nil {
-            overlayContainerConstraints.append(contentsOf: overlayContainer.anchor(bottom: backgroundView.bottomAnchor))
+            overlayContainerConstraints = overlayContainer.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, bottom: backgroundView.bottomAnchor, right: backgroundView.rightAnchor)
         } else {
-            overlayContainerConstraints.append(contentsOf: overlayContainer.anchor(bottom: footerView!.topAnchor))
+            overlayContainerConstraints = overlayContainer.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, bottom: footerView!.topAnchor, right: backgroundView.rightAnchor)
         }
         
         for direction in swipeDirections {
