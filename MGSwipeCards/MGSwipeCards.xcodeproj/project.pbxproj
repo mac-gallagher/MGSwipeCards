@@ -14,20 +14,23 @@
 		AD3844DF20C2588200E12412 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844DE20C2588200E12412 /* AppDelegate.swift */; };
 		AD3844E120C2588200E12412 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844E020C2588200E12412 /* ViewController.swift */; };
 		AD3844E920C2588300E12412 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD3844E720C2588300E12412 /* LaunchScreen.storyboard */; };
-		AD3844FA20C25A7F00E12412 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844EF20C25A7F00E12412 /* Utilities.swift */; };
-		AD3844FB20C25A7F00E12412 /* SwipeDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F020C25A7F00E12412 /* SwipeDirection.swift */; };
-		AD3844FC20C25A7F00E12412 /* MGCardStackViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F220C25A7F00E12412 /* MGCardStackViewDelegate.swift */; };
-		AD3844FD20C25A7F00E12412 /* MGCardStackViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F320C25A7F00E12412 /* MGCardStackViewDataSource.swift */; };
-		AD3844FE20C25A7F00E12412 /* MGCardStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F420C25A7F00E12412 /* MGCardStackView.swift */; };
-		AD3844FF20C25A7F00E12412 /* MGSwipeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F620C25A7F00E12412 /* MGSwipeCard.swift */; };
-		AD38450020C25A7F00E12412 /* MGSwipeCardDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F720C25A7F00E12412 /* MGSwipeCardDelegate.swift */; };
-		AD38450120C25A7F00E12412 /* MGSwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3844F820C25A7F00E12412 /* MGSwipeView.swift */; };
 		ADA2636920C3031B000C13A5 /* MGSwipeCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD3844B820C2585000E12412 /* MGSwipeCards.framework */; };
 		ADA2636A20C3031B000C13A5 /* MGSwipeCards.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD3844B820C2585000E12412 /* MGSwipeCards.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ADA2637220C35097000C13A5 /* SampleMGSwipeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA2637120C35097000C13A5 /* SampleMGSwipeCard.swift */; };
 		ADA2637420C3A882000C13A5 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA2637320C3A882000C13A5 /* Utilities.swift */; };
 		ADA2637620C3A917000C13A5 /* SampleMGSwipeCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA2637520C3A917000C13A5 /* SampleMGSwipeCardModel.swift */; };
 		ADA7FBB320C62BC700E89E70 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADA7FBB220C62BC700E89E70 /* Assets.xcassets */; };
+		ADB967D220E86CDE00A86996 /* MGSwipeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967C720E86CDE00A86996 /* MGSwipeCard.swift */; };
+		ADB967D320E86CDE00A86996 /* MGSwipeCard+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967C820E86CDE00A86996 /* MGSwipeCard+Animations.swift */; };
+		ADB967D420E86CDE00A86996 /* SwipeDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967C920E86CDE00A86996 /* SwipeDirection.swift */; };
+		ADB967D520E86CDE00A86996 /* Array+Shift.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967CA20E86CDE00A86996 /* Array+Shift.swift */; };
+		ADB967D620E86CDE00A86996 /* MGSwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967CB20E86CDE00A86996 /* MGSwipeView.swift */; };
+		ADB967D720E86CDE00A86996 /* MGSwipeCardDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967CC20E86CDE00A86996 /* MGSwipeCardDelegate.swift */; };
+		ADB967D820E86CDE00A86996 /* UIView+Anchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967CD20E86CDE00A86996 /* UIView+Anchor.swift */; };
+		ADB967D920E86CDE00A86996 /* MGCardStackViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967CE20E86CDE00A86996 /* MGCardStackViewDelegate.swift */; };
+		ADB967DA20E86CDE00A86996 /* CGPoint+Vectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967CF20E86CDE00A86996 /* CGPoint+Vectors.swift */; };
+		ADB967DB20E86CDE00A86996 /* MGCardStackViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967D020E86CDE00A86996 /* MGCardStackViewDataSource.swift */; };
+		ADB967DC20E86CDE00A86996 /* MGCardStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB967D120E86CDE00A86996 /* MGCardStackView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,19 +69,22 @@
 		AD3844E020C2588200E12412 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		AD3844E820C2588300E12412 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AD3844EA20C2588300E12412 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AD3844EF20C25A7F00E12412 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		AD3844F020C25A7F00E12412 /* SwipeDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeDirection.swift; sourceTree = "<group>"; };
-		AD3844F220C25A7F00E12412 /* MGCardStackViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGCardStackViewDelegate.swift; sourceTree = "<group>"; };
-		AD3844F320C25A7F00E12412 /* MGCardStackViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGCardStackViewDataSource.swift; sourceTree = "<group>"; };
-		AD3844F420C25A7F00E12412 /* MGCardStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGCardStackView.swift; sourceTree = "<group>"; };
-		AD3844F620C25A7F00E12412 /* MGSwipeCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGSwipeCard.swift; sourceTree = "<group>"; };
-		AD3844F720C25A7F00E12412 /* MGSwipeCardDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGSwipeCardDelegate.swift; sourceTree = "<group>"; };
-		AD3844F820C25A7F00E12412 /* MGSwipeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGSwipeView.swift; sourceTree = "<group>"; };
 		AD3844F920C25A7F00E12412 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ADA2637120C35097000C13A5 /* SampleMGSwipeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMGSwipeCard.swift; sourceTree = "<group>"; };
 		ADA2637320C3A882000C13A5 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		ADA2637520C3A917000C13A5 /* SampleMGSwipeCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMGSwipeCardModel.swift; sourceTree = "<group>"; };
 		ADA7FBB220C62BC700E89E70 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		ADB967C720E86CDE00A86996 /* MGSwipeCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGSwipeCard.swift; sourceTree = "<group>"; };
+		ADB967C820E86CDE00A86996 /* MGSwipeCard+Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MGSwipeCard+Animations.swift"; sourceTree = "<group>"; };
+		ADB967C920E86CDE00A86996 /* SwipeDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeDirection.swift; sourceTree = "<group>"; };
+		ADB967CA20E86CDE00A86996 /* Array+Shift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Shift.swift"; sourceTree = "<group>"; };
+		ADB967CB20E86CDE00A86996 /* MGSwipeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGSwipeView.swift; sourceTree = "<group>"; };
+		ADB967CC20E86CDE00A86996 /* MGSwipeCardDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGSwipeCardDelegate.swift; sourceTree = "<group>"; };
+		ADB967CD20E86CDE00A86996 /* UIView+Anchor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Anchor.swift"; sourceTree = "<group>"; };
+		ADB967CE20E86CDE00A86996 /* MGCardStackViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGCardStackViewDelegate.swift; sourceTree = "<group>"; };
+		ADB967CF20E86CDE00A86996 /* CGPoint+Vectors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Vectors.swift"; sourceTree = "<group>"; };
+		ADB967D020E86CDE00A86996 /* MGCardStackViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGCardStackViewDataSource.swift; sourceTree = "<group>"; };
+		ADB967D120E86CDE00A86996 /* MGCardStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGCardStackView.swift; sourceTree = "<group>"; };
 		AFFE673683286FACA9E12D38 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B09FD1FD613E308B63D42E4F /* Pods-MGSwipeCards.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGSwipeCards.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MGSwipeCards/Pods-MGSwipeCards.debug.xcconfig"; sourceTree = "<group>"; };
 		E40DC06B292D40F70DA25E55 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -108,7 +114,8 @@
 		AD3844AE20C2585000E12412 = {
 			isa = PBXGroup;
 			children = (
-				AD3844EE20C25A7F00E12412 /* Sources */,
+				ADB967C620E86CDE00A86996 /* Classes */,
+				AD4EDF0A20E8273000C7E84C /* Supporting Files */,
 				AD3844DD20C2588200E12412 /* Demo */,
 				AD3844B920C2585000E12412 /* Products */,
 				CD21071C98C7AE7B5FEEDBFE /* Pods */,
@@ -142,37 +149,63 @@
 			path = Demo;
 			sourceTree = "<group>";
 		};
-		AD3844EE20C25A7F00E12412 /* Sources */ = {
+		AD4EDF0A20E8273000C7E84C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AD3844F120C25A7F00E12412 /* MGCardStackView */,
-				AD3844F520C25A7F00E12412 /* MGSwipeCard */,
-				AD3844F020C25A7F00E12412 /* SwipeDirection.swift */,
-				AD3844EF20C25A7F00E12412 /* Utilities.swift */,
 				AD3844F920C25A7F00E12412 /* Info.plist */,
 			);
-			name = Sources;
-			path = ../Sources;
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		AD3844F120C25A7F00E12412 /* MGCardStackView */ = {
+		ADB967C620E86CDE00A86996 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				AD3844F220C25A7F00E12412 /* MGCardStackViewDelegate.swift */,
-				AD3844F320C25A7F00E12412 /* MGCardStackViewDataSource.swift */,
-				AD3844F420C25A7F00E12412 /* MGCardStackView.swift */,
+				ADB967E220E86FB700A86996 /* MGCardStackView */,
+				ADB967E320E86FBA00A86996 /* MGSwipeCard */,
+				ADB967E420E86FBC00A86996 /* Utilities */,
+				ADB967E520E86FBF00A86996 /* Extensions */,
 			);
-			path = MGCardStackView;
+			name = Classes;
+			path = ../Classes;
 			sourceTree = "<group>";
 		};
-		AD3844F520C25A7F00E12412 /* MGSwipeCard */ = {
+		ADB967E220E86FB700A86996 /* MGCardStackView */ = {
 			isa = PBXGroup;
 			children = (
-				AD3844F620C25A7F00E12412 /* MGSwipeCard.swift */,
-				AD3844F720C25A7F00E12412 /* MGSwipeCardDelegate.swift */,
-				AD3844F820C25A7F00E12412 /* MGSwipeView.swift */,
+				ADB967D120E86CDE00A86996 /* MGCardStackView.swift */,
+				ADB967CE20E86CDE00A86996 /* MGCardStackViewDelegate.swift */,
+				ADB967D020E86CDE00A86996 /* MGCardStackViewDataSource.swift */,
 			);
-			path = MGSwipeCard;
+			name = MGCardStackView;
+			sourceTree = "<group>";
+		};
+		ADB967E320E86FBA00A86996 /* MGSwipeCard */ = {
+			isa = PBXGroup;
+			children = (
+				ADB967C720E86CDE00A86996 /* MGSwipeCard.swift */,
+				ADB967C820E86CDE00A86996 /* MGSwipeCard+Animations.swift */,
+				ADB967CC20E86CDE00A86996 /* MGSwipeCardDelegate.swift */,
+				ADB967CB20E86CDE00A86996 /* MGSwipeView.swift */,
+			);
+			name = MGSwipeCard;
+			sourceTree = "<group>";
+		};
+		ADB967E420E86FBC00A86996 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				ADB967C920E86CDE00A86996 /* SwipeDirection.swift */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		ADB967E520E86FBF00A86996 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				ADB967CA20E86CDE00A86996 /* Array+Shift.swift */,
+				ADB967CD20E86CDE00A86996 /* UIView+Anchor.swift */,
+				ADB967CF20E86CDE00A86996 /* CGPoint+Vectors.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		CB4579ED46749A40D2E1B3DA /* Frameworks */ = {
@@ -366,14 +399,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD3844FF20C25A7F00E12412 /* MGSwipeCard.swift in Sources */,
-				AD3844FE20C25A7F00E12412 /* MGCardStackView.swift in Sources */,
-				AD3844FB20C25A7F00E12412 /* SwipeDirection.swift in Sources */,
-				AD38450120C25A7F00E12412 /* MGSwipeView.swift in Sources */,
-				AD3844FD20C25A7F00E12412 /* MGCardStackViewDataSource.swift in Sources */,
-				AD3844FA20C25A7F00E12412 /* Utilities.swift in Sources */,
-				AD38450020C25A7F00E12412 /* MGSwipeCardDelegate.swift in Sources */,
-				AD3844FC20C25A7F00E12412 /* MGCardStackViewDelegate.swift in Sources */,
+				ADB967D620E86CDE00A86996 /* MGSwipeView.swift in Sources */,
+				ADB967D720E86CDE00A86996 /* MGSwipeCardDelegate.swift in Sources */,
+				ADB967DB20E86CDE00A86996 /* MGCardStackViewDataSource.swift in Sources */,
+				ADB967DC20E86CDE00A86996 /* MGCardStackView.swift in Sources */,
+				ADB967D920E86CDE00A86996 /* MGCardStackViewDelegate.swift in Sources */,
+				ADB967DA20E86CDE00A86996 /* CGPoint+Vectors.swift in Sources */,
+				ADB967D820E86CDE00A86996 /* UIView+Anchor.swift in Sources */,
+				ADB967D520E86CDE00A86996 /* Array+Shift.swift in Sources */,
+				ADB967D420E86CDE00A86996 /* SwipeDirection.swift in Sources */,
+				ADB967D220E86CDE00A86996 /* MGSwipeCard.swift in Sources */,
+				ADB967D320E86CDE00A86996 /* MGSwipeCard+Animations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,9 +580,9 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/../Sources/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -571,9 +607,9 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/../Sources/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

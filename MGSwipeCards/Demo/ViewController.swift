@@ -19,23 +19,26 @@ class ViewController: UIViewController {
         initializeCardStackView()
     }
     
-    private func initializeCardStackView() {
-        let cardStack = MGCardStackView()
-        view.addSubview(cardStack)
-        cardStack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 45, paddingLeft: 0, paddingBottom: 45, paddingRight: 0, width: 0, height: 0)
-        cardStack.delegate = self
-        cardStack.dataSource = self
-    }
-    
     private func initializeCards() {
         for model in viewModels {
             let card = SampleMGSwipeCard()
             card.model = model
             card.setBackgroundImage(model.image)
+            card.maximumRotationAngle = CGFloat.pi/10
+            
             let footer = SampleCardFooterView(title: "\(model.name), \(model.age)", subtitle: model.occupation)
-            card.setFooterView(footer, withHeight: footer.label.intrinsicContentSize.height + 20)
+            card.setFooterView(footer)
+            card.footerHeight = footer.label.intrinsicContentSize.height + 20
             cards.append(card)
         }
+    }
+    
+    private func initializeCardStackView() {
+        let cardStack = MGCardStackView()
+        view.addSubview(cardStack)
+        cardStack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 45, paddingBottom: 45)
+        cardStack.delegate = self
+        cardStack.dataSource = self
     }
     
 }
@@ -69,7 +72,7 @@ extension ViewController {
     var viewModels: [SampleMGSwipeCardModel] {
         var models = [SampleMGSwipeCardModel]()
         
-        let michelle = SampleMGSwipeCardModel(name: "Michelle", age: 26, occupation: "Graphic Designer", image: #imageLiteral(resourceName: "michelle"))
+        let michelle = SampleMGSwipeCardModel(name: "Michelle", age: 26, occupation: "Graphic Designer", image:#imageLiteral(resourceName: "michelle"))
         let joshua = SampleMGSwipeCardModel(name: "Joshua", age: 27, occupation: "Business Services Sales Representative", image: #imageLiteral(resourceName: "joshua"))
         let daiane = SampleMGSwipeCardModel(name: "Daiane", age: 23, occupation: "Graduate Student", image: #imageLiteral(resourceName: "daiane"))
         let andrew = SampleMGSwipeCardModel(name: "Andrew", age: 26, occupation: nil, image: #imageLiteral(resourceName: "andrew"))

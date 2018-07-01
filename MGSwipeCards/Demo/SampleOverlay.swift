@@ -40,7 +40,7 @@ class SampleOverlay: UIView {
         label.textColor = color
         
         addSubview(label)
-        label.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 3, width: label.intrinsicContentSize.width, height: label.intrinsicContentSize.height)
+        label.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingLeft: 8, paddingRight: 3, width: label.intrinsicContentSize.width, height: label.intrinsicContentSize.height)
     }
 
 }

@@ -1,14 +1,14 @@
 //
-//  Utilities.swift
+//  CGPoint+Swipe.swift
 //  MGSwipeCards
 //
-//  Created by Mac Gallagher on 5/4/18.
+//  Created by Mac Gallagher on 6/30/18.
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
 import UIKit
 
-public extension CGPoint {
+extension CGPoint {
     
     public var norm: CGFloat {
         return sqrt(self.x*self.x + self.y*self.y)

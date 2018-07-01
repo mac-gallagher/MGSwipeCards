@@ -2,32 +2,47 @@
 //  MGCardStackView.swift
 //  MGSwipeCards
 //
-//  Created by Mac Gallagher on 3/28/18.
+//  Created by Mac Gallagher on 5/4/18.
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
 import UIKit
 
-public class MGCardStackView: UIView {
+open class MGCardStackView: UIView {
     
-    public var delegate: MGCardStackViewDelegate?
+    //MARK: - Variables
     
-    public var dataSource: MGCardStackViewDataSource?
+    open var delegate: MGCardStackViewDelegate?
     
-    public var horizontalInset: CGFloat = 10.0
+    open var horizontalInset: CGFloat = 10.0 {
+        didSet {
+            setNeedsLayout()
+        }
+    }
     
-    public var verticalInset: CGFloat = 10.0
+    open var verticalInset: CGFloat = 10.0 {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    
+    public var dataSource: MGCardStackViewDataSource? {
+        didSet {
+            reloadData()
+        }
+    }
     
     private var numberOfVisibleCards: Int = 3
     
     private var visibleCards: [MGSwipeCard] = []
     
-    //non-swiped card indices from data source
-    private var remainingIndices: [Int] = []
+    private var remainingIndices: [Int] = [] //non-swiped card indices from data source
     
     private var cardStack = UIView()
     
     private static var cardScaleFactor: CGFloat = 0.95
+    
+    //MARK: - Initialization
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,31 +58,17 @@ public class MGCardStackView: UIView {
         addSubview(cardStack)
     }
     
-    public override func layoutSubviews() {
+    //MARK: - Layout
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
         cardStack.frame = CGRect(x: horizontalInset, y: verticalInset, width: frame.width - 2 * horizontalInset, height: frame.height - 2 * verticalInset)
         if dataSource != nil {
             reloadData()
         }
     }
     
-    private func insertCard(card: MGSwipeCard, at index: Int) {
-        cardStack.insertSubview(card, at: visibleCards.count - index)
-        visibleCards.insert(card, at: index)
-        card.transform = CGAffineTransform.identity
-        card.frame = cardStack.bounds
-        card.delegate = self
-        resetCard(card, at: index)
-    }
-    
-    private func resetCard(_ card: MGSwipeCard, at index: Int) {
-        if index == 0 {
-            card.transform = CGAffineTransform.identity
-            card.isUserInteractionEnabled = true
-        } else {
-            card.transform = CGAffineTransform(scaleX: MGCardStackView.cardScaleFactor, y: MGCardStackView.cardScaleFactor)
-            card.isUserInteractionEnabled = false
-        }
-    }
+    //MARK: - Main Methods
     
     public func shift(withDistance distance: Int = 1) {
         if distance == 0 || visibleCards.count <= 1 { return }
@@ -107,9 +108,28 @@ public class MGCardStackView: UIView {
         }
     }
     
+    private func insertCard(card: MGSwipeCard, at index: Int) {
+        cardStack.insertSubview(card, at: visibleCards.count - index)
+        visibleCards.insert(card, at: index)
+        card.transform = CGAffineTransform.identity
+        card.frame = cardStack.bounds
+        card.delegate = self
+        resetCard(card, at: index)
+    }
+    
+    private func resetCard(_ card: MGSwipeCard, at index: Int) {
+        if index == 0 {
+            card.transform = CGAffineTransform.identity
+            card.isUserInteractionEnabled = true
+        } else {
+            card.transform = CGAffineTransform(scaleX: MGCardStackView.cardScaleFactor, y: MGCardStackView.cardScaleFactor)
+            card.isUserInteractionEnabled = false
+        }
+    }
+    
 }
 
-//MARK: - MGSwipeCardDelegate Methods
+//MARK: - MGSwipeCardDelegate
 
 extension MGCardStackView: MGSwipeCardDelegate {
     
@@ -161,21 +181,5 @@ extension MGCardStackView: MGSwipeCardDelegate {
     
 }
 
-//MARK: - Extensions
 
-private extension Array {
-    
-    func shift(withDistance distance: Int = 1) -> Array<Element> {
-        let offsetIndex = distance >= 0 ?
-            self.index(startIndex, offsetBy: distance, limitedBy: endIndex) :
-            self.index(endIndex, offsetBy: distance, limitedBy: startIndex)
-        guard let index = offsetIndex else { return self }
-        return Array(self[index ..< endIndex] + self[startIndex ..< index])
-    }
-    
-    mutating func shiftInPlace(withDistance distance: Int = 1) {
-        self = shift(withDistance: distance)
-    }
-    
-}
 

@@ -1,5 +1,5 @@
 //
-//  SwipeableCardContainerDataSource.swift
+//  MGCardStackViewDataSource.swift
 //  MGSwipeCards
 //
 //  Created by Mac Gallagher on 5/31/18.

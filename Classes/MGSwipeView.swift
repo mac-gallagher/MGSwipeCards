@@ -10,6 +10,8 @@ import UIKit
 
 open class MGSwipeView: UIView {
     
+    //MARK: Variables
+    
     open var swipeDirections = SwipeDirection.allDirections
     
     public var activeDirection: SwipeDirection? {
@@ -26,8 +28,10 @@ open class MGSwipeView: UIView {
     
     public lazy var panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
 
+    //MARK: - Initialization
+    
     public init() {
-        super.init(frame: CGRect.zero)
+        super.init(frame: .zero)
         initialize()
     }
     
@@ -45,6 +49,25 @@ open class MGSwipeView: UIView {
         addGestureRecognizer(panGestureRecognizer)
     }
     
+    //MARK: - Swipe Handling
+    
+    public func swipeSpeed(onDirection direction: SwipeDirection) -> CGFloat {
+        if !swipeDirections.contains(direction) { return 0 }
+        let velocity = panGestureRecognizer.velocity(in: superview)
+        return abs(direction.point.dotProduct(with: velocity))
+    }
+    
+    public func swipePercentage(onDirection direction: SwipeDirection) -> CGFloat {
+        if !swipeDirections.contains(direction) { return 0 }
+        let translation = panGestureRecognizer.translation(in: superview)
+        let normalizedTranslation = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
+        let percentage = normalizedTranslation.dotProduct(with: direction.point)
+        if percentage < 0 {
+            return 0
+        }
+        return percentage
+    }
+    
     @objc private func handlePan(_ recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
@@ -56,23 +79,6 @@ open class MGSwipeView: UIView {
         default:
             break
         }
-    }
-    
-    public func swipeSpeed(onDirection direction: SwipeDirection) -> CGFloat {
-        let velocity = panGestureRecognizer.velocity(in: superview)
-        if !swipeDirections.contains(direction) { return 0 }
-        return abs(direction.point.dotProduct(with: velocity))
-    }
-    
-    public func swipePercentage(onDirection direction: SwipeDirection) -> CGFloat {
-        let translation = panGestureRecognizer.translation(in: superview)
-        if !swipeDirections.contains(direction) { return 0 }
-        let normalizedDragVector = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
-        let percentage = normalizedDragVector.dotProduct(with: direction.point)
-        if percentage < 0 {
-            return 0
-        }
-        return percentage
     }
     
     open func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
