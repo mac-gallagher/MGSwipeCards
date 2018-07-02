@@ -1,0 +1,5 @@
+use_frameworks!
+
+target 'MGSwipeCards_Example' do
+    pod 'MGSwipeCards', :path => '../'
+end
