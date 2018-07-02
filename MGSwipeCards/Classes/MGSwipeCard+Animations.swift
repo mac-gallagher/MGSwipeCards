@@ -11,10 +11,9 @@ import pop
 
 extension MGSwipeCard {
     
-    func swipeOffScreenAnimation(didSwipeFast: Bool) {
+    func performSwipeAnimation(direction: SwipeDirection, translation: CGPoint, didSwipeFast: Bool = false, randomRotationDirection: Bool = false) {
         removeAllAnimations()
         isUserInteractionEnabled = false
-        guard let direction = activeDirection else { return }
         overlays[direction]??.alpha = 1
         
         //reset anchor to center of card?
@@ -22,7 +21,7 @@ extension MGSwipeCard {
         let duration = swipeAnimationMinimumDuration
         if let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY) {
             translationAnimation.duration = duration
-            translationAnimation.toValue = translationForSwipeAnimation(didSwipeFast: didSwipeFast)
+            translationAnimation.toValue = translationForSwipeAnimation(translation: translation, didSwipeFast: didSwipeFast)
             translationAnimation.completionBlock = { (_, _) in
                 self.removeFromSuperview()
             }
@@ -31,27 +30,29 @@ extension MGSwipeCard {
         
         if let rotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation) {
             rotationAnimation.duration =  duration
-            rotationAnimation.toValue = 2 * rotationForSwipeAnimation * maximumRotationAngle
+            if randomRotationDirection && (direction == .left || direction == .right) {
+                rotationAnimation.toValue = 2 * Array([-1,1])[Int(arc4random_uniform(UInt32(2)))] * maximumRotationAngle                                                          
+            } else {
+                rotationAnimation.toValue = 2 * rotationForSwipeAnimation(direction: direction) * maximumRotationAngle
+            }
             animationLayer.pop_add(rotationAnimation, forKey: "swipeRotationAnimation")
         }
     }
     
-    var rotationForSwipeAnimation: CGFloat {
-        if activeDirection == SwipeDirection.up || activeDirection == SwipeDirection.down {
+    func rotationForSwipeAnimation(direction: SwipeDirection) -> CGFloat {
+        if direction == .up || direction == .down {
             return 0
         }
         let location = panGestureRecognizer.location(in: self)
-        if (activeDirection == .left && location.y < bounds.height / 2) || (activeDirection == .right && location.y >= bounds.height / 2) {
+        if (direction == .left && location.y < bounds.height / 2) || (direction == .right && location.y >= bounds.height / 2) {
             return -1
         }
         return 1
     }
     
-    func translationForSwipeAnimation(didSwipeFast: Bool) -> CGPoint {
-        guard let superview = superview else { return CGPoint.zero }
+    func translationForSwipeAnimation(translation: CGPoint, didSwipeFast: Bool) -> CGPoint {
         let cardDiagonalLength = CGPoint.zero.distance(to: CGPoint(x: bounds.width, y: bounds.height))
         let minimumOffscreenTranslation = CGPoint(x: UIScreen.main.bounds.width + cardDiagonalLength, y: UIScreen.main.bounds.height + cardDiagonalLength)
-        let translation = panGestureRecognizer.translation(in: superview)
         let maxLength = max(abs(translation.x), abs(translation.y))
         let directionVector = CGPoint(x: translation.x / maxLength, y: translation.y / maxLength)
         if didSwipeFast {

@@ -32,13 +32,13 @@ open class MGCardStackView: UIView {
         }
     }
     
-    private var numberOfVisibleCards: Int = 3
-    
     private var visibleCards: [MGSwipeCard] = []
     
     private var remainingIndices: [Int] = [] //non-swiped card indices from data source
     
     private var cardStack = UIView()
+    
+    private static var numberOfVisibleCards: Int = 3
     
     private static var cardScaleFactor: CGFloat = 0.95
     
@@ -63,35 +63,10 @@ open class MGCardStackView: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
         cardStack.frame = CGRect(x: horizontalInset, y: verticalInset, width: frame.width - 2 * horizontalInset, height: frame.height - 2 * verticalInset)
-        if dataSource != nil {
-            reloadData()
-        }
+        reloadData()
     }
     
-    //MARK: - Main Methods
-    
-    public func shift(withDistance distance: Int = 1) {
-        if distance == 0 || visibleCards.count <= 1 { return }
-
-        guard let dataSource = dataSource else { return }
-
-        if distance > 0 {
-            visibleCards.first?.removeFromSuperview()
-            visibleCards.removeFirst()
-            remainingIndices.shiftInPlace()
-            let bottomCardIndex = remainingIndices[visibleCards.count]
-            let card = dataSource.card(forItemAtIndex: bottomCardIndex)
-            insertCard(card: card, at: visibleCards.count)
-            resetCard(visibleCards[0], at: 0)
-        } else {
-            visibleCards.last?.removeFromSuperview()
-            visibleCards.removeLast()
-            remainingIndices.shiftInPlace(withDistance: -1)
-            let card = dataSource.card(forItemAtIndex: remainingIndices[0])
-            insertCard(card: card, at: 0)
-            resetCard(visibleCards[1], at: 1)
-        }
-    }
+    //MARK: - Data Source
     
     public func reloadData() {
         guard let dataSource = dataSource else { return }
@@ -101,7 +76,7 @@ open class MGCardStackView: UIView {
         visibleCards = []
         let numberOfCards = dataSource.numberOfCards()
         remainingIndices = Array(0..<numberOfCards)
-        for index in 0..<min(numberOfCards, numberOfVisibleCards) {
+        for index in 0..<min(numberOfCards, MGCardStackView.numberOfVisibleCards) {
             let card = dataSource.card(forItemAtIndex: index)
             card.delegate = self
             insertCard(card: card, at: index)
@@ -114,16 +89,49 @@ open class MGCardStackView: UIView {
         card.transform = CGAffineTransform.identity
         card.frame = cardStack.bounds
         card.delegate = self
-        resetCard(card, at: index)
+        resetTransform(card: card, at: index)
     }
     
-    private func resetCard(_ card: MGSwipeCard, at index: Int) {
+    private func resetTransform(card: MGSwipeCard, at index: Int) {
         if index == 0 {
             card.transform = CGAffineTransform.identity
             card.isUserInteractionEnabled = true
         } else {
             card.transform = CGAffineTransform(scaleX: MGCardStackView.cardScaleFactor, y: MGCardStackView.cardScaleFactor)
             card.isUserInteractionEnabled = false
+        }
+    }
+    
+    //MARK: - Main Methods
+    
+    public func shift(withDistance distance: Int = 1) {
+        if distance == 0 || visibleCards.count <= 1 { return }
+        
+        guard let dataSource = dataSource else { return }
+        
+        if distance > 0 {
+            visibleCards.first?.removeFromSuperview()
+            visibleCards.removeFirst()
+            remainingIndices.shiftInPlace()
+            let bottomCardIndex = remainingIndices[visibleCards.count]
+            let card = dataSource.card(forItemAtIndex: bottomCardIndex)
+            insertCard(card: card, at: visibleCards.count)
+            resetTransform(card: visibleCards[0], at: 0)
+        } else {
+            visibleCards.last?.removeFromSuperview()
+            visibleCards.removeLast()
+            remainingIndices.shiftInPlace(withDistance: -1)
+            let card = dataSource.card(forItemAtIndex: remainingIndices[0])
+            insertCard(card: card, at: 0)
+            resetTransform(card: visibleCards[1], at: 1)
+        }
+    }
+    
+    public func swipe(withDirection direction: SwipeDirection) {
+        if visibleCards.count <= 0 { return }
+        let topCard = visibleCards[0]
+        if topCard.isUserInteractionEnabled {
+            topCard.performSwipe(withDirection: direction)
         }
     }
     
@@ -157,6 +165,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
             return
         }
 
+        //load next card
         guard let dataSource = dataSource else { return }
         if remainingIndices.count - visibleCards.count > 0 {
             let bottomCardIndex = remainingIndices[visibleCards.count]
@@ -175,7 +184,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
     public func didCancelSwipe(on card: MGSwipeCard) {
         if visibleCards.count <= 1 { return }
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
-            self.resetCard(self.visibleCards[1], at: 1)
+            self.resetTransform(card: self.visibleCards[1], at: 1)
         }, completion: nil)
     }
     

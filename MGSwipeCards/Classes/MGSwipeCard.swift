@@ -199,6 +199,20 @@ open class MGSwipeCard: MGSwipeView {
     
     //MARK: - Swipe Handling
     
+    public func performSwipe(withDirection direction: SwipeDirection) {
+        if !swipeDirections.contains(direction) { return }
+        isUserInteractionEnabled = false
+        animationLayer.rasterizationScale = UIScreen.main.scale
+        animationLayer.shouldRasterize = true
+        
+        UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut, animations: {
+            self.overlays[direction]??.alpha = 1
+        }) { (_) in
+            self.performSwipeAnimation(direction: direction, translation: direction.point, randomRotationDirection: true)
+            self.delegate?.didSwipe(on: self, withDirection: direction)
+        }
+    }
+    
     private var rotationDirectionY: CGFloat = 1
     
     open override func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
@@ -246,12 +260,12 @@ open class MGSwipeCard: MGSwipeView {
     }
 
     open override func endSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-        guard let direction = activeDirection else { return }
+        guard let direction = activeDirection, let superview = superview else { return }
         if swipeSpeed(onDirection: direction) >= minimumSwipeSpeed {
-            swipeOffScreenAnimation(didSwipeFast: true)
+            performSwipeAnimation(direction: direction, translation: panGestureRecognizer.translation(in: superview), didSwipeFast: true)
             delegate?.didSwipe(on: self, withDirection: direction)
         } else if swipePercentage(onDirection: direction) >= minimumSwipeMargin {
-            swipeOffScreenAnimation(didSwipeFast: false)
+            performSwipeAnimation(direction: direction, translation: panGestureRecognizer.translation(in: superview))
             delegate?.didSwipe(on: self, withDirection: direction)
         } else {
             resetCardAnimation()
@@ -260,4 +274,12 @@ open class MGSwipeCard: MGSwipeView {
     }
     
 }
+
+
+
+
+
+
+
+
 
