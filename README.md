@@ -6,13 +6,13 @@
 
 A modern swipeable card interface inspired by Tinder and built with Facebook's Pop animation library.
 
-<img src="https://github.com/mac-gallagher/MGSwipeCards/blob/master/Images/swipe_example.gif?raw=true">
+<img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe_example.gif">
 
 ## Features
-* Modern user interface
 * Maximum customizability - create your own card template!
 * Accurate swipe recognition based on velocity and card position
 * Smooth overlay image transitions
+* Programmatic swiping
 * Dynamic card loading using data source/delegate pattern
 
 ## Installation
@@ -150,6 +150,7 @@ Attribute  | Description
 Each `MGCardStackView` has the attributes `horizontalInset` and `verticalInset` which adjust the padding between the view and its contained cards. Measured in points. Both values are defaulted to 10.
 
 ## Other Methods
+* `swipe(withDirection direction: SwipeDirection)` - Performs a swipe programmatically in the given direction. Calls any delegate functions as usual.
 * `shift(withDistance distance: Int)` - Shifts the card stack by the given distance. The indices of any previously swiped cards are ignored.
 
 ## Requirements
