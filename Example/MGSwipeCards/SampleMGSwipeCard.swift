@@ -13,6 +13,8 @@ class SampleMGSwipeCard: MGSwipeCard {
     
     var model: SampleMGSwipeCardModel?
     
+    var gradientLayer: CAGradientLayer?
+    
     override init() {
         super.init()
         initialize()
@@ -41,13 +43,14 @@ class SampleMGSwipeCard: MGSwipeCard {
     }
     
     private func configureGradientLayer() {
-        let height: CGFloat = 150
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = CGRect(x: 0, y: bounds.height - height, width: bounds.width, height: height)
-        gradientLayer.colors = [UIColor.black.withAlphaComponent(0.01).cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
-        layer.insertSublayer(gradientLayer, below: footerView?.layer)
+        let heightFactor: CGFloat = 0.35
+        gradientLayer?.removeFromSuperlayer()
+        gradientLayer = CAGradientLayer()
+        gradientLayer?.frame = CGRect(x: 0, y: (1 - heightFactor) * bounds.height, width: bounds.width, height: heightFactor * bounds.height)
+        gradientLayer?.colors = [UIColor.black.withAlphaComponent(0.01).cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
+        gradientLayer?.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer?.endPoint = CGPoint(x: 0.5, y: 1)
+        layer.insertSublayer(gradientLayer!, below: footerView?.layer)
     }
     
     private func configureOverlays() {

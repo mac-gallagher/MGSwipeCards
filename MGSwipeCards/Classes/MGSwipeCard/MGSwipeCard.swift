@@ -31,7 +31,7 @@ open class MGSwipeCard: MGSwipeView {
         return backgroundView.layer
     }
     
-    var animationLayer: CALayer {
+    internal var animationLayer: CALayer {
         return super.layer
     }
     
@@ -197,7 +197,7 @@ open class MGSwipeCard: MGSwipeView {
         animationLayer.shadowColor = color.cgColor
     }
     
-    //MARK: - Swipe Handling
+    //MARK: - Swipe/Tap Handling
     
     public func performSwipe(withDirection direction: SwipeDirection) {
         if !swipeDirections.contains(direction) { return }
@@ -213,6 +213,10 @@ open class MGSwipeCard: MGSwipeView {
         }
     }
     
+    open override func didTap(on view: MGSwipeView, recognizer: UITapGestureRecognizer) {
+        delegate?.didTap(on: self, recognizer: recognizer)
+    }
+    
     private var rotationDirectionY: CGFloat = 1
     
     open override func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
@@ -220,18 +224,12 @@ open class MGSwipeCard: MGSwipeView {
         animationLayer.rasterizationScale = UIScreen.main.scale
         animationLayer.shouldRasterize = true
         let touchPoint = recognizer.location(in: self)
-        setAnchor(to: CGPoint(x: touchPoint.x / bounds.width, y: touchPoint.y / bounds.height))
         if touchPoint.y < bounds.height / 2 {
             rotationDirectionY = 1
         } else {
             rotationDirectionY = -1
         }
         delegate?.beginSwiping(on: self)
-    }
-
-    private func setAnchor(to anchorPoint: CGPoint) {
-        animationLayer.anchorPoint = anchorPoint
-        animationLayer.position = CGPoint(x: bounds.size.width * anchorPoint.x, y: bounds.size.height * anchorPoint.y)
     }
     
     private func alphaForOverlay(withDirection direction: SwipeDirection) -> CGFloat {

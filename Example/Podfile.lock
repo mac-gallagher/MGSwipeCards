@@ -1,23 +1,28 @@
 PODS:
-  - MGSwipeCards (1.0.0):
+  - MGSwipeCards (1.1.0):
     - pop (~> 1.0)
   - pop (1.0.10)
+  - PopBounceButton (1.1.1):
+    - pop (~> 1.0)
 
 DEPENDENCIES:
   - MGSwipeCards (from `../`)
+  - PopBounceButton
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - pop
+    - PopBounceButton
 
 EXTERNAL SOURCES:
   MGSwipeCards:
     :path: "../"
 
 SPEC CHECKSUMS:
-  MGSwipeCards: 08467bd265f8859c6b65427b76d105da8af2f8e2
+  MGSwipeCards: 7b39d28dc2dd05d1e062e762245a2fe3aa2e1048
   pop: 82ca6b068ce9278fd350fd9dd09482a0ce9492e6
+  PopBounceButton: 25518b306611afd2c4dfab742fbe0424aab3213a
 
-PODFILE CHECKSUM: eb5c042c58dad5e4e5edb51b6f0662e85e50deab
+PODFILE CHECKSUM: b2af244655535042f681d0fafe6f018e39a82fa9
 
 COCOAPODS: 1.5.0

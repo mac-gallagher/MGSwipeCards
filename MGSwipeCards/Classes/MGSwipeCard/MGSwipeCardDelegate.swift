@@ -10,6 +10,8 @@ import Foundation
 
 public protocol MGSwipeCardDelegate {
     
+    func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer)
+    
     func beginSwiping(on card: MGSwipeCard)
     
     func continueSwiping(on card: MGSwipeCard)

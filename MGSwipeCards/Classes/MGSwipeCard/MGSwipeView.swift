@@ -28,6 +28,8 @@ open class MGSwipeView: UIView {
     
     public lazy var panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
 
+    public lazy var tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+    
     //MARK: - Initialization
     
     public init() {
@@ -46,10 +48,11 @@ open class MGSwipeView: UIView {
     }
     
     private func initialize() {
+        addGestureRecognizer(tapGestureRecognizer)
         addGestureRecognizer(panGestureRecognizer)
     }
     
-    //MARK: - Swipe Handling
+    //MARK: - Swipe/Tap Handling
     
     public func swipeSpeed(onDirection direction: SwipeDirection) -> CGFloat {
         if !swipeDirections.contains(direction) { return 0 }
@@ -68,6 +71,10 @@ open class MGSwipeView: UIView {
         return percentage
     }
     
+    @objc private func handleTap(_ recognizer: UITapGestureRecognizer) {
+        didTap(on: self, recognizer: recognizer)
+    }
+    
     @objc private func handlePan(_ recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
@@ -79,6 +86,9 @@ open class MGSwipeView: UIView {
         default:
             break
         }
+    }
+    
+    open func didTap(on view: MGSwipeView, recognizer: UITapGestureRecognizer) {
     }
     
     open func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {

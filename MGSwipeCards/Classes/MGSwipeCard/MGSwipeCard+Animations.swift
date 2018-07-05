@@ -9,14 +9,12 @@
 import UIKit
 import pop
 
-extension MGSwipeCard {
+internal extension MGSwipeCard {
     
     func performSwipeAnimation(direction: SwipeDirection, translation: CGPoint, didSwipeFast: Bool = false, randomRotationDirection: Bool = false) {
         removeAllAnimations()
         isUserInteractionEnabled = false
         overlays[direction]??.alpha = 1
-        
-        //reset anchor to center of card?
         
         let duration = swipeAnimationMinimumDuration
         if let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY) {
@@ -30,16 +28,16 @@ extension MGSwipeCard {
         
         if let rotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation) {
             rotationAnimation.duration =  duration
-            if randomRotationDirection && (direction == .left || direction == .right) {
-                rotationAnimation.toValue = 2 * Array([-1,1])[Int(arc4random_uniform(UInt32(2)))] * maximumRotationAngle                                                          
+            if randomRotationDirection {
+                rotationAnimation.toValue = randomRotationForAnimation(direction: direction) * (2 * maximumRotationAngle)
             } else {
-                rotationAnimation.toValue = 2 * rotationForSwipeAnimation(direction: direction) * maximumRotationAngle
+                rotationAnimation.toValue = rotationForAnimation(direction: direction) * (2 * maximumRotationAngle)
             }
             animationLayer.pop_add(rotationAnimation, forKey: "swipeRotationAnimation")
         }
     }
     
-    func rotationForSwipeAnimation(direction: SwipeDirection) -> CGFloat {
+    func rotationForAnimation(direction: SwipeDirection) -> CGFloat {
         if direction == .up || direction == .down {
             return 0
         }
@@ -48,6 +46,15 @@ extension MGSwipeCard {
             return -1
         }
         return 1
+    }
+    
+    func randomRotationForAnimation(direction: SwipeDirection) -> CGFloat {
+        switch direction {
+        case .up, .down:
+            return 0
+        case .left, .right:
+            return 2 * Array([-1,1])[Int(arc4random_uniform(UInt32(2)))] * maximumRotationAngle
+        }
     }
     
     func translationForSwipeAnimation(translation: CGPoint, didSwipeFast: Bool) -> CGPoint {

@@ -14,4 +14,6 @@ public protocol MGCardStackViewDelegate {
     
     func didEndSwipe(on card: MGSwipeCard, withDirection direction: SwipeDirection)
     
+    func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer)
+    
 }
