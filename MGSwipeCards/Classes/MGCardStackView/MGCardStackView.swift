@@ -40,7 +40,7 @@ open class MGCardStackView: UIView {
     
     private var cardStack = UIView()
     
-    private static var numberOfVisibleCards: Int = 2
+    private static var numberOfVisibleCards: Int = 3
     
     private static var cardScaleFactor: CGFloat = 0.95
     
@@ -48,15 +48,15 @@ open class MGCardStackView: UIView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        initialize()
+        sharedInit()
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        initialize()
+        sharedInit()
     }
     
-    private func initialize() {
+    private func sharedInit() {
         addSubview(cardStack)
     }
     

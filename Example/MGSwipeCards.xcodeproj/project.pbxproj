@@ -75,7 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				ADBB333A20E9DB68006A16C4 /* Podspec Metadata */,
-				ADBB332420E9D799006A16C4 /* Example for MGSwipeCards (DONE) */,
+				ADBB332420E9D799006A16C4 /* Example for MGSwipeCards */,
 				ADBB330520E9D73B006A16C4 /* Products */,
 				A3E3C537B0C9707CDFF47058 /* Pods */,
 				609FDD062A99FCB841E604AF /* Frameworks */,
@@ -90,7 +90,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		ADBB332420E9D799006A16C4 /* Example for MGSwipeCards (DONE) */ = {
+		ADBB332420E9D799006A16C4 /* Example for MGSwipeCards */ = {
 			isa = PBXGroup;
 			children = (
 				ADBB332B20E9D799006A16C4 /* AppDelegate.swift */,
@@ -104,7 +104,7 @@
 				ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */,
 				ADBB333720E9D7D3006A16C4 /* Supporting Files */,
 			);
-			name = "Example for MGSwipeCards (DONE)";
+			name = "Example for MGSwipeCards";
 			path = MGSwipeCards;
 			sourceTree = "<group>";
 		};

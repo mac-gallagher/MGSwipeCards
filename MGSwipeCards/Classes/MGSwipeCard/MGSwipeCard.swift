@@ -8,17 +8,37 @@
 
 import UIKit
 
+private struct MGSwipeCardProperties {
+    
+    var imageView: UIImageView?
+    
+    var footerView: UIView?
+    
+    var overlays: [SwipeDirection: UIView?]
+    
+}
+
 open class MGSwipeCard: MGSwipeView {
     
     //MARK: - Variables
     
     public var delegate: MGSwipeCardDelegate?
     
-    public var imageView: UIImageView?
+    private var properties = MGSwipeCardProperties(imageView: nil, footerView: nil, overlays: [:])
     
-    public var footerView: UIView?
+    open var imageView: UIImageView? {
+        return properties.imageView
+    }
     
-    public var footerHeight: CGFloat = 80
+    open var footerView: UIView? {
+        return properties.footerView
+    }
+    
+    open var overlays: [SwipeDirection: UIView?] {
+        return properties.overlays
+    }
+    
+    public var footerHeight: CGFloat = 100
     
     open override var backgroundColor: UIColor? {
         didSet {
@@ -44,8 +64,6 @@ open class MGSwipeCard: MGSwipeView {
     
     private var overlayContainer: UIView?
     
-    var overlays: [SwipeDirection: UIView?] = [:]
-    
     //MARK: Swipe Recognition Settings
     
     open var minimumSwipeSpeed: CGFloat = 1600 //in points per second
@@ -66,20 +84,20 @@ open class MGSwipeCard: MGSwipeView {
     
     public override init() {
         super.init()
-        initialize()
+        sharedInit()
     }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        initialize()
+        sharedInit()
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        initialize()
+        sharedInit()
     }
     
-    private func initialize() {
+    private func sharedInit() {
         super.addSubview(backgroundView)
         _ = backgroundView.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
         backgroundColor = .black
@@ -165,7 +183,7 @@ open class MGSwipeCard: MGSwipeView {
             addSubview(overlayContainer!)
         }
         overlays[direction]??.removeFromSuperview()
-        overlays[direction] = overlay
+        properties.overlays[direction] = overlay
         overlays[direction]??.alpha = 0
         overlayContainer?.addSubview(overlay)
         setNeedsLayout()
@@ -174,7 +192,7 @@ open class MGSwipeCard: MGSwipeView {
     public func setBackgroundImage(_ image: UIImage?) {
         if imageView == nil {
             imageView?.removeFromSuperview()
-            imageView = UIImageView()
+            properties.imageView = UIImageView()
             imageView?.contentMode = .scaleAspectFill
             addSubview(imageView!)
             setNeedsLayout()
@@ -185,7 +203,7 @@ open class MGSwipeCard: MGSwipeView {
     public func setFooterView(_ footer: UIView?) {
         guard let footer = footer else { return }
         footerView?.removeFromSuperview()
-        footerView = footer
+        properties.footerView = footer
         addSubview(footerView!)
         setNeedsLayout()
     }
@@ -232,14 +250,6 @@ open class MGSwipeCard: MGSwipeView {
         delegate?.beginSwiping(on: self)
     }
     
-    private func alphaForOverlay(withDirection direction: SwipeDirection) -> CGFloat {
-        if direction != activeDirection { return 0 }
-        let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
-            return percentage + swipePercentage(onDirection: direction)
-        }
-        return min((2 * swipePercentage(onDirection: direction) - totalPercentage)/minimumSwipeMargin, 1)
-    }
-    
     open override func continueSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: self)
         var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
@@ -255,6 +265,14 @@ open class MGSwipeCard: MGSwipeView {
             overlays[direction]??.alpha = alphaForOverlay(withDirection: direction)
         }
         delegate?.continueSwiping(on: self)
+    }
+    
+    private func alphaForOverlay(withDirection direction: SwipeDirection) -> CGFloat {
+        if direction != activeDirection { return 0 }
+        let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
+            return percentage + swipePercentage(onDirection: direction)
+        }
+        return min((2 * swipePercentage(onDirection: direction) - totalPercentage)/minimumSwipeMargin, 1)
     }
 
     open override func endSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {

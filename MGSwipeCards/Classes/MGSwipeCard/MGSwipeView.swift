@@ -8,9 +8,20 @@
 
 import UIKit
 
+private struct MGSwipeViewProperties {
+
+    let panGestureRecognizer: UIPanGestureRecognizer
+
+    let tapGestureRecognizer: UITapGestureRecognizer
+    
+}
+
 open class MGSwipeView: UIView {
     
     //MARK: Variables
+    
+    private lazy var properties = MGSwipeViewProperties(panGestureRecognizer: UIPanGestureRecognizer(target: self, action: #selector(handlePan)),
+                                                        tapGestureRecognizer: UITapGestureRecognizer(target: self, action: #selector(handleTap)))
     
     open var swipeDirections = SwipeDirection.allDirections
     
@@ -26,30 +37,34 @@ open class MGSwipeView: UIView {
         }).direction
     }
     
-    public lazy var panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+    public var panGestureRecognizer: UIPanGestureRecognizer {
+        return properties.panGestureRecognizer
+    }
 
-    public lazy var tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+    public var tapGestureRecognizer: UITapGestureRecognizer {
+        return properties.tapGestureRecognizer
+    }
     
     //MARK: - Initialization
     
     public init() {
         super.init(frame: .zero)
-        initialize()
+        sharedInit()
     }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        initialize()
+        sharedInit()
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        initialize()
+        sharedInit()
     }
     
-    private func initialize() {
-        addGestureRecognizer(tapGestureRecognizer)
+    private func sharedInit() {
         addGestureRecognizer(panGestureRecognizer)
+        addGestureRecognizer(tapGestureRecognizer)
     }
     
     //MARK: - Swipe/Tap Handling
