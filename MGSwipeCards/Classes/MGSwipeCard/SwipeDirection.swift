@@ -8,8 +8,8 @@
 
 import UIKit
 
-public enum SwipeDirection {
-
+@objc public enum SwipeDirection: Int {
+    
     case left
     case right
     case up
@@ -29,6 +29,19 @@ public enum SwipeDirection {
             return CGPoint(x: 0, y: -1)
         case .down:
             return CGPoint(x: 0, y: 1)
+        }
+    }
+    
+    public var string: String {
+        switch self {
+        case .left:
+            return "left"
+        case .right:
+            return "right"
+        case .up:
+            return "up"
+        case .down:
+            return "down"
         }
     }
     

@@ -8,12 +8,12 @@
 
 import Foundation
 
-public protocol MGCardStackViewDelegate {
+@objc public protocol MGCardStackViewDelegate {
     
-    func didSwipeAllCards()
+    @objc optional func didSwipeAllCards()
     
-    func didEndSwipe(on card: MGSwipeCard, withDirection direction: SwipeDirection)
+    @objc optional func didEndSwipe(on card: MGSwipeCard, withDirection direction: SwipeDirection)
     
-    func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer)
+    @objc optional func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer)
     
 }

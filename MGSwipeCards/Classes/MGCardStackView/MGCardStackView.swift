@@ -179,7 +179,7 @@ open class MGCardStackView: UIView {
 extension MGCardStackView: MGSwipeCardDelegate {
     
     public func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer) {
-        delegate?.didTap(on: card, recognizer: recognizer)
+        delegate?.didTap?(on: card, recognizer: recognizer)
     }
     
     public func beginSwiping(on card: MGSwipeCard) {
@@ -201,10 +201,10 @@ extension MGCardStackView: MGSwipeCardDelegate {
         stateArray.append(remainingIndices)
         remainingIndices.removeFirst()
         visibleCards.remove(at: 0)
-        delegate?.didEndSwipe(on: card, withDirection: direction)
+        delegate?.didEndSwipe?(on: card, withDirection: direction)
 
         if remainingIndices.count == 0 {
-            delegate?.didSwipeAllCards()
+            delegate?.didSwipeAllCards?()
             return
         }
 

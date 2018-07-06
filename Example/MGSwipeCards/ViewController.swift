@@ -188,10 +188,6 @@ class ViewController: UIViewController {
 
 extension ViewController: MGCardStackViewDataSource, MGCardStackViewDelegate {
     
-    func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer) {
-        print("Tapped on top card")
-    }
-    
     func numberOfCards() -> Int {
         return cards.count
     }
@@ -200,12 +196,16 @@ extension ViewController: MGCardStackViewDataSource, MGCardStackViewDelegate {
         return cards[index]
     }
     
+    func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer) {
+        print("Tapped on top card")
+    }
+    
     func didSwipeAllCards() {
         print("Swiped all cards!")
     }
-    
+
     func didEndSwipe(on card: MGSwipeCard, withDirection direction: SwipeDirection) {
-        print("Swiped \(direction) on \((card as! SampleMGSwipeCard).model?.name ?? "")")
+        print("Swiped \(direction.string) on \((card as! SampleMGSwipeCard).model?.name ?? "")")
     }
     
 }
