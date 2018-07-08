@@ -153,7 +153,7 @@ Performs a swipe programmatically in the given direction. Any delegate methods a
 func swipe(withDirection direction: SwipeDirection)
 ```
 
-![Shift](Images/swipe.gif)
+![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe.gif)
 
 ### Undo
 Restores the card stack to its state before the last swipe. Returns the newly restored card.
@@ -162,7 +162,7 @@ Restores the card stack to its state before the last swipe. Returns the newly re
 func undoLastSwipe() -> MGSwipeCard?
 ```
 
-![Shift](Images/undo.gif)
+![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/undo.gif)
 
 ### Shift
 Shifts the card stack's cards by the given distance. Any previously swiped cards are skipped over.
@@ -171,7 +171,7 @@ Shifts the card stack's cards by the given distance. Any previously swiped cards
 func shift(withDistance distance: Int = 1)
 ```
 
-![Shift](Images/shift.gif)
+![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/shift.gif)
 
 ## Customization
 Each `MGSwipeCard` has the following built-in UI properties. Other subviews can be added to make your own unique card template.
