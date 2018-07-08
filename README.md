@@ -4,16 +4,40 @@
 ![license](https://img.shields.io/cocoapods/l/MGSwipeCards.svg)
 ![CocoaPods](https://img.shields.io/cocoapods/p/MGSwipeCards.svg)
 
-A modern swipeable card interface inspired by Tinder and built with Facebook's Pop animation library.
+🔥 A modern swipeable card interface inspired by Tinder and built with Facebook's Pop animation library.
 
-<img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe_example.gif">
+![Tinder Demo](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe_example.gif)
 
 ## Features
-* Maximum customizability - create your own card template!
-* Accurate swipe recognition based on velocity and card position
-* Smooth overlay image transitions
-* Programmatic swiping
-* Dynamic card loading using data source/delegate pattern
+- [x] Maximum customizability - create your own card template!
+- [x] Accurate swipe recognition based on velocity and card position
+- [x] Programmatic swiping
+- [x] Undo and card stack reordering
+- [x] Smooth overlay view transitions
+- [x] Dynamic card loading using data source/delegate pattern
+
+## Table of Contents
+
+- [Example](#example)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Contributing](#contributing)
+- [Quick Start](#quick-start)
+- [Useful Methods](#useful-methods)
+- [Customization](#customization)
+- [Sources](#sources)
+- [Author](#author)
+- [License](#license)
+
+## Example
+To run the example project, clone the repo and run the `MGSwipeCards-Example` target. 
+
+The example project uses the Tinder-inspired framework [PopBounceButton](<https://github.com/mac-gallagher/PopBounceButton>), make sure to check it out!
+
+## Requirements
+* iOS 9.0+
+* Xcode 9.0+
+* Swift 4.0+
 
 ## Installation
 
@@ -22,144 +46,169 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
 
 	pod 'MGSwipeCards'
 
-
 ### Manual
-1. Download and drop the `Classes` directory into your project. 
+1. Download and drop the `MGSwipeCards` directory into your project. 
 2. Install Facebook's [Pop](<https://github.com/facebook/pop>) library.
 
-## Usage
-The framework `MGSwipeCards` is comprised two main classes:
+## Contributing
+- If you **found a bug**, open an issue and tag as bug.
+- If you **have a feature request**, open an issue and tag as feature.
+- If you **want to contribute**, submit a pull request.
+	- In order to submit a pull request, please fork this repo and submit a pull request from your forked repo.
+	- Have a detailed message as to what your pull request fixes/enhances/adds.
 
-* `MGSwipeCard` - the base class for all animated swipeable cards.
-* `MGSwipeCardStackView` - the view which handles the displaying and loading of cards.
-
-### Creating cards
-1. Create your own card by subclassing `MGSwipeCard`. Add any subviews you like; you have complete control over your card's appearance!
-2. Set your card's swipeable directions with the `swipeDirections` attribute.
-3. Create your overlay views and attach them using the `setOverlay` function. By default, each overlay covers the entire card. To change this behavior, simply wrap your overlay in another view and attach this view instead.
+## Quick Start
+1. Create your own card by subclassing `MGSwipeCard`.
 
     ```swift
-    class MyMGSwipeCard: MGSwipeCard {
-   
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            swipeDirections = [.left, .right] //default is [.left, .up, .right, .down]
-            configureOverlays()
-        }
-        
-        func configureOverlays() {
-            let redView = UIView()
-            redView.backgroundColor = .red
-            setOverlay(forDirection: .left, overlay: redView)
-            
-            let greenView = UIView()
-            greenView.backgroundColor = .green
-            setOverlay(forDirection: .right, overlay: greenView)
-        }
-        
+    class SampleCard: MGSwipeCard {
+
+	     var model: SampleCardModel? {
+	         didSet {
+	             configureModel()
+	         }
+	     }
+	     
+	     func configureModel() {
+	         guard let model = model else { return }
+	         self.setBackgroundImage(model.image)
+	     }
+    
+    }
+    
+    struct SampleCardModel {
+	     var image: UIImage
     }
     ```
-    
-    | <img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/one_direction_example.gif" width="250"/> |  <img src="https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/three_directions_example.gif" width="250"/> | 
-    |:---:|:---:|
-    | **Figure 1:** Overlay Transitions with<br> One Swipe Direction | **Figure 2:** Overlay Transitions with<br> Three Swipe Directions |
-    
-    
-  
- 
-### Creating a card stack  
 
-1. Add a `MGSwipeCardStackView` to your view.
+2. Add a `MGCardStackView` to your view and implement to the protocol `MGCardStackViewDataSource`.
 
     ```swift
     class ViewController: UIViewController {
     
         var cards = [MyMGSwipeCard]()
         
-        var cardStack = MGCardStackView()
-        
         override func viewDidLoad() {
+            super.viewDidLoad()
+            
+            let cardStack = MGCardStackView()
             view.addSubview(cardStack)
-            cardStack.frame = view.bounds.insetBy(dx: 10, dy: 50)
+            cardStack.frame = view.safeAreaLayoutGuide.bounds.insetBy(dx: 10, dy: 50)
+            cardStack.dataSource = self
+            
+            for model in cardModels {
+                let card = MyMGSwipeCard()
+                card.model = model
+                cards.append(card)
+            }
         }
         
     }
-    ```
 
-2. Conform your view controller to the protocols `MGSwipeCardStackViewDataSource` and  `MGSwipeCardStackViewDelegate` and complete all required functions.
+    //MARK: - Data Source Methods
+	
+        extension ViewController: MGCardStackViewDataSource {
 
-    ```swift
-    extension ViewController: MGSwipeCardDataSource, MGSwipeCardDelegate {
+	    func numberOfCards() -> Int {
+		    return cards.count
+        }
+        
+	    func card(forItemAtIndex index: Int) -> MGSwipeCard {
+		    return cards[index]
+	    }
+	
+    }
+
+    //MARK: - Card Models
+
+    extension ViewController {
+
+	    var cardModels: [SampleMGSwipeCardModel] {
+            var models = [SampleMGSwipeCardModel]()
+        
+            let model1 = MyModel(image: UIImage(named: "cardImage1"))
+            let model2 = MyModel(image: UIImage(named: "cardImage2"))
+            let model3 = MyModel(image: UIImage(named: "cardImage3"))
+                
+            models.append(model1)
+            models.append(model2)
+            models.append(model3)
+        
+            return models
+        }
     
-        // MARK: - Data Source Methods
-    
-        func numberOfCards() -> Int {
-            return cards.count
-        }
-        
-        func card(forItemAtIndex index: Int) -> MGSwipeCard {
-            return cards[index]
-        }
-        
-        // MARK: - Delegate Methods
-        
-        func didSwipeAllCards() {
-            print("Swiped all cards")
-        }
-    
-        func didEndSwipe(on card: MGSwipeCard, withDirection direction: SwipeDirection) {
-            print("Swiped \(direction)")
-        }
-        
     }
     ```
+    
+3. Happy swiping!
 
-3. Set your `MGSwipeCardStackView`'s `dataSource` property.
 
-    ```swift
-    cardStack.dataSource = self
-    ```
+## Useful Methods
+The following methods can be accessed from `MGCardStackView`.
 
+### Swipe
+Performs a swipe programmatically in the given direction. Any delegate methods are called as usual.
+
+```swift
+func swipe(withDirection direction: SwipeDirection)
+```
+
+![Shift](Images/swipe.gif)
+
+### Undo
+Restores the card stack to its state before the last swipe. Returns the newly restored card.
+
+```swift
+func undoLastSwipe() -> MGSwipeCard?
+```
+
+![Shift](Images/undo.gif)
+
+### Shift
+Shifts the card stack's cards by the given distance. Any previously swiped cards are skipped over.
+
+```swift
+func shift(withDistance distance: Int = 1)
+```
+
+![Shift](Images/shift.gif)
 
 ## Customization
+Each `MGSwipeCard` has the following built-in UI properties. Other subviews can be added to make your own unique card template.
 
-### Card appearance
-Each `MGSwipeCard` has the following built-in properties:
+### Background image
+The background image can be set with 
 
-* **Background Image** - Set with `setBackgroundImage(_ image: UIImage)`.
-* **Footer** - Set with `setFooterView(_ footer: UIView?)` and modify the footer's height with `footerHeight`. The card's background image is displayed above the footer unless the footer is transparent.
-* **Shadow** - Set with `setShadow(radius: CGFloat, opacity: Float, offset: CGSize, color: UIColor)`.
+```swift 
+func setBackgroundImage(_ image: UIImage)
+```
 
-### Swipe recognition settings
+### Footer
+The footer can be set with 
 
-Attribute  | Description
-|:------------- |:-------------
-`minimumSwipeSpeed`  | The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1600.
-`minimumSwipeMargin` | The minimum required drag distance on the intended direction to trigger a swipe. Measured from the initial touch point. Defined as a value in the range [0, 2]. Defaults to 0.5.
+```swift 
+func setFooterView(_ footer: UIView?)
+```
+The footer's height should be modified with `footerHeight`. The card's background image is displayed above the footer unless the footer is transparent.
 
-### Animation settings
+### Overlays
+An *overlay* is the view whose alpha value reacts to the user's dragging. The card's overlays can be set with
 
-Attribute  | Description
-|:------------- |:-------------
-`maximumRotationAngle`           | The maximum rotation angle of the card. Measured in radians. Defined as a value in the range [0, `CGFloat.pi`/2]. Defaults to `CGFloat.pi`/10.
-`swipeAnimationMinimumDuration`  | The minimum duration of the off-screen swipe animation. Measured in seconds. Defaults to 0.8.
-`resetAnimationSpringBounciness` | The effective bounciness of the swipe spring animation upon a cancelled swipe. Higher values increase spring movement range resulting in more oscillations and springiness. Defined as a value in the range [0, 20]. Defaults to 12.
-`resetAnimationSpringSpeed`      | The effective speed of the spring animation upon a cancelled swipe. Higher values increase the dampening power of the spring. Defined as a value in the range [0, 20]. Defaults to 20.
+```swift 
+func setOverlay(forDirection direction: SwipeDirection, overlay: UIView?)
+```
+The overlays will always be laid out above the footer.
 
-### MGCardStackView
-Each `MGCardStackView` has the attributes `horizontalInset` and `verticalInset` which adjust the padding between the view and its contained cards. Measured in points. Both values are defaulted to 10.
+### Shadow
+The card's shadow can be set with
 
-## Other Methods
-* `swipe(withDirection direction: SwipeDirection)` - Performs a swipe programmatically in the given direction. Calls any delegate functions as usual.
-* `shift(withDistance distance: Int)` - Shifts the card stack by the given distance. The indices of any previously swiped cards are ignored.
-
-## Requirements
-* iOS 9.0+
-* Xcode 9.0+
+```swift 
+func setShadow(radius: CGFloat, opacity: Float, offset: CGSize, color: UIColor)
+```
 
 ## Sources
-* [Pop](<https://github.com/facebook/pop>): Facebook's iOS animation framework.
-* *"Building a Tinder-esque Card Interface"* by Phill Farrugia (on [Medium](https://medium.com/@phillfarrugia/building-a-tinder-esque-card-interface-5afa63c6d3db))
+- [Pop](<https://github.com/facebook/pop>): Facebook's iOS animation framework.
+- *"Building a Tinder-esque Card Interface"* by Phill Farrugia (on [Medium](https://medium.com/@phillfarrugia/building-a-tinder-esque-card-interface-5afa63c6d3db))
 
 ## Author
 Mac Gallagher, jmgallagher36@gmail.com
