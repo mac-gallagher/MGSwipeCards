@@ -10,8 +10,18 @@ import Foundation
 
 public protocol MGCardStackViewDataSource {
     
-    func numberOfCards() -> Int
+    func numberOfCards(in cardStack: MGCardStackView) -> Int
+    func cardStack(_ cardStack: MGCardStackView, viewforCardAt index: Int) -> UIView?
+    func cardStack(_ cardStack: MGCardStackView, viewForCardFooterAt index: Int) -> UIView?
+    func cardStack(_ cardStack: MGCardStackView, heightForCardFooterAt index: Int) -> CGFloat
+    func cardStack(_ cardStack: MGCardStackView, viewForCardOverlayAt index: Int) -> UIView?
     
-    func card(forItemAtIndex index: Int) -> MGSwipeCard
+}
+
+public extension MGCardStackViewDataSource {
+    
+    func cardStack(_ cardStack: MGCardStackView, viewForCardFooterAt index: Int) -> UIView? { return nil }
+    func cardStack(_ cardStack: MGCardStackView, heightForCardFooterAt index: Int) -> CGFloat { return 100 }
+    func cardStack(_ cardStack: MGCardStackView, viewForCardOverlayAt index: Int) -> UIView? { return nil }
     
 }

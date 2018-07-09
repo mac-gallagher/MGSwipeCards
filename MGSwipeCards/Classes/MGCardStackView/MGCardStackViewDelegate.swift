@@ -8,12 +8,21 @@
 
 import Foundation
 
-@objc public protocol MGCardStackViewDelegate {
+public protocol MGCardStackViewDelegate {
     
-    @objc optional func didSwipeAllCards()
+    func didSwipeAllCards(_ cardStack: MGCardStackView)
+    func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection)
+    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int)
+    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, recognizer: UITapGestureRecognizer)
+    func cardStack(_ cardStack: MGCardStackView, swipeDirectionsForCardAt index: Int) -> [SwipeDirection]
+    //    func shouldDisplayContentBehindFooter()
+}
+
+public extension MGCardStackViewDelegate {
     
-    @objc optional func didEndSwipe(on card: MGSwipeCard, withDirection direction: SwipeDirection)
-    
-    @objc optional func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer)
-    
+    func didSwipeAllCards(_ cardStack: MGCardStackView) {}
+    func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection) {}
+    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int) {}
+    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, recognizer: UITapGestureRecognizer) {}
+    func cardStack(_ cardStack: MGCardStackView, swipeDirectionsForCardAt index: Int) -> [SwipeDirection] { return [.left, .right] }
 }

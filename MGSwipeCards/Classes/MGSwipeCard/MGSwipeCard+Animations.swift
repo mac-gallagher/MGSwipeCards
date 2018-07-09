@@ -14,7 +14,7 @@ internal extension MGSwipeCard {
     func performSwipeAnimation(direction: SwipeDirection, translation: CGPoint, didSwipeFast: Bool = false, randomRotationDirection: Bool = false) {
         removeAllAnimations()
         isUserInteractionEnabled = false
-        overlays[direction]??.alpha = 1
+//        overlays[direction]??.alpha = 1
         
         let duration = swipeAnimationMinimumDuration
         if let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY) {
@@ -23,7 +23,7 @@ internal extension MGSwipeCard {
             translationAnimation.completionBlock = { (_, _) in
                 self.removeFromSuperview()
             }
-            animationLayer.pop_add(translationAnimation, forKey: "swipeTranslationAnimation")
+            layer.pop_add(translationAnimation, forKey: "swipeTranslationAnimation")
         }
         
         if let rotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation) {
@@ -33,7 +33,7 @@ internal extension MGSwipeCard {
             } else {
                 rotationAnimation.toValue = rotationForAnimation(direction: direction) * (2 * maximumRotationAngle)
             }
-            animationLayer.pop_add(rotationAnimation, forKey: "swipeRotationAnimation")
+            layer.pop_add(rotationAnimation, forKey: "swipeRotationAnimation")
         }
     }
     
@@ -77,17 +77,17 @@ internal extension MGSwipeCard {
             resetPositionAnimation.springBounciness = resetAnimationSpringBounciness
             resetPositionAnimation.springSpeed = resetAnimationSpringSpeed
             resetPositionAnimation.completionBlock = { _, _ in
-                self.animationLayer.transform = CATransform3DIdentity
-                self.animationLayer.shouldRasterize = false
+                self.layer.transform = CATransform3DIdentity
+                self.layer.shouldRasterize = false
             }
-            animationLayer.pop_add(resetPositionAnimation, forKey: "resetPositionAnimation")
+            layer.pop_add(resetPositionAnimation, forKey: "resetPositionAnimation")
         }
         
         if let resetRotationAnimation = POPSpringAnimation(propertyNamed: kPOPLayerRotation) {
             resetRotationAnimation.toValue = 0
             resetRotationAnimation.springBounciness = resetAnimationSpringBounciness
             resetRotationAnimation.springSpeed = resetAnimationSpringSpeed
-            animationLayer.pop_add(resetRotationAnimation, forKey: "resetRotationAnimation")
+            layer.pop_add(resetRotationAnimation, forKey: "resetRotationAnimation")
         }
         
         guard let direction = activeDirection else { return }
@@ -95,14 +95,14 @@ internal extension MGSwipeCard {
             resetOverlayAnimation.toValue = 0
             resetOverlayAnimation.springBounciness = resetAnimationSpringBounciness
             resetOverlayAnimation.springSpeed = resetAnimationSpringSpeed
-            overlays[direction]??.pop_add(resetOverlayAnimation, forKey: "resetAlphaAnimation")
+//            overlays[direction]??.pop_add(resetOverlayAnimation, forKey: "resetAlphaAnimation") //put in external animator
         }
     }
     
     func removeAllAnimations() {
-        animationLayer.pop_removeAllAnimations()
-        for overlay in overlays.values {
-            overlay?.pop_removeAllAnimations()
-        }
+        layer.pop_removeAllAnimations()
+//        for overlay in overlays.values {
+//            overlay?.pop_removeAllAnimations()
+//        }
     }
 }

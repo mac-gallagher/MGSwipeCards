@@ -8,77 +8,46 @@
 
 import UIKit
 
-private struct MGSwipeCardProperties {
-    
-    var imageView: UIImageView?
-    
-    var footerView: UIView?
-    
-    var overlays: [SwipeDirection: UIView?]
-    
-}
-
 open class MGSwipeCard: MGSwipeView {
-    
-    //MARK: - Variables
     
     public var delegate: MGSwipeCardDelegate?
     
-    private var properties = MGSwipeCardProperties(imageView: nil, footerView: nil, overlays: [:])
+    public private(set) var contentView: UIView?
+    public private(set) var footerView: UIView?
+    private var overlayContainer: UIView?
+    private var overlays: [SwipeDirection: UIView?] = [:]
     
-    open var imageView: UIImageView? {
-        return properties.imageView
-    }
-    
-    open var footerView: UIView? {
-        return properties.footerView
-    }
-    
-    open var overlays: [SwipeDirection: UIView?] {
-        return properties.overlays
-    }
-    
-    public var footerHeight: CGFloat = 100
-    
-    open override var backgroundColor: UIColor? {
+    public var footerHeight: CGFloat = 100 {
         didSet {
-            backgroundView.backgroundColor = backgroundColor
-            super.backgroundColor = .clear
+            layoutSubviews()
         }
     }
     
-    override open var layer: CALayer {
-        return backgroundView.layer
-    }
+    private var contentViewConstraints: [NSLayoutConstraint] = []
+    private var footerViewConstraints: [NSLayoutConstraint] = []
+    private var overlayContainerConstraints: [NSLayoutConstraint] = []
+    private var overlayConstraintsForDirection: [SwipeDirection: [NSLayoutConstraint]] = [:]
     
-    internal var animationLayer: CALayer {
-        return super.layer
-    }
+    ///The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1600.
+    public var minimumSwipeSpeed: CGFloat = 1600
     
-    private let backgroundView: UIView = {
-        let background = UIView()
-        background.isUserInteractionEnabled = false
-        background.layer.masksToBounds = true
-        return background
-    }()
+    ///The minimum required drag distance on the intended direction to trigger a swipe. Measured from the initial touch point. Defined as a value in the range [0, 2].
+    ///Defaults to 0.5.
+    public var minimumSwipeMargin: CGFloat = 0.5
     
-    private var overlayContainer: UIView?
+    ///The maximum rotation angle of the card. Measured in radians. Defined as a value in the range [0, `CGFloat.pi`/2]. Defaults to `CGFloat.pi`/10.
+    public var maximumRotationAngle: CGFloat = CGFloat.pi / 10
     
-    //MARK: Swipe Recognition Settings
+    ///The minimum duration of the off-screen swipe animation. Measured in seconds. Defaults to 0.8.
+    public var swipeAnimationMinimumDuration: TimeInterval = 0.8
     
-    open var minimumSwipeSpeed: CGFloat = 1600 //in points per second
+    ///The effective bounciness of the swipe spring animation upon a cancelled swipe. Higher values increase spring movement range resulting in more oscillations and springiness.
+    ///Defined as a value in the range [0, 20]. Defaults to 12.
+    public var resetAnimationSpringBounciness: CGFloat = 12.0
     
-    open var minimumSwipeMargin: CGFloat = 0.5 //values defined in [0,2]
-    
-    //MARK: Swipe Animation Settings
-    
-    open var maximumRotationAngle: CGFloat = CGFloat.pi / 10
-    
-    open var swipeAnimationMinimumDuration: TimeInterval = 0.8
-    
-    open var resetAnimationSpringBounciness: CGFloat = 12.0
-    
-    open var resetAnimationSpringSpeed: CGFloat = 20.0
+    ///The effective speed of the spring animation upon a cancelled swipe. Higher values increase the dampening power of the spring. Defined as a value in the range [0, 20].
+    ///Defaults to 20.
+    public var resetAnimationSpringSpeed: CGFloat = 20.0
     
     //MARK: - Initialization
     
@@ -98,26 +67,26 @@ open class MGSwipeCard: MGSwipeView {
     }
     
     private func sharedInit() {
-        super.addSubview(backgroundView)
-        _ = backgroundView.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
         backgroundColor = .black
+        clipsToBounds = true
     }
     
     //MARK: - Layout
     
-    private var footerViewConstraints: [NSLayoutConstraint] = []
-    
-    private var imageViewConstraints: [NSLayoutConstraint] = []
-    
-    private var overlayContainerConstraints: [NSLayoutConstraint] = []
-    
-    private var overlayConstraintsForDirection: [SwipeDirection: [NSLayoutConstraint]] = [:]
-    
     open override func layoutSubviews() {
         super.layoutSubviews()
         layoutFooterView()
-        layoutImageView()
         layoutOverlays()
+    }
+    
+    private func layoutContentView() {
+        guard let content = contentView else { return }
+        NSLayoutConstraint.deactivate(contentViewConstraints)
+        if footerView == nil {
+            contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
+        } else {
+            contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: footerView!.topAnchor, right: rightAnchor)
+        }
     }
     
     private func layoutFooterView() {
@@ -126,26 +95,16 @@ open class MGSwipeCard: MGSwipeView {
         footerViewConstraints = footer.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, heightConstant: footerHeight)
     }
     
-    private func layoutImageView() {
-        guard let imageView = imageView else { return }
-        NSLayoutConstraint.deactivate(imageViewConstraints)
-        if footerView == nil || footerView?.backgroundColor == .clear || footerView?.backgroundColor == nil {
-            imageViewConstraints = imageView.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, bottom: backgroundView.bottomAnchor, right: backgroundView.rightAnchor)
-        } else {
-            imageViewConstraints = imageView.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, bottom: footerView!.bottomAnchor, right: backgroundView.rightAnchor)
-        }
-    }
-    
     private func layoutOverlays() {
         guard let overlayContainer = overlayContainer else { return }
         NSLayoutConstraint.deactivate(overlayContainerConstraints)
-        overlayContainerConstraints = overlayContainer.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, right: backgroundView.rightAnchor)
         if footerView == nil {
-            overlayContainerConstraints = overlayContainer.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, bottom: backgroundView.bottomAnchor, right: backgroundView.rightAnchor)
+            overlayContainerConstraints = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
         } else {
-            overlayContainerConstraints = overlayContainer.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, bottom: footerView!.topAnchor, right: backgroundView.rightAnchor)
+            overlayContainerConstraints = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: footerView!.topAnchor, right: rightAnchor)
         }
         
+        //MODIFY
         for direction in swipeDirections {
             if let overlayConstraints = overlayConstraintsForDirection[direction] {
                 NSLayoutConstraint.deactivate(overlayConstraints)
@@ -154,82 +113,40 @@ open class MGSwipeCard: MGSwipeView {
         }
     }
     
-    open override func addSubview(_ view: UIView) {
-        backgroundView.addSubview(view)
-        updateViewHierarchy()
-    }
-    
-    open override func insertSubview(_ view: UIView, at index: Int) {
-        backgroundView.insertSubview(view, at: index)
-        updateViewHierarchy()
-    }
-    
-    private func updateViewHierarchy() {
-        if let overlayContainer = overlayContainer {
-            backgroundView.bringSubview(toFront: overlayContainer)
-        }
-        if let imageView = imageView {
-            backgroundView.sendSubview(toBack: imageView)
-        }
-    }
-    
     //MARK: - Setters/Getters
+    
+    public func setContentView(_ content: UIView?) {
+        guard let content = content else { return }
+        contentView = content
+        addSubview(contentView!)
+        setNeedsLayout()
+    }
+    
+    public func setFooterView(_ footer: UIView?) {
+        guard let footer = footer else { return }
+        footerView = footer
+        addSubview(footerView!)
+        setNeedsLayout()
+    }
     
     public func setOverlay(forDirection direction: SwipeDirection, overlay: UIView?) {
         guard let overlay = overlay else { return }
         if overlayContainer == nil {
-            overlayContainer?.removeFromSuperview()
             overlayContainer = UIView()
             addSubview(overlayContainer!)
         }
         overlays[direction]??.removeFromSuperview()
-        properties.overlays[direction] = overlay
+        overlays[direction] = overlay
         overlays[direction]??.alpha = 0
         overlayContainer?.addSubview(overlay)
         setNeedsLayout()
     }
     
-    public func setBackgroundImage(_ image: UIImage?) {
-        if imageView == nil {
-            imageView?.removeFromSuperview()
-            properties.imageView = UIImageView()
-            imageView?.contentMode = .scaleAspectFill
-            addSubview(imageView!)
-            setNeedsLayout()
-        }
-        imageView?.image = image
-    }
-    
-    public func setFooterView(_ footer: UIView?) {
-        guard let footer = footer else { return }
-        footerView?.removeFromSuperview()
-        properties.footerView = footer
-        addSubview(footerView!)
-        setNeedsLayout()
+    public func overlay(forDirection direction: SwipeDirection) -> UIView? {
+        return overlays[direction] ?? nil
     }
 
-    open func setShadow(radius: CGFloat, opacity: Float, offset: CGSize = .zero, color: UIColor = UIColor.black) {
-        animationLayer.shadowRadius = radius
-        animationLayer.shadowOpacity = opacity
-        animationLayer.shadowOffset = offset
-        animationLayer.shadowColor = color.cgColor
-    }
-    
     //MARK: - Swipe/Tap Handling
-    
-    public func performSwipe(withDirection direction: SwipeDirection) {
-        if !swipeDirections.contains(direction) { return }
-        isUserInteractionEnabled = false
-        animationLayer.rasterizationScale = UIScreen.main.scale
-        animationLayer.shouldRasterize = true
-        
-        UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut, animations: {
-            self.overlays[direction]??.alpha = 1
-        }) { (_) in
-            self.performSwipeAnimation(direction: direction, translation: direction.point, randomRotationDirection: true)
-            self.delegate?.didSwipe(on: self, withDirection: direction)
-        }
-    }
     
     open override func didTap(on view: MGSwipeView, recognizer: UITapGestureRecognizer) {
         delegate?.didTap(on: self, recognizer: recognizer)
@@ -239,8 +156,8 @@ open class MGSwipeCard: MGSwipeView {
     
     open override func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
         removeAllAnimations()
-        animationLayer.rasterizationScale = UIScreen.main.scale
-        animationLayer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.main.scale
+        layer.shouldRasterize = true
         let touchPoint = recognizer.location(in: self)
         if touchPoint.y < bounds.height / 2 {
             rotationDirectionY = 1
@@ -259,7 +176,7 @@ open class MGSwipeCard: MGSwipeView {
         let rotationAngle = max(-CGFloat.pi/2, min(rotationDirectionY * abs(maximumRotationAngle) * rotationStrength, CGFloat.pi/2))
         transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngle))
         
-        animationLayer.setAffineTransform(transform)
+        layer.setAffineTransform(transform)
         
         for direction in swipeDirections {
             overlays[direction]??.alpha = alphaForOverlay(withDirection: direction)
@@ -270,22 +187,37 @@ open class MGSwipeCard: MGSwipeView {
     private func alphaForOverlay(withDirection direction: SwipeDirection) -> CGFloat {
         if direction != activeDirection { return 0 }
         let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
-            return percentage + swipePercentage(onDirection: direction)
+            return percentage + (swipePercentage[direction] ?? 0)
         }
-        return min((2 * swipePercentage(onDirection: direction) - totalPercentage)/minimumSwipeMargin, 1)
+        return min((2 * (swipePercentage[direction] ?? 0) - totalPercentage)/minimumSwipeMargin, 1)
     }
 
     open override func endSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
         guard let direction = activeDirection, let superview = superview else { return }
-        if swipeSpeed(onDirection: direction) >= minimumSwipeSpeed {
+        if (swipeSpeed[direction] ?? 0) >= minimumSwipeSpeed {
             performSwipeAnimation(direction: direction, translation: panGestureRecognizer.translation(in: superview), didSwipeFast: true)
-            delegate?.didSwipe(on: self, withDirection: direction)
-        } else if swipePercentage(onDirection: direction) >= minimumSwipeMargin {
+            delegate?.didSwipe(on: self, with: direction)
+        } else if (swipePercentage[direction] ?? 0) >= minimumSwipeMargin {
             performSwipeAnimation(direction: direction, translation: panGestureRecognizer.translation(in: superview))
-            delegate?.didSwipe(on: self, withDirection: direction)
+            delegate?.didSwipe(on: self, with: direction)
         } else {
             resetCardAnimation()
             delegate?.didCancelSwipe(on: self)
+        }
+    }
+    
+    //Move this to animator and card stack. Make private
+    public func performSwipe(withDirection direction: SwipeDirection) {
+        if !swipeDirections.contains(direction) { return }
+        isUserInteractionEnabled = false
+        layer.rasterizationScale = UIScreen.main.scale
+        layer.shouldRasterize = true
+        
+        UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut, animations: {
+            self.overlays[direction]??.alpha = 1
+        }) { (_) in
+            self.performSwipeAnimation(direction: direction, translation: direction.point, randomRotationDirection: true)
+            self.delegate?.didSwipe(on: self, with: direction)
         }
     }
     

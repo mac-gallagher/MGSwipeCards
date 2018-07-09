@@ -11,7 +11,11 @@ import MGSwipeCards
 
 class SampleMGSwipeCard: MGSwipeCard {
     
-    var model: SampleMGSwipeCardModel?
+    var model: SampleMGSwipeCardModel? {
+        didSet {
+            configureModel()
+        }
+    }
     
     var gradientLayer: CAGradientLayer?
     
@@ -33,8 +37,15 @@ class SampleMGSwipeCard: MGSwipeCard {
     func initialize() {
         layer.cornerRadius = 10
         swipeDirections = [.left, .up, .right]
-        setShadow(radius: 8, opacity: 0.2, offset: CGSize(width: 0, height: 2), color: .black)
+//        setShadow(radius: 8, opacity: 0.2, offset: CGSize(width: 0, height: 2), color: .black)
         configureOverlays()
+    }
+    
+    private func configureModel() {
+        guard let model = model else { return }
+        let footer = SampleCardFooterView(title: "\(model.name), \(model.age)", subtitle: model.occupation)
+        setFooterView(footer)
+        footerHeight = footer.label.intrinsicContentSize.height + 20
     }
     
     override func layoutSubviews() {

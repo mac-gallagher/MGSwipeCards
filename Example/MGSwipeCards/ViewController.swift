@@ -14,8 +14,6 @@ class ViewController: UIViewController {
     
     //MARK: - Subviews
     
-    var cards = [MGSwipeCard]()
-    
     let cardStack = MGCardStackView()
     
     var backgroundGradient: UIView?
@@ -67,19 +65,16 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .white
         configureNavigationBar()
-        for model in cardModels {
-            initializeCard(withModel: model)
-        }
         initializeButtonStackView()
         setupButtons()
         initializeCardStackView()
     }
     
     func configureNavigationBar() {
-        let leftButton = UIBarButtonItem(title: "Shift Left", style: .plain, target: self, action: #selector(handleShift))
+        let leftButton = UIBarButtonItem(title: "Shift Back", style: .plain, target: self, action: #selector(handleShift))
         leftButton.tintColor = .lightGray
         leftButton.tag = 1
-        let rightButton = UIBarButtonItem(title: "Shift Right", style: .plain, target: self, action: #selector(handleShift))
+        let rightButton = UIBarButtonItem(title: "Shift Forward", style: .plain, target: self, action: #selector(handleShift))
         rightButton.tintColor = .lightGray
         rightButton.tag = 2
         navigationItem.leftBarButtonItem = leftButton
@@ -93,16 +88,6 @@ class ViewController: UIViewController {
         } else {
             cardStack.shift()
         }
-    }
-    
-    func initializeCard(withModel model: SampleMGSwipeCardModel) {
-        let card = SampleMGSwipeCard()
-        card.model = model
-        card.setBackgroundImage(model.image)
-        let footer = SampleCardFooterView(title: "\(model.name), \(model.age)", subtitle: model.occupation)
-        card.setFooterView(footer)
-        card.footerHeight = footer.label.intrinsicContentSize.height + 20
-        cards.append(card)
     }
     
     func initializeButtonStackView() {
@@ -184,31 +169,48 @@ class ViewController: UIViewController {
     
 }
 
-//MARK: - Data Source + Delegate Methods
+//MARK: - Data Source
 
-extension ViewController: MGCardStackViewDataSource, MGCardStackViewDelegate {
+extension ViewController: MGCardStackViewDataSource {
     
-    func numberOfCards() -> Int {
-        return cards.count
+    func numberOfCards(in cardStack: MGCardStackView) -> Int {
+        return cardModels.count
     }
     
-    func card(forItemAtIndex index: Int) -> MGSwipeCard {
-        return cards[index]
+    func cardStack(_ cardStack: MGCardStackView, viewforCardAt index: Int) -> UIView? {
+        return UIView()
     }
     
-    func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer) {
-        print("Tapped on top card")
+    func cardStack(_ cardStack: MGCardStackView, viewForCardFooterAt index: Int) -> UIView? {
+        let footer = UIView()
+        if index % 2 == 0 {
+            footer.backgroundColor = .blue
+        } else {
+            footer.backgroundColor = .red
+        }
+        return footer
     }
     
-    func didSwipeAllCards() {
-        print("Swiped all cards!")
-    }
-
-    func didEndSwipe(on card: MGSwipeCard, withDirection direction: SwipeDirection) {
-        print("Swiped \(direction.string) on \((card as! SampleMGSwipeCard).model?.name ?? "")")
+    func cardStack(_ cardStack: MGCardStackView, heightForCardFooterAt index: Int) -> CGFloat {
+        return 150
     }
     
 }
+
+//MARK: - Delegate
+
+extension ViewController: MGCardStackViewDelegate {
+ 
+    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, recognizer: UITapGestureRecognizer) {
+        print("tapped, location \(recognizer.location(in: cardStack))")
+    }
+    
+    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int) {
+        print("tapped")
+    }
+    
+}
+
 
 //MARK: - Card Models
 

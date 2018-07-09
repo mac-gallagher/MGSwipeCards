@@ -8,75 +8,68 @@
 
 import UIKit
 
-private struct MGSwipeViewProperties {
-
-    let panGestureRecognizer: UIPanGestureRecognizer
-
-    let tapGestureRecognizer: UITapGestureRecognizer
-    
-}
-
 open class MGSwipeView: UIView {
     
-    //MARK: Variables
+    public var swipeDirections = SwipeDirection.allDirections
     
-    private lazy var properties = MGSwipeViewProperties(panGestureRecognizer: UIPanGestureRecognizer(target: self, action: #selector(handlePan)),
-                                                        tapGestureRecognizer: UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+    public var swipeSpeed: [SwipeDirection: CGFloat] {
+        var dict = [SwipeDirection: CGFloat]()
+        for direction in SwipeDirection.allDirections {
+            dict[direction] = calculateSwipeSpeed(on: direction)
+        }
+        return dict
+    }
     
-    open var swipeDirections = SwipeDirection.allDirections
+    public var swipePercentage: [SwipeDirection: CGFloat] {
+        var dict = [SwipeDirection: CGFloat]()
+        for direction in SwipeDirection.allDirections {
+            dict[direction] = calculateSwipePercentage(on: direction)
+        }
+        return dict
+    }
     
     public var activeDirection: SwipeDirection? {
-        let translation = panGestureRecognizer.translation(in: superview)
-        let normalizedTranslation = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
-        return swipeDirections.reduce((distance: CGFloat.infinity, direction: nil), { closest, direction -> (CGFloat, SwipeDirection?) in
-            let distance = direction.point.distance(to: normalizedTranslation)
-            if distance < closest.distance {
-                return (distance, direction)
+        return swipeDirections.reduce((highestPercentage: 0, direction: nil), { (percentage, direction) -> (CGFloat, SwipeDirection?) in
+            if let swipePercentage = swipePercentage[direction], swipePercentage > percentage.highestPercentage {
+                return (swipePercentage, direction)
             }
-            return closest
+            return percentage
         }).direction
     }
     
-    public var panGestureRecognizer: UIPanGestureRecognizer {
-        return properties.panGestureRecognizer
-    }
-
-    public var tapGestureRecognizer: UITapGestureRecognizer {
-        return properties.tapGestureRecognizer
-    }
+    public private(set) lazy var panGestureRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+    public private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
     
     //MARK: - Initialization
     
     public init() {
         super.init(frame: .zero)
-        sharedInit()
+        initializeGestureRecognizers()
     }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        sharedInit()
+        initializeGestureRecognizers()
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        sharedInit()
+        initializeGestureRecognizers()
     }
     
-    private func sharedInit() {
+    private func initializeGestureRecognizers() {
         addGestureRecognizer(panGestureRecognizer)
         addGestureRecognizer(tapGestureRecognizer)
     }
     
     //MARK: - Swipe/Tap Handling
     
-    public func swipeSpeed(onDirection direction: SwipeDirection) -> CGFloat {
-        if !swipeDirections.contains(direction) { return 0 }
+    private func calculateSwipeSpeed(on direction: SwipeDirection) -> CGFloat {
         let velocity = panGestureRecognizer.velocity(in: superview)
         return abs(direction.point.dotProduct(with: velocity))
     }
     
-    public func swipePercentage(onDirection direction: SwipeDirection) -> CGFloat {
-        if !swipeDirections.contains(direction) { return 0 }
+    private func calculateSwipePercentage(on direction: SwipeDirection) -> CGFloat {
         let translation = panGestureRecognizer.translation(in: superview)
         let normalizedTranslation = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
         let percentage = normalizedTranslation.dotProduct(with: direction.point)

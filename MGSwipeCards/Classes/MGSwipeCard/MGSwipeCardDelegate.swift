@@ -11,13 +11,9 @@ import Foundation
 public protocol MGSwipeCardDelegate {
     
     func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer)
-    
     func beginSwiping(on card: MGSwipeCard)
-    
     func continueSwiping(on card: MGSwipeCard)
-    
-    func didSwipe(on card: MGSwipeCard, withDirection direction: SwipeDirection)
-    
+    func didSwipe(on card: MGSwipeCard, with direction: SwipeDirection)
     func didCancelSwipe(on card: MGSwipeCard)
     
 }

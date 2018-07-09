@@ -10,9 +10,13 @@ import UIKit
 
 open class MGCardStackView: UIView {
     
-    //MARK: - Variables
-    
     open var delegate: MGCardStackViewDelegate?
+    
+    public var dataSource: MGCardStackViewDataSource? {
+        didSet {
+            reloadData()
+        }
+    }
     
     open var horizontalInset: CGFloat = 10.0 {
         didSet {
@@ -26,22 +30,14 @@ open class MGCardStackView: UIView {
         }
     }
     
-    public var dataSource: MGCardStackViewDataSource? {
-        didSet {
-            reloadData()
-        }
-    }
-    
+    private var currentCardIndex = 0
+    private var numberOfCards = 0
     private var visibleCards: [MGSwipeCard] = []
-    
     private var remainingIndices: [Int] = [] //non-swiped card indices from data source
-    
     private var stateArray: [[Int]] = []
-    
     private var cardStack = UIView()
     
     private static var numberOfVisibleCards: Int = 3
-    
     private static var cardScaleFactor: CGFloat = 0.95
     
     //MARK: - Initialization
@@ -85,23 +81,37 @@ open class MGCardStackView: UIView {
     
     public func reloadData() {
         guard let dataSource = dataSource else { return }
-        let numberOfCards = dataSource.numberOfCards()
+        numberOfCards = dataSource.numberOfCards(in: self)
+        currentCardIndex = 0
         stateArray = []
         let freshState = Array(0..<numberOfCards)
         loadState(freshState)
     }
     
     private func loadState(_ state: [Int]) {
-        guard let dataSource = dataSource else { return }
         for card in visibleCards {
             card.removeFromSuperview()
         }
         visibleCards = []
         remainingIndices = state
         for index in 0..<min(remainingIndices.count, MGCardStackView.numberOfVisibleCards) {
-            let card = dataSource.card(forItemAtIndex: remainingIndices[index])
-            insertCard(card: card, at: index)
+            if let card = reloadCard(at: remainingIndices[index]) {
+                insertCard(card: card, at: remainingIndices[index])
+                currentCardIndex = remainingIndices[index]
+            }
         }
+    }
+    
+    private func reloadCard(at index: Int) -> MGSwipeCard? {
+        guard let dataSource = dataSource else { return nil }
+        let card = MGSwipeCard()
+        card.setContentView(dataSource.cardStack(self, viewforCardAt: index))
+        card.footerHeight = dataSource.cardStack(self, heightForCardFooterAt: index)
+        card.setFooterView(dataSource.cardStack(self, viewForCardFooterAt: index))
+        for direction in card.swipeDirections {
+            card.setOverlay(forDirection: direction, overlay: dataSource.cardStack(self, viewForCardOverlayAt: index))
+        }
+        return card
     }
     
     private func insertCard(card: MGSwipeCard, at index: Int) {
@@ -117,22 +127,22 @@ open class MGCardStackView: UIView {
     public func shift(withDistance distance: Int = 1) {
         if distance == 0 || visibleCards.count <= 1 { return }
 
-        guard let dataSource = dataSource else { return }
-        
         if distance > 0 {
             visibleCards.first?.removeFromSuperview()
             visibleCards.removeFirst()
             remainingIndices.shiftInPlace()
+            currentCardIndex = remainingIndices[0]
             let bottomCardIndex = remainingIndices[visibleCards.count]
-            let card = dataSource.card(forItemAtIndex: bottomCardIndex)
-            insertCard(card: card, at: visibleCards.count)
+            let card = reloadCard(at: bottomCardIndex)
+            insertCard(card: card!, at: visibleCards.count)
             setFrame(forCard: visibleCards[0], at: 0)
         } else {
             visibleCards.last?.removeFromSuperview()
             visibleCards.removeLast()
             remainingIndices.shiftInPlace(withDistance: -1)
-            let card = dataSource.card(forItemAtIndex: remainingIndices[0])
-            insertCard(card: card, at: 0)
+            currentCardIndex = remainingIndices[0]
+            let card = reloadCard(at: remainingIndices[0])
+            insertCard(card: card!, at: 0)
             setFrame(forCard: visibleCards[1], at: 1)
         }
     }
@@ -148,28 +158,29 @@ open class MGCardStackView: UIView {
     private var undoAnimationIsActive = false
     
     public func undoLastSwipe() -> MGSwipeCard? {
-        if stateArray.count <= 0 { return nil }
-        if undoAnimationIsActive { return nil }
-        
-        undoAnimationIsActive = true
-        
-        for card in visibleCards {
-            card.transform = CGAffineTransform.identity
-        }
-        
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
-            self.loadState(self.stateArray.removeLast())
-        }) { (_) in
-
-            self.undoAnimationIsActive = false
-
-            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
-                for direction in self.visibleCards[0].swipeDirections {
-                    self.visibleCards[0].overlays[direction]??.alpha = 0
-                }
-            }, completion: nil)
-        }
-        return visibleCards[0]
+//        if stateArray.count <= 0 { return nil }
+//        if undoAnimationIsActive { return nil }
+//
+//        undoAnimationIsActive = true
+//
+//        for card in visibleCards {
+//            card.transform = CGAffineTransform.identity
+//        }
+//
+//        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+//            self.loadState(self.stateArray.removeLast())
+//        }) { (_) in
+//
+//            self.undoAnimationIsActive = false
+//
+//            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+//                for direction in self.visibleCards[0].swipeDirections {
+////                    self.visibleCards[0].overlays[direction]??.alpha = 0
+//                }
+//            }, completion: nil)
+//        }
+//        return visibleCards[0]
+        return nil
     }
     
 }
@@ -179,7 +190,8 @@ open class MGCardStackView: UIView {
 extension MGCardStackView: MGSwipeCardDelegate {
     
     public func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer) {
-        delegate?.didTap?(on: card, recognizer: recognizer)
+        delegate?.cardStack(self, didSelectCardAt: currentCardIndex)
+        delegate?.cardStack(self, didSelectCardAt: currentCardIndex, recognizer: recognizer)
     }
     
     public func beginSwiping(on card: MGSwipeCard) {
@@ -197,24 +209,24 @@ extension MGCardStackView: MGSwipeCardDelegate {
         nextCard.transform = CGAffineTransform(scaleX: scaleFactor, y: scaleFactor)
     }
     
-    public func didSwipe(on card: MGSwipeCard, withDirection direction: SwipeDirection) {
+    public func didSwipe(on card: MGSwipeCard, with direction: SwipeDirection) {
         stateArray.append(remainingIndices)
         remainingIndices.removeFirst()
         visibleCards.remove(at: 0)
-        delegate?.didEndSwipe?(on: card, withDirection: direction)
-
+        delegate?.cardStack(self, didSwipeCardAt: currentCardIndex, with: direction)
+        
         if remainingIndices.count == 0 {
-            delegate?.didSwipeAllCards?()
+            delegate?.didSwipeAllCards(self)
             return
         }
 
         //load next card
         
-        guard let dataSource = dataSource else { return }
+        currentCardIndex = remainingIndices[0]
         if remainingIndices.count - visibleCards.count > 0 {
             let bottomCardIndex = remainingIndices[visibleCards.count]
-            let card = dataSource.card(forItemAtIndex: bottomCardIndex)
-            insertCard(card: card, at: visibleCards.count)
+            let card = reloadCard(at: bottomCardIndex)
+            insertCard(card: card!, at: visibleCards.count)
         }
 
         UIView.animate(withDuration: 0.2, delay: 0.1, options: .curveEaseOut, animations: {
