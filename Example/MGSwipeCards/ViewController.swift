@@ -153,15 +153,15 @@ class ViewController: UIViewController {
         case 1:
             let card = cardStack.undoLastSwipe()
             if card != nil {
-                let name = (card as! SampleMGSwipeCard).model?.name ?? ""
+                let name = cardModels[cardStack.currentCardIndex]
                 print("Undo swipe on \(name)")
             }
         case 2:
-            cardStack.swipe(withDirection: .left)
+            cardStack.swipe(.left)
         case 3:
-            cardStack.swipe(withDirection: .up)
+            cardStack.swipe(.up)
         case 4:
-            cardStack.swipe(withDirection: .right)
+            cardStack.swipe(.right)
         default:
             break
         }
@@ -177,22 +177,44 @@ extension ViewController: MGCardStackViewDataSource {
         return cardModels.count
     }
     
+    //wrap image in shadowView
     func cardStack(_ cardStack: MGCardStackView, viewforCardAt index: Int) -> UIView? {
-        return UIView()
+        return SampleCardView(image: cardModels[index].image)
     }
     
     func cardStack(_ cardStack: MGCardStackView, viewForCardFooterAt index: Int) -> UIView? {
-        let footer = UIView()
-        if index % 2 == 0 {
-            footer.backgroundColor = .blue
-        } else {
-            footer.backgroundColor = .red
-        }
+        let footer = SampleCardFooterView(title: "\(cardModels[index].name), \(cardModels[index].age)", subtitle: cardModels[index].occupation)
         return footer
     }
     
     func cardStack(_ cardStack: MGCardStackView, heightForCardFooterAt index: Int) -> CGFloat {
-        return 150
+        return 100
+    }
+    
+    func cardStack(_ cardStack: MGCardStackView, viewForCardOverlayAt index: Int, for direction: SwipeDirection) -> UIView? {
+        switch direction {
+        case .left:
+            let leftView = UIView()
+            let leftOverlay = SampleCardOverlay(title: "NOPE", color: .sampleRed, rotationAngle: CGFloat.pi/10)
+            leftView.addSubview(leftOverlay)
+            leftOverlay.anchor(top: leftView.topAnchor, left: nil, bottom: nil, right: leftView.rightAnchor, paddingTop: 30, paddingRight: 14)
+            return leftView
+        case .up:
+            let upView = UIView()
+            let upOverlay = SampleCardOverlay(title: "LOVE", color: .sampleBlue, rotationAngle: -CGFloat.pi/20)
+            upView.addSubview(upOverlay)
+            upOverlay.anchor(top: nil, left: nil, bottom: upView.bottomAnchor, right: nil, paddingBottom: 20)
+            upOverlay.centerXAnchor.constraint(equalTo: upView.centerXAnchor).isActive = true
+            return upView
+        case .right:
+            let rightView = UIView()
+            let rightOverlay = SampleCardOverlay(title: "LIKE", color: .sampleGreen, rotationAngle: -CGFloat.pi/10)
+            rightView.addSubview(rightOverlay)
+            rightOverlay.anchor(top: rightView.topAnchor, left: rightView.leftAnchor, bottom: nil, right: nil, paddingTop: 26, paddingLeft: 14)
+            return rightView
+        case .down:
+            return nil
+        }
     }
     
 }
@@ -200,13 +222,21 @@ extension ViewController: MGCardStackViewDataSource {
 //MARK: - Delegate
 
 extension ViewController: MGCardStackViewDelegate {
- 
-    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, recognizer: UITapGestureRecognizer) {
-        print("tapped, location \(recognizer.location(in: cardStack))")
+    
+    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, touchPoint: CGPoint) {
+        print("tapped, location \(touchPoint)")
     }
     
     func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int) {
         print("tapped")
+    }
+    
+    func cardStack(_ cardStack: MGCardStackView, allowedSwipeDirectionsForCardAt index: Int) -> [SwipeDirection] {
+        return [.left, .up, .right]
+    }
+    
+    func cardStack(_ cardStack: MGCardStackView, shouldMakeCardFooterTransparentAt index: Int) -> Bool {
+        return true
     }
     
 }
@@ -216,16 +246,16 @@ extension ViewController: MGCardStackViewDelegate {
 
 extension ViewController {
     
-    var cardModels: [SampleMGSwipeCardModel] {
-        var models = [SampleMGSwipeCardModel]()
+    var cardModels: [SampleCardModel] {
+        var models = [SampleCardModel]()
         
-        let michelle = SampleMGSwipeCardModel(name: "Michelle", age: 26, occupation: "Graphic Designer", image:#imageLiteral(resourceName: "michelle"))
-        let joshua = SampleMGSwipeCardModel(name: "Joshua", age: 27, occupation: "Business Services Sales Representative", image: #imageLiteral(resourceName: "joshua"))
-        let daiane = SampleMGSwipeCardModel(name: "Daiane", age: 23, occupation: "Graduate Student", image: #imageLiteral(resourceName: "daiane"))
-        let andrew = SampleMGSwipeCardModel(name: "Andrew", age: 26, occupation: nil, image: #imageLiteral(resourceName: "andrew"))
-        let julian = SampleMGSwipeCardModel(name: "Julian", age: 25, occupation: "Model/Photographer", image: #imageLiteral(resourceName: "julian"))
-        let bailey = SampleMGSwipeCardModel(name: "Bailey", age: 25, occupation: "Software Engineer", image: #imageLiteral(resourceName: "bailey"))
-        let rachel = SampleMGSwipeCardModel(name: "Rachel", age: 27, occupation: "Interior Designer", image: #imageLiteral(resourceName: "rachel"))
+        let michelle = SampleCardModel(name: "Michelle", age: 26, occupation: "Graphic Designer", image:#imageLiteral(resourceName: "michelle"))
+        let joshua = SampleCardModel(name: "Joshua", age: 27, occupation: "Business Services Sales Representative", image: #imageLiteral(resourceName: "joshua"))
+        let daiane = SampleCardModel(name: "Daiane", age: 23, occupation: "Graduate Student", image: #imageLiteral(resourceName: "daiane"))
+        let andrew = SampleCardModel(name: "Andrew", age: 26, occupation: nil, image: #imageLiteral(resourceName: "andrew"))
+        let julian = SampleCardModel(name: "Julian", age: 25, occupation: "Model/Photographer", image: #imageLiteral(resourceName: "julian"))
+        let bailey = SampleCardModel(name: "Bailey", age: 25, occupation: "Software Engineer", image: #imageLiteral(resourceName: "bailey"))
+        let rachel = SampleCardModel(name: "Rachel", age: 27, occupation: "Interior Designer", image: #imageLiteral(resourceName: "rachel"))
         
         models.append(michelle)
         models.append(joshua)

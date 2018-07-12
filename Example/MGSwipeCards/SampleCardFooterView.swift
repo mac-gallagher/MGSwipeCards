@@ -11,20 +11,30 @@ import UIKit
 class SampleCardFooterView: UIView {
     
     var title: String?
-    
     var subtitle: String?
-    
     var label = UILabel()
+    
+    private var gradientLayer: CAGradientLayer?
+    
+    //MARK: - Initialization
     
     init(title: String?, subtitle: String?) {
         super.init(frame: CGRect.zero)
         self.title = title
         self.subtitle = subtitle
-        initializeLabel()
+        sharedInit()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        sharedInit()
+    }
+    
+    private func sharedInit() {
+        backgroundColor = .clear
+        layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        layer.cornerRadius = 10 //only do bottom corners
+        clipsToBounds = true
         initializeLabel()
     }
     
@@ -41,13 +51,24 @@ class SampleCardFooterView: UIView {
         }
         
         label.attributedText = attributedText
-
         addSubview(label)
     }
+    
+    //MARK: - Layout
     
     override func layoutSubviews() {
         let padding: CGFloat = 20
         label.frame = CGRect(x: padding, y: bounds.height - label.intrinsicContentSize.height - padding, width: bounds.width - 2 * padding, height: label.intrinsicContentSize.height)
+        configureGradientLayer()
+    }
+    
+    private func configureGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        gradientLayer?.frame = bounds
+        gradientLayer?.colors = [UIColor.black.withAlphaComponent(0.01).cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
+        gradientLayer?.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer?.endPoint = CGPoint(x: 0.5, y: 1)
+        layer.insertSublayer(gradientLayer!, at: 0)
     }
     
 }

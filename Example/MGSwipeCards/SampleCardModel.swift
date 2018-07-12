@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct SampleMGSwipeCardModel {
+struct SampleCardModel {
     
     let name: String
     let age: Int

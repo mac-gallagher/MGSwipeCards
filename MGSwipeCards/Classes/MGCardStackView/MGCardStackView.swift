@@ -30,7 +30,7 @@ open class MGCardStackView: UIView {
         }
     }
     
-    private var currentCardIndex = 0
+    public private(set) var currentCardIndex = 0
     private var numberOfCards = 0
     private var visibleCards: [MGSwipeCard] = []
     private var remainingIndices: [Int] = [] //non-swiped card indices from data source
@@ -105,17 +105,20 @@ open class MGCardStackView: UIView {
     private func reloadCard(at index: Int) -> MGSwipeCard? {
         guard let dataSource = dataSource else { return nil }
         let card = MGSwipeCard()
-        card.setContentView(dataSource.cardStack(self, viewforCardAt: index))
         card.footerHeight = dataSource.cardStack(self, heightForCardFooterAt: index)
         card.setFooterView(dataSource.cardStack(self, viewForCardFooterAt: index))
+        card.footerIsTransparent = delegate?.cardStack(self, shouldMakeCardFooterTransparentAt: index) ?? false
+        card.setContentView(dataSource.cardStack(self, viewforCardAt: index))
         for direction in card.swipeDirections {
-            card.setOverlay(forDirection: direction, overlay: dataSource.cardStack(self, viewForCardOverlayAt: index))
+            card.setOverlay(forDirection: direction, overlay: dataSource.cardStack(self, viewForCardOverlayAt: index, for: direction))
         }
+        card.swipeDirections = delegate?.cardStack(self, allowedSwipeDirectionsForCardAt: index) ?? [.left, .right]
+        card.options = delegate?.cardStack(self, optionsForCardAt: index) ?? MGSwipeCardOptions()
         return card
     }
     
     private func insertCard(card: MGSwipeCard, at index: Int) {
-        card.removeAllAnimations()
+//        card.removeAllAnimations()
         card.delegate = self
         cardStack.insertSubview(card, at: visibleCards.count - index)
         visibleCards.insert(card, at: index)
@@ -147,16 +150,17 @@ open class MGCardStackView: UIView {
         }
     }
     
-    public func swipe(withDirection direction: SwipeDirection) {
+    public func swipe(_ direction: SwipeDirection) {
         if visibleCards.count <= 0 { return }
         let topCard = visibleCards[0]
         if topCard.isUserInteractionEnabled {
-            topCard.performSwipe(withDirection: direction)
+            topCard.swipe(withDirection: direction)
         }
     }
     
     private var undoAnimationIsActive = false
     
+    //undoLastAction?
     public func undoLastSwipe() -> MGSwipeCard? {
 //        if stateArray.count <= 0 { return nil }
 //        if undoAnimationIsActive { return nil }
@@ -167,6 +171,8 @@ open class MGCardStackView: UIView {
 //            card.transform = CGAffineTransform.identity
 //        }
 //
+//        loadState(self.stateArray.removeLast())
+//
 //        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
 //            self.loadState(self.stateArray.removeLast())
 //        }) { (_) in
@@ -175,13 +181,25 @@ open class MGCardStackView: UIView {
 //
 //            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
 //                for direction in self.visibleCards[0].swipeDirections {
-////                    self.visibleCards[0].overlays[direction]??.alpha = 0
+//                    self.visibleCards[0].overlay(forDirection: direction)?.alpha = 0
 //                }
 //            }, completion: nil)
 //        }
+//        visibleCards[0].resetPosition()
 //        return visibleCards[0]
         return nil
     }
+ 
+    private func removeCards(_ cards: [MGSwipeCard]) {
+        cards.forEach { card in
+            card.delegate = nil
+            card.removeFromSuperview()
+        }
+    }
+    
+    //MARK: - Setters/Getters
+    
+    //func viewForCard
     
 }
 
@@ -189,16 +207,16 @@ open class MGCardStackView: UIView {
 
 extension MGCardStackView: MGSwipeCardDelegate {
     
-    public func didTap(on card: MGSwipeCard, recognizer: UITapGestureRecognizer) {
-        delegate?.cardStack(self, didSelectCardAt: currentCardIndex)
-        delegate?.cardStack(self, didSelectCardAt: currentCardIndex, recognizer: recognizer)
+    public func card(didTap card: MGSwipeCard, location: CGPoint) {
+        delegate?.cardStack(self, didSelectCardAt: currentCardIndex, touchPoint: location)
     }
     
-    public func beginSwiping(on card: MGSwipeCard) {
+    public func card(didBeginSwipe card: MGSwipeCard) {
+        //remove all animations
     }
     
-    //continuously animate loading of next card
-    public func continueSwiping(on card: MGSwipeCard) {
+    //load background card
+    public func card(didContinueSwipe card: MGSwipeCard) {
         if visibleCards.count <= 1 { return }
         let topCard = visibleCards[0]
         let translation = topCard.panGestureRecognizer.translation(in: cardStack)
@@ -209,7 +227,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
         nextCard.transform = CGAffineTransform(scaleX: scaleFactor, y: scaleFactor)
     }
     
-    public func didSwipe(on card: MGSwipeCard, with direction: SwipeDirection) {
+    public func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection) {
         stateArray.append(remainingIndices)
         remainingIndices.removeFirst()
         visibleCards.remove(at: 0)
@@ -219,7 +237,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
             delegate?.didSwipeAllCards(self)
             return
         }
-
+        
         //load next card
         
         currentCardIndex = remainingIndices[0]
@@ -228,7 +246,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
             let card = reloadCard(at: bottomCardIndex)
             insertCard(card: card!, at: visibleCards.count)
         }
-
+        
         UIView.animate(withDuration: 0.2, delay: 0.1, options: .curveEaseOut, animations: {
             self.visibleCards[0].transform = CGAffineTransform.identity
         }) { _ in
@@ -237,7 +255,9 @@ extension MGCardStackView: MGSwipeCardDelegate {
 
     }
     
-    public func didCancelSwipe(on card: MGSwipeCard) {
+    public func card(didCancelSwipe card: MGSwipeCard) {
+        //call animator
+        //should rasterize is false in completion
         if visibleCards.count <= 1 { return }
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
             self.setFrame(forCard: self.visibleCards[1], at: 1)

@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		61F3FA4ABE2F71849B7796BD /* Pods_MGSwipeCards_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD00FB837C1D5D4BC52105CA /* Pods_MGSwipeCards_Example.framework */; };
+		AD32F80920F51D8C000D2268 /* SampleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD32F80820F51D8C000D2268 /* SampleCardView.swift */; };
 		ADBB332E20E9D799006A16C4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332520E9D799006A16C4 /* ViewController.swift */; };
 		ADBB332F20E9D799006A16C4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */; };
-		ADBB333020E9D799006A16C4 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332720E9D799006A16C4 /* Utilities.swift */; };
-		ADBB333120E9D799006A16C4 /* SampleOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332820E9D799006A16C4 /* SampleOverlay.swift */; };
-		ADBB333220E9D799006A16C4 /* SampleMGSwipeCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332920E9D799006A16C4 /* SampleMGSwipeCardModel.swift */; };
-		ADBB333320E9D799006A16C4 /* SampleMGSwipeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332A20E9D799006A16C4 /* SampleMGSwipeCard.swift */; };
+		ADBB333020E9D799006A16C4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332720E9D799006A16C4 /* Extensions.swift */; };
+		ADBB333120E9D799006A16C4 /* SampleCardOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332820E9D799006A16C4 /* SampleCardOverlay.swift */; };
+		ADBB333220E9D799006A16C4 /* SampleCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332920E9D799006A16C4 /* SampleCardModel.swift */; };
 		ADBB333420E9D799006A16C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332B20E9D799006A16C4 /* AppDelegate.swift */; };
 		ADBB333520E9D799006A16C4 /* SampleCardFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332C20E9D799006A16C4 /* SampleCardFooterView.swift */; };
 		ADBB333920E9D7FE006A16C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADBB333820E9D7FE006A16C4 /* Assets.xcassets */; };
@@ -23,13 +23,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AD32F80820F51D8C000D2268 /* SampleCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardView.swift; sourceTree = "<group>"; };
 		ADBB330420E9D73B006A16C4 /* MGSwipeCards_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MGSwipeCards_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADBB332520E9D799006A16C4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		ADBB332720E9D799006A16C4 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		ADBB332820E9D799006A16C4 /* SampleOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleOverlay.swift; sourceTree = "<group>"; };
-		ADBB332920E9D799006A16C4 /* SampleMGSwipeCardModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleMGSwipeCardModel.swift; sourceTree = "<group>"; };
-		ADBB332A20E9D799006A16C4 /* SampleMGSwipeCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleMGSwipeCard.swift; sourceTree = "<group>"; };
+		ADBB332720E9D799006A16C4 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		ADBB332820E9D799006A16C4 /* SampleCardOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleCardOverlay.swift; sourceTree = "<group>"; };
+		ADBB332920E9D799006A16C4 /* SampleCardModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleCardModel.swift; sourceTree = "<group>"; };
 		ADBB332B20E9D799006A16C4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ADBB332C20E9D799006A16C4 /* SampleCardFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleCardFooterView.swift; sourceTree = "<group>"; };
 		ADBB332D20E9D799006A16C4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -95,11 +95,11 @@
 			children = (
 				ADBB332B20E9D799006A16C4 /* AppDelegate.swift */,
 				ADBB332C20E9D799006A16C4 /* SampleCardFooterView.swift */,
-				ADBB332920E9D799006A16C4 /* SampleMGSwipeCardModel.swift */,
-				ADBB332A20E9D799006A16C4 /* SampleMGSwipeCard.swift */,
-				ADBB332820E9D799006A16C4 /* SampleOverlay.swift */,
+				ADBB332820E9D799006A16C4 /* SampleCardOverlay.swift */,
+				AD32F80820F51D8C000D2268 /* SampleCardView.swift */,
+				ADBB332920E9D799006A16C4 /* SampleCardModel.swift */,
 				ADBB332520E9D799006A16C4 /* ViewController.swift */,
-				ADBB332720E9D799006A16C4 /* Utilities.swift */,
+				ADBB332720E9D799006A16C4 /* Extensions.swift */,
 				ADBB333820E9D7FE006A16C4 /* Assets.xcassets */,
 				ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */,
 				ADBB333720E9D7D3006A16C4 /* Supporting Files */,
@@ -245,11 +245,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADBB333420E9D799006A16C4 /* AppDelegate.swift in Sources */,
-				ADBB333220E9D799006A16C4 /* SampleMGSwipeCardModel.swift in Sources */,
-				ADBB333020E9D799006A16C4 /* Utilities.swift in Sources */,
-				ADBB333120E9D799006A16C4 /* SampleOverlay.swift in Sources */,
+				ADBB333220E9D799006A16C4 /* SampleCardModel.swift in Sources */,
+				ADBB333020E9D799006A16C4 /* Extensions.swift in Sources */,
+				AD32F80920F51D8C000D2268 /* SampleCardView.swift in Sources */,
+				ADBB333120E9D799006A16C4 /* SampleCardOverlay.swift in Sources */,
 				ADBB332E20E9D799006A16C4 /* ViewController.swift in Sources */,
-				ADBB333320E9D799006A16C4 /* SampleMGSwipeCard.swift in Sources */,
 				ADBB333520E9D799006A16C4 /* SampleCardFooterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

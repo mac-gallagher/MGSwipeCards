@@ -12,26 +12,11 @@ open class MGSwipeView: UIView {
     
     public var swipeDirections = SwipeDirection.allDirections
     
-    public var swipeSpeed: [SwipeDirection: CGFloat] {
-        var dict = [SwipeDirection: CGFloat]()
-        for direction in SwipeDirection.allDirections {
-            dict[direction] = calculateSwipeSpeed(on: direction)
-        }
-        return dict
-    }
-    
-    public var swipePercentage: [SwipeDirection: CGFloat] {
-        var dict = [SwipeDirection: CGFloat]()
-        for direction in SwipeDirection.allDirections {
-            dict[direction] = calculateSwipePercentage(on: direction)
-        }
-        return dict
-    }
-    
     public var activeDirection: SwipeDirection? {
         return swipeDirections.reduce((highestPercentage: 0, direction: nil), { (percentage, direction) -> (CGFloat, SwipeDirection?) in
-            if let swipePercentage = swipePercentage[direction], swipePercentage > percentage.highestPercentage {
-                return (swipePercentage, direction)
+            let swipePercent = swipePercentage(on: direction)
+            if swipePercent > percentage.highestPercentage {
+                return (swipePercent, direction)
             }
             return percentage
         }).direction
@@ -62,14 +47,14 @@ open class MGSwipeView: UIView {
         addGestureRecognizer(tapGestureRecognizer)
     }
     
-    //MARK: - Swipe/Tap Handling
+    //MARK: - Getters/Setters
     
-    private func calculateSwipeSpeed(on direction: SwipeDirection) -> CGFloat {
+    public func swipeSpeed(on direction: SwipeDirection) -> CGFloat {
         let velocity = panGestureRecognizer.velocity(in: superview)
         return abs(direction.point.dotProduct(with: velocity))
     }
     
-    private func calculateSwipePercentage(on direction: SwipeDirection) -> CGFloat {
+    public func swipePercentage(on direction: SwipeDirection) -> CGFloat {
         let translation = panGestureRecognizer.translation(in: superview)
         let normalizedTranslation = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
         let percentage = normalizedTranslation.dotProduct(with: direction.point)
@@ -78,6 +63,8 @@ open class MGSwipeView: UIView {
         }
         return percentage
     }
+    
+    //MARK: - Swipe/Tap Handling
     
     @objc private func handleTap(_ recognizer: UITapGestureRecognizer) {
         didTap(on: self, recognizer: recognizer)
@@ -96,16 +83,12 @@ open class MGSwipeView: UIView {
         }
     }
     
-    open func didTap(on view: MGSwipeView, recognizer: UITapGestureRecognizer) {
-    }
+    open func didTap(on view: MGSwipeView, recognizer: UITapGestureRecognizer) {}
     
-    open func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-    }
+    open func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {}
     
-    open func continueSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-    }
+    open func continueSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {}
     
-    open func endSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-    }
+    open func endSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {}
     
 }

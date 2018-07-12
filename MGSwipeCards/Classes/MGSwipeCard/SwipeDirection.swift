@@ -10,10 +10,7 @@ import UIKit
 
 public enum SwipeDirection: Int {
     
-    case left
-    case right
-    case up
-    case down
+    case left, right, up, down
     
     public static var allDirections: [SwipeDirection] {
         return [.left, .right, .up, .down]

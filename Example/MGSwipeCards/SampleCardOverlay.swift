@@ -8,16 +8,17 @@
 
 import UIKit
 
-class SampleOverlay: UIView {
+class SampleCardOverlay: UIView {
     
     private var title: String?
-    
     private var color: UIColor?
+    private var rotationAngle: CGFloat = 0
     
-    init(title: String?, color: UIColor?) {
+    init(title: String?, color: UIColor?, rotationAngle: CGFloat) {
         super.init(frame: CGRect.zero)
         self.title = title
         self.color = color
+        self.rotationAngle = rotationAngle
         initialize()
     }
     
@@ -31,6 +32,7 @@ class SampleOverlay: UIView {
         layer.borderWidth = 4
         layer.cornerRadius = 4
         initializeLabel()
+        transform = CGAffineTransform(rotationAngle: rotationAngle)
     }
     
     private func initializeLabel() {
@@ -42,7 +44,7 @@ class SampleOverlay: UIView {
         addSubview(label)
         label.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingLeft: 8, paddingRight: 3, width: label.intrinsicContentSize.width, height: label.intrinsicContentSize.height)
     }
-
+    
 }
 
 extension NSAttributedStringKey {
