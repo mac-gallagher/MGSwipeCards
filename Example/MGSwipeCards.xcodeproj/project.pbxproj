@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		61F3FA4ABE2F71849B7796BD /* Pods_MGSwipeCards_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD00FB837C1D5D4BC52105CA /* Pods_MGSwipeCards_Example.framework */; };
 		AD32F80920F51D8C000D2268 /* SampleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD32F80820F51D8C000D2268 /* SampleCardView.swift */; };
+		ADAEDF0220F83A3800172438 /* SampleMGSwipeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAEDF0120F83A3800172438 /* SampleMGSwipeCard.swift */; };
 		ADBB332E20E9D799006A16C4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332520E9D799006A16C4 /* ViewController.swift */; };
 		ADBB332F20E9D799006A16C4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */; };
 		ADBB333020E9D799006A16C4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332720E9D799006A16C4 /* Extensions.swift */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		AD32F80820F51D8C000D2268 /* SampleCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardView.swift; sourceTree = "<group>"; };
+		ADAEDF0120F83A3800172438 /* SampleMGSwipeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMGSwipeCard.swift; sourceTree = "<group>"; };
 		ADBB330420E9D73B006A16C4 /* MGSwipeCards_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MGSwipeCards_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADBB332520E9D799006A16C4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				ADBB332820E9D799006A16C4 /* SampleCardOverlay.swift */,
 				AD32F80820F51D8C000D2268 /* SampleCardView.swift */,
 				ADBB332920E9D799006A16C4 /* SampleCardModel.swift */,
+				ADAEDF0120F83A3800172438 /* SampleMGSwipeCard.swift */,
 				ADBB332520E9D799006A16C4 /* ViewController.swift */,
 				ADBB332720E9D799006A16C4 /* Extensions.swift */,
 				ADBB333820E9D7FE006A16C4 /* Assets.xcassets */,
@@ -246,6 +249,7 @@
 			files = (
 				ADBB333420E9D799006A16C4 /* AppDelegate.swift in Sources */,
 				ADBB333220E9D799006A16C4 /* SampleCardModel.swift in Sources */,
+				ADAEDF0220F83A3800172438 /* SampleMGSwipeCard.swift in Sources */,
 				ADBB333020E9D799006A16C4 /* Extensions.swift in Sources */,
 				AD32F80920F51D8C000D2268 /* SampleCardView.swift in Sources */,
 				ADBB333120E9D799006A16C4 /* SampleCardOverlay.swift in Sources */,

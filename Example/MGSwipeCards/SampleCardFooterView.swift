@@ -59,16 +59,6 @@ class SampleCardFooterView: UIView {
     override func layoutSubviews() {
         let padding: CGFloat = 20
         label.frame = CGRect(x: padding, y: bounds.height - label.intrinsicContentSize.height - padding, width: bounds.width - 2 * padding, height: label.intrinsicContentSize.height)
-        configureGradientLayer()
-    }
-    
-    private func configureGradientLayer() {
-        gradientLayer = CAGradientLayer()
-        gradientLayer?.frame = bounds
-        gradientLayer?.colors = [UIColor.black.withAlphaComponent(0.01).cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
-        gradientLayer?.startPoint = CGPoint(x: 0.5, y: 0)
-        gradientLayer?.endPoint = CGPoint(x: 0.5, y: 1)
-        layer.insertSublayer(gradientLayer!, at: 0)
     }
     
 }

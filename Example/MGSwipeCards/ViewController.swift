@@ -14,6 +14,16 @@ class ViewController: UIViewController {
     
     //MARK: - Subviews
     
+    lazy var cards: [SampleMGSwipeCard] = {
+        var finishedCards = [SampleMGSwipeCard]()
+        for model in cardModels {
+            let card = SampleMGSwipeCard()
+            card.model = model
+            finishedCards.append(card)
+        }
+        return finishedCards
+    }()
+    
     let cardStack = MGCardStackView()
     
     var backgroundGradient: UIView?
@@ -153,7 +163,7 @@ class ViewController: UIViewController {
         case 1:
             let card = cardStack.undoLastSwipe()
             if card != nil {
-                let name = cardModels[cardStack.currentCardIndex]
+                let name = cardModels[cardStack.currentCardIndex].name
                 print("Undo swipe on \(name)")
             }
         case 2:
@@ -173,48 +183,12 @@ class ViewController: UIViewController {
 
 extension ViewController: MGCardStackViewDataSource {
     
+    func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard {
+        return cards[index]
+    }
+    
     func numberOfCards(in cardStack: MGCardStackView) -> Int {
-        return cardModels.count
-    }
-    
-    //wrap image in shadowView
-    func cardStack(_ cardStack: MGCardStackView, viewforCardAt index: Int) -> UIView? {
-        return SampleCardView(image: cardModels[index].image)
-    }
-    
-    func cardStack(_ cardStack: MGCardStackView, viewForCardFooterAt index: Int) -> UIView? {
-        let footer = SampleCardFooterView(title: "\(cardModels[index].name), \(cardModels[index].age)", subtitle: cardModels[index].occupation)
-        return footer
-    }
-    
-    func cardStack(_ cardStack: MGCardStackView, heightForCardFooterAt index: Int) -> CGFloat {
-        return 100
-    }
-    
-    func cardStack(_ cardStack: MGCardStackView, viewForCardOverlayAt index: Int, for direction: SwipeDirection) -> UIView? {
-        switch direction {
-        case .left:
-            let leftView = UIView()
-            let leftOverlay = SampleCardOverlay(title: "NOPE", color: .sampleRed, rotationAngle: CGFloat.pi/10)
-            leftView.addSubview(leftOverlay)
-            leftOverlay.anchor(top: leftView.topAnchor, left: nil, bottom: nil, right: leftView.rightAnchor, paddingTop: 30, paddingRight: 14)
-            return leftView
-        case .up:
-            let upView = UIView()
-            let upOverlay = SampleCardOverlay(title: "LOVE", color: .sampleBlue, rotationAngle: -CGFloat.pi/20)
-            upView.addSubview(upOverlay)
-            upOverlay.anchor(top: nil, left: nil, bottom: upView.bottomAnchor, right: nil, paddingBottom: 20)
-            upOverlay.centerXAnchor.constraint(equalTo: upView.centerXAnchor).isActive = true
-            return upView
-        case .right:
-            let rightView = UIView()
-            let rightOverlay = SampleCardOverlay(title: "LIKE", color: .sampleGreen, rotationAngle: -CGFloat.pi/10)
-            rightView.addSubview(rightOverlay)
-            rightOverlay.anchor(top: rightView.topAnchor, left: rightView.leftAnchor, bottom: nil, right: nil, paddingTop: 26, paddingLeft: 14)
-            return rightView
-        case .down:
-            return nil
-        }
+        return cards.count
     }
     
 }
@@ -223,20 +197,22 @@ extension ViewController: MGCardStackViewDataSource {
 
 extension ViewController: MGCardStackViewDelegate {
     
+    func didSwipeAllCards(_ cardStack: MGCardStackView) {
+        print("Swiped all cards!")
+    }
+    
+    func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection) {
+        print("Swiped \(direction) on \(cards[index].model?.name ?? "")")
+    }
+    
+    func cardStack(_ cardStack: MGCardStackView, additionalOptionsForCardAt index: Int) -> MGSwipeCardOptions {
+        let options = MGSwipeCardOptions()
+        return options
+    }
+    
+    
     func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, touchPoint: CGPoint) {
-        print("tapped, location \(touchPoint)")
-    }
-    
-    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int) {
-        print("tapped")
-    }
-    
-    func cardStack(_ cardStack: MGCardStackView, allowedSwipeDirectionsForCardAt index: Int) -> [SwipeDirection] {
-        return [.left, .up, .right]
-    }
-    
-    func cardStack(_ cardStack: MGCardStackView, shouldMakeCardFooterTransparentAt index: Int) -> Bool {
-        return true
+        print("Tapped with location \(touchPoint)")
     }
     
 }
@@ -268,5 +244,12 @@ extension ViewController {
         return models
     }
     
+    
 }
+
+
+
+
+
+
 

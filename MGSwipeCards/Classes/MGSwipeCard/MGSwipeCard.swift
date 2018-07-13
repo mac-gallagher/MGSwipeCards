@@ -22,6 +22,10 @@ open class MGSwipeCard: MGSwipeView {
     public var delegate: MGSwipeCardDelegate?
     
     private lazy var animator = CardAnimator(card: self)
+    public var isSwipeAnimating: Bool {
+        return animator.isSwipeAnimating
+    }
+    
     public var options = MGSwipeCardOptions()
     
     public private(set) var contentView: UIView?
@@ -110,6 +114,8 @@ open class MGSwipeCard: MGSwipeView {
         }
         overlays[direction]??.removeFromSuperview()
         overlays[direction] = overlay
+        overlays[direction]??.layer.shouldRasterize = true
+        overlays[direction]??.layer.rasterizationScale = UIScreen.main.scale
         overlays[direction]??.alpha = 0
         overlayContainer?.addSubview(overlay)
         _ = overlay.anchor(top: overlayContainer?.topAnchor, left: overlayContainer?.leftAnchor, bottom: overlayContainer?.bottomAnchor, right: overlayContainer?.rightAnchor)
@@ -124,17 +130,12 @@ open class MGSwipeCard: MGSwipeView {
     
     private var rotationDirectionY: CGFloat = 1
     
-    private func updateOverlays() {
+    private func alphaForOverlay(with direction: SwipeDirection) -> CGFloat {
+        if direction != activeDirection { return 0 }
         let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
             return percentage + swipePercentage(on: direction)
         }
-        for direction in swipeDirections {
-            if direction == activeDirection {
-                overlays[direction]??.alpha = min((2 * swipePercentage(on: direction) - totalPercentage)/options.minimumSwipeMargin, 1)
-            } else {
-                overlays[direction]??.alpha = 0
-            }
-        }
+        return min((2 * swipePercentage(on: direction) - totalPercentage)/options.minimumSwipeMargin, 1)
     }
     
     open override func didTap(on view: MGSwipeView, recognizer: UITapGestureRecognizer) {
@@ -142,7 +143,7 @@ open class MGSwipeCard: MGSwipeView {
     }
     
     open override func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-        animator.removeAllAnimations()
+        animator.removeAllSwipeAnimations()
         layer.rasterizationScale = UIScreen.main.scale
         layer.shouldRasterize = true
         let touchPoint = recognizer.location(in: self)
@@ -164,11 +165,14 @@ open class MGSwipeCard: MGSwipeView {
         transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngle))
         
         layer.setAffineTransform(transform)
+
+        swipeDirections.forEach { direction in
+            overlays[direction]??.alpha = alphaForOverlay(with: direction)
+        }
         
-        updateOverlays()
         delegate?.card(didContinueSwipe: self)
     }
-
+    
     open override func endSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
         guard let direction = activeDirection else { return }
         
@@ -211,6 +215,10 @@ open class MGSwipeCard: MGSwipeView {
         animator.applyForcedSwipeAnimation(direction: direction) { _ in
             self.removeFromSuperview()
         }
+    }
+    
+    public func removeAllSwipeAnimations() {
+        animator.removeAllSwipeAnimations()
     }
         
 }

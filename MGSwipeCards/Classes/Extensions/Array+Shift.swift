@@ -23,3 +23,11 @@ extension Array {
     }
     
 }
+
+extension Array where Element: Hashable {
+    func difference(from other: [Element]) -> [Element] {
+        let thisSet = Set<Element>(self)
+        let otherSet = Set<Element>(other)
+        return Array(thisSet.symmetricDifference(otherSet))
+    }
+}

@@ -23,6 +23,8 @@ class SampleCardView: UIView {
         return iv
     }()
     
+    var gradientLayer: CAGradientLayer?
+    
     init(image: UIImage?) {
         super.init(frame: .zero)
         imageView.image = image
@@ -49,5 +51,20 @@ class SampleCardView: UIView {
         layer.shadowOffset = CGSize(width: 0, height: 2)
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        configureGradientLayer()
+    }
+    
+    private func configureGradientLayer() {
+        let heightFactor: CGFloat = 0.35
+        gradientLayer?.removeFromSuperlayer()
+        gradientLayer = CAGradientLayer()
+        gradientLayer?.frame = CGRect(x: 0, y: (1 - heightFactor) * bounds.height, width: bounds.width, height: heightFactor * bounds.height)
+        gradientLayer?.colors = [UIColor.black.withAlphaComponent(0.01).cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
+        gradientLayer?.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer?.endPoint = CGPoint(x: 0.5, y: 1)
+        backgroundView.layer.insertSublayer(gradientLayer!, above: imageView.layer)
+    }
     
 }

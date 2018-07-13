@@ -10,7 +10,7 @@ import pop
 
 open class CardAnimator {
     
-    // public var isAnimating. Return pop and UIView
+    public private(set) var isSwipeAnimating = false
     
     private var card: MGSwipeCard
     private lazy var options = card.options
@@ -20,7 +20,8 @@ open class CardAnimator {
     }
     
     open func applySwipeAnimation(direction: SwipeDirection, translation: CGPoint, fast: Bool = false, randomRotation: Bool = false, completion: ((Bool) -> Void)?) {
-        removeAllAnimations()
+        removeAllSwipeAnimations()
+        isSwipeAnimating = true
         
         updateOverlays(direction: direction)
 
@@ -29,6 +30,7 @@ open class CardAnimator {
             translationAnimation.toValue = translationForSwipeAnimation(translation: translation, fast: fast)
             translationAnimation.completionBlock = { (_, finished) in
                 completion?(finished)
+                self.isSwipeAnimating = false
             }
             card.layer.pop_add(translationAnimation, forKey: "swipeTranslationAnimation")
         }
@@ -45,7 +47,9 @@ open class CardAnimator {
     }
     
     open func applyForcedSwipeAnimation(direction: SwipeDirection, completion: ((Bool) -> Void)?) {
-        removeAllAnimations()
+        removeAllSwipeAnimations()
+        isSwipeAnimating = true
+        
         UIView.animate(withDuration: 0.15, animations: {
             self.updateOverlays(direction: direction)
         }) { _ in
@@ -96,13 +100,15 @@ open class CardAnimator {
     }
     
     open func applyResetAnimation(completion: ((Bool) -> Void)?) {
-        removeAllAnimations()
-
+        removeAllSwipeAnimations()
+        isSwipeAnimating = true
+        
         if let resetPositionAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY) {
             resetPositionAnimation.toValue = CGPoint.zero
             resetPositionAnimation.springBounciness = options.resetAnimationSpringBounciness
             resetPositionAnimation.springSpeed = options.resetAnimationSpringSpeed
             resetPositionAnimation.completionBlock = { _, finished in
+                self.isSwipeAnimating = false
                 completion?(finished)
             }
             card.layer.pop_add(resetPositionAnimation, forKey: "resetPositionAnimation")
@@ -124,7 +130,8 @@ open class CardAnimator {
         }
     }
     
-    open func removeAllAnimations() {
+    open func removeAllSwipeAnimations() {
+        isSwipeAnimating = false
         card.pop_removeAllAnimations()
         card.layer.pop_removeAllAnimations()
         card.swipeDirections.forEach { direction in
