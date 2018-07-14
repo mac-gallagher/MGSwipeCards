@@ -9,7 +9,5 @@ import Foundation
 import pop
 
 open class CardStackAnimator {
-    
-    
-    //duration
+    //replace UIView.animate with Pop
 }

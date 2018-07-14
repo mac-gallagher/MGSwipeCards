@@ -29,7 +29,7 @@ open class MGSwipeCard: MGSwipeView {
     
     public private(set) var swipedDirection: SwipeDirection?
     
-    public var options = MGSwipeCardOptions()
+    public var options = MGSwipeCardOptions.defaultOptions
     
     public private(set) var contentView: UIView?
     public private(set) var footerView: UIView?

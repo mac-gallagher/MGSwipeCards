@@ -12,6 +12,4 @@ public protocol MGCardStackViewDataSource {
     
     func numberOfCards(in cardStack: MGCardStackView) -> Int
     func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard
-//    func cardStack(_ cardStack: MGCardStackView, offsetForIndexAt index: Int) -> CGSize
-//    func cardStack(_ cardStack: MGCardStackView, scaleFactorForIndexAt index: Int) -> CGFloat
 }

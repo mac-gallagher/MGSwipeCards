@@ -130,7 +130,6 @@ class ViewController: UIViewController {
     
     func initializeCardStackView() {
         view.addSubview(cardStack)
-        cardStack.verticalInset = 14
         cardStack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: buttonStackView.topAnchor, right: view.safeAreaLayoutGuide.rightAnchor)
         cardStack.delegate = self
         cardStack.dataSource = self
@@ -201,15 +200,15 @@ extension ViewController: MGCardStackViewDelegate {
         print("Swiped all cards!")
     }
     
-    func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection) {
-        print("Swiped \(direction) on \(cards[index].model?.name ?? "")")
-    }
-    
-    func cardStack(_ cardStack: MGCardStackView, additionalOptionsForCardAt index: Int) -> MGSwipeCardOptions {
-        let options = MGSwipeCardOptions()
+    func additionalOptions(_ cardStack: MGCardStackView) -> MGCardStackViewOptions {
+        let options = MGCardStackViewOptions()
+        options.cardStackInsets = UIEdgeInsets(top: 14, left: 10, bottom: 14, right: 10)
         return options
     }
     
+    func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection) {
+        print("Swiped \(direction) on \(cards[index].model?.name ?? "")")
+    }
     
     func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, touchPoint: CGPoint) {
         print("Tapped with location \(touchPoint)")
