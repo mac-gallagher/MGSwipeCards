@@ -177,7 +177,7 @@ open class MGSwipeCard: MGSwipeView {
     }
     
     open override func endSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-        guard let direction = activeDirection else { return }
+        guard let direction = activeDirection else { cancelSwipe(); return }
         
         if swipeSpeed(on: direction) >= options.minimumSwipeSpeed {
             swipedDirection = direction
@@ -199,6 +199,10 @@ open class MGSwipeCard: MGSwipeView {
             return
         }
         
+        cancelSwipe()
+    }
+    
+    private func cancelSwipe() {
         animator.applyResetAnimation { finished in
             if finished {
                 self.layer.shouldRasterize = false
@@ -233,10 +237,6 @@ open class MGSwipeCard: MGSwipeView {
         delegate?.card(didUndoSwipe: self)
     }
     
-    public func removeAllSwipeAnimations() {
-        animator.removeAllSwipeAnimations()
-    }
-        
 }
 
 

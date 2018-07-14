@@ -194,7 +194,6 @@ extension CardAnimator {
     public static var forcedSwipeRotationKey = "forcedSwipeRotationAnimation"
     public static var reverseSwipeTranslationKey = "reverseSwipeTranslationAnimation"
     public static var reverseSwipeRotationKey = "reverseSwipeRotationAnimation"
-    public static var reverseSwipeOverlayAlphaKey = "reverseSwipeOverlayAlphaAnimation"
     public static var resetTranslationKey = "resetTranslationAnimation"
     public static var resetRotationKey = "resetRotationAnimation"
     public static var resetOverlayAlphaKey = "resetOverlayAlphaAnimation"
