@@ -14,6 +14,10 @@ open class MGSwipeCardOptions {
     ///The minimum duration of the off-screen swipe animation. Measured in seconds. Defaults to 0.8.
     public var swipeAnimationMinimumDuration: TimeInterval = 0.8
     
+    public var undoSwipeAnimationDuration: TimeInterval = 0.2
+    
+    public var overlayFadeInOutDuration: TimeInterval = 0.15
+    
     ///The effective bounciness of the swipe spring animation upon a cancelled swipe. Higher values increase spring movement range resulting in more oscillations and springiness. Defined as a value in the range [0, 20]. Defaults to 12.
     public var resetAnimationSpringBounciness: CGFloat = 12.0
     

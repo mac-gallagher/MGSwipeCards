@@ -15,6 +15,7 @@ public protocol MGSwipeCardDelegate {
     func card(didContinueSwipe card: MGSwipeCard)
     func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection)
     func card(didCancelSwipe card: MGSwipeCard)
+    func card(didUndoSwipe card: MGSwipeCard)
 }
 
 open class MGSwipeCard: MGSwipeView {
@@ -25,6 +26,8 @@ open class MGSwipeCard: MGSwipeView {
     public var isSwipeAnimating: Bool {
         return animator.isSwipeAnimating
     }
+    
+    public private(set) var swipedDirection: SwipeDirection?
     
     public var options = MGSwipeCardOptions()
     
@@ -177,44 +180,57 @@ open class MGSwipeCard: MGSwipeView {
         guard let direction = activeDirection else { return }
         
         if swipeSpeed(on: direction) >= options.minimumSwipeSpeed {
+            swipedDirection = direction
             isUserInteractionEnabled = false
-            delegate?.card(didSwipe: self, with: direction)
-            animator.applySwipeAnimation(direction: direction, translation: recognizer.translation(in: superview), fast: true) { _ in
+            animator.applySwipeAnimation(direction: direction, directionVector: recognizer.translation(in: superview), fast: true) { _ in
                 self.removeFromSuperview()
             }
+            delegate?.card(didSwipe: self, with: direction)
             return
         }
         
         if swipePercentage(on: direction) >= options.minimumSwipeMargin {
+            swipedDirection = direction
             isUserInteractionEnabled = false
-            delegate?.card(didSwipe: self, with: direction)
-            animator.applySwipeAnimation(direction: direction, translation: recognizer.translation(in: superview)) { _ in
+            animator.applySwipeAnimation(direction: direction, directionVector: recognizer.translation(in: superview)) { _ in
                 self.removeFromSuperview()
             }
+            delegate?.card(didSwipe: self, with: direction)
             return
         }
         
-        delegate?.card(didCancelSwipe: self)
         animator.applyResetAnimation { finished in
             if finished {
                 self.layer.shouldRasterize = false
-                self.layer.transform = CATransform3DIdentity
             }
         }
+        delegate?.card(didCancelSwipe: self)
     }
     
     //MARK: - Actions
     
     public func swipe(withDirection direction: SwipeDirection) {
         if !swipeDirections.contains(direction) { return }
+        swipedDirection = direction
         isUserInteractionEnabled = false
         layer.rasterizationScale = UIScreen.main.scale
         layer.shouldRasterize = true
-        delegate?.card(didSwipe: self, with: direction)
-        
         animator.applyForcedSwipeAnimation(direction: direction) { _ in
             self.removeFromSuperview()
         }
+        delegate?.card(didSwipe: self, with: direction)
+    }
+    
+    public func undoSwipe() {
+        if swipedDirection == nil { return }
+        animator.applyReverseSwipeAnimation { finished in
+            if finished {
+                self.isUserInteractionEnabled = true
+                self.layer.shouldRasterize = false
+            }
+        }
+        swipedDirection = nil
+        delegate?.card(didUndoSwipe: self)
     }
     
     public func removeAllSwipeAnimations() {
