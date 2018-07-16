@@ -160,11 +160,7 @@ class ViewController: UIViewController {
     @objc func handleTap(_ sender: PopBounceButton) {
         switch sender.tag {
         case 1:
-            let card = cardStack.undoLastSwipe()
-            if card != nil {
-                let name = cardModels[cardStack.currentCardIndex].name
-                print("Undo swipe on \(name)")
-            }
+            cardStack.undoLastSwipe()
         case 2:
             cardStack.swipe(.left)
         case 3:
@@ -204,6 +200,14 @@ extension ViewController: MGCardStackViewDelegate {
         let options = MGCardStackViewOptions()
         options.cardStackInsets = UIEdgeInsets(top: 14, left: 10, bottom: 14, right: 10)
         return options
+    }
+    
+    func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection) {
+        print("Undo swipe \(direction) on \(cards[index].model?.name ?? "")")
+    }
+    
+    func shouldDisableShiftAnimation(_ cardStack: MGCardStackView) -> Bool {
+        return false
     }
     
     func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection) {

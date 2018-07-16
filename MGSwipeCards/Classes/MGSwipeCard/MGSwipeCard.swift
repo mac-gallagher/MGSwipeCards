@@ -15,7 +15,7 @@ public protocol MGSwipeCardDelegate {
     func card(didContinueSwipe card: MGSwipeCard)
     func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection)
     func card(didCancelSwipe card: MGSwipeCard)
-    func card(didUndoSwipe card: MGSwipeCard)
+    func card(didUndoSwipe card: MGSwipeCard, from direction: SwipeDirection)
 }
 
 open class MGSwipeCard: MGSwipeView {
@@ -226,15 +226,15 @@ open class MGSwipeCard: MGSwipeView {
     }
     
     public func undoSwipe() {
-        if swipedDirection == nil { return }
+        guard let direction = swipedDirection else { return }
         animator.applyReverseSwipeAnimation { finished in
             if finished {
                 self.isUserInteractionEnabled = true
                 self.layer.shouldRasterize = false
             }
         }
+        delegate?.card(didUndoSwipe: self, from: direction)
         swipedDirection = nil
-        delegate?.card(didUndoSwipe: self)
     }
     
 }
