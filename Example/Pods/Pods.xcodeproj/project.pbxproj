@@ -53,7 +53,6 @@
 		9B0579BD07DC4BD0EECCDB6E936EC5DB /* MGCardStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6ED602EB1698A5FFC8718523B55705 /* MGCardStackView.swift */; };
 		A160362C0808E79F37DDB1F1EDACE838 /* CGPoint+Vectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40998530815EBAF08F888151190DA96C /* CGPoint+Vectors.swift */; };
 		ABCAE037F19275A2C910176FAFC2FD88 /* POPAnimationTracer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 68523E481B5743F13CC04AE4BC27DC58 /* POPAnimationTracer.mm */; };
-		AD1B95B620F3F1960036C3C1 /* CardAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B95B520F3F1960036C3C1 /* CardAnimator.swift */; };
 		AD32F80B20F7D1AC000D2268 /* MGSwipeCardOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD32F80A20F7D1AC000D2268 /* MGSwipeCardOptions.swift */; };
 		ADAEDF0420F92E0A00172438 /* CardStackAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAEDF0320F92E0A00172438 /* CardStackAnimator.swift */; };
 		ADAEDF0620FA962800172438 /* MGCardStackViewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAEDF0520FA962800172438 /* MGCardStackViewOptions.swift */; };
@@ -189,7 +188,6 @@
 		A733B65F8A49EED09EF687C03B4DFC1B /* Pods-MGSwipeCards_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MGSwipeCards_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		A796091C637C6A9495036F7DC8532E35 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		A90E46C0782D88840A8B564B885DB896 /* POPAnimationInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = POPAnimationInternal.h; path = pop/POPAnimationInternal.h; sourceTree = "<group>"; };
-		AD1B95B520F3F1960036C3C1 /* CardAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardAnimator.swift; sourceTree = "<group>"; };
 		AD32F80A20F7D1AC000D2268 /* MGSwipeCardOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MGSwipeCardOptions.swift; sourceTree = "<group>"; };
 		ADAEDF0320F92E0A00172438 /* CardStackAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStackAnimator.swift; sourceTree = "<group>"; };
 		ADAEDF0520FA962800172438 /* MGCardStackViewOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MGCardStackViewOptions.swift; sourceTree = "<group>"; };
@@ -428,7 +426,6 @@
 		A0C37350B0EBC130A53AE4229DD491EF /* MGSwipeCard */ = {
 			isa = PBXGroup;
 			children = (
-				AD1B95B520F3F1960036C3C1 /* CardAnimator.swift */,
 				A03176E037E32E474DBEBEB783AE699E /* MGSwipeCard.swift */,
 				AD32F80A20F7D1AC000D2268 /* MGSwipeCardOptions.swift */,
 				3F57644A821FB32DC629603BD8B21AE6 /* MGSwipeView.swift */,
@@ -727,7 +724,6 @@
 				4FDAE8376DA835226BBB29B6886525C1 /* SwipeDirection.swift in Sources */,
 				BC79323DF8C6C30A1A280FAD3DFA948D /* UIView+Anchor.swift in Sources */,
 				ADAEDF0620FA962800172438 /* MGCardStackViewOptions.swift in Sources */,
-				AD1B95B620F3F1960036C3C1 /* CardAnimator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

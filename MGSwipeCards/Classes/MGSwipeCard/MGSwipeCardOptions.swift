@@ -12,7 +12,7 @@ open class MGSwipeCardOptions {
     open static var defaultOptions = MGSwipeCardOptions()
     
     ///The minimum duration of the off-screen swipe animation. Measured in seconds. Defaults to 0.8.
-    open var swipeAnimationMinimumDuration: TimeInterval = 0.8
+    open var swipeAnimationMaximumDuration: TimeInterval = 0.8
     
     open var undoSwipeAnimationDuration: TimeInterval = 0.2
     

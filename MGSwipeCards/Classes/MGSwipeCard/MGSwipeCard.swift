@@ -15,21 +15,15 @@ public protocol MGSwipeCardDelegate {
     func card(didContinueSwipe card: MGSwipeCard)
     func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection)
     func card(didCancelSwipe card: MGSwipeCard)
-    func card(didUndoSwipe card: MGSwipeCard, from direction: SwipeDirection)
 }
 
 open class MGSwipeCard: MGSwipeView {
     
     public var delegate: MGSwipeCardDelegate?
     
-    private lazy var animator = CardAnimator(card: self)
-    public var isSwipeAnimating: Bool {
-        return animator.isSwipeAnimating
-    }
-    
-    public private(set) var swipedDirection: SwipeDirection?
-    
     public var options = MGSwipeCardOptions.defaultOptions
+    
+    public var touchPoint: CGPoint?
     
     public private(set) var contentView: UIView?
     public private(set) var footerView: UIView?
@@ -117,8 +111,6 @@ open class MGSwipeCard: MGSwipeView {
         }
         overlays[direction]??.removeFromSuperview()
         overlays[direction] = overlay
-        overlays[direction]??.layer.shouldRasterize = true
-        overlays[direction]??.layer.rasterizationScale = UIScreen.main.scale
         overlays[direction]??.alpha = 0
         overlayContainer?.addSubview(overlay)
         _ = overlay.anchor(top: overlayContainer?.topAnchor, left: overlayContainer?.leftAnchor, bottom: overlayContainer?.bottomAnchor, right: overlayContainer?.rightAnchor)
@@ -133,20 +125,11 @@ open class MGSwipeCard: MGSwipeView {
     
     private var rotationDirectionY: CGFloat = 1
     
-    private func alphaForOverlay(with direction: SwipeDirection) -> CGFloat {
-        if direction != activeDirection { return 0 }
-        let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
-            return percentage + swipePercentage(on: direction)
-        }
-        return min((2 * swipePercentage(on: direction) - totalPercentage)/options.minimumSwipeMargin, 1)
-    }
-    
     open override func didTap(on view: MGSwipeView, recognizer: UITapGestureRecognizer) {
         delegate?.card(didTap: self, location: recognizer.location(in: self))
     }
     
     open override func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-        animator.removeAllSwipeAnimations()
         layer.rasterizationScale = UIScreen.main.scale
         layer.shouldRasterize = true
         let touchPoint = recognizer.location(in: self)
@@ -155,86 +138,34 @@ open class MGSwipeCard: MGSwipeView {
         } else {
             rotationDirectionY = -1
         }
+        self.touchPoint = touchPoint
         delegate?.card(didBeginSwipe: self)
     }
     
     open override func continueSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: self)
         var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
-        
         let superviewTranslation = recognizer.translation(in: superview)
         let rotationStrength = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
         let rotationAngle = max(-CGFloat.pi/2, min(rotationDirectionY * abs(options.maximumRotationAngle) * rotationStrength, CGFloat.pi/2))
         transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngle))
-        
         layer.setAffineTransform(transform)
-
-        swipeDirections.forEach { direction in
-            overlays[direction]??.alpha = alphaForOverlay(with: direction)
-        }
-        
         delegate?.card(didContinueSwipe: self)
     }
     
     open override func endSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-        guard let direction = activeDirection else { cancelSwipe(); return }
-        
-        if swipeSpeed(on: direction) >= options.minimumSwipeSpeed {
-            swipedDirection = direction
-            isUserInteractionEnabled = false
-            animator.applySwipeAnimation(direction: direction, directionVector: recognizer.translation(in: superview), fast: true) { _ in
-                self.removeFromSuperview()
+        layer.shouldRasterize = false
+        if let direction = activeDirection {
+            if swipeSpeed(on: direction) >= options.minimumSwipeSpeed {
+                delegate?.card(didSwipe: self, with: direction)
+            } else if swipePercentage(on: direction) >= options.minimumSwipeMargin {
+                delegate?.card(didSwipe: self, with: direction)
+            } else {
+                delegate?.card(didCancelSwipe: self)
             }
-            delegate?.card(didSwipe: self, with: direction)
-            return
+        } else {
+            delegate?.card(didCancelSwipe: self)
         }
-        
-        if swipePercentage(on: direction) >= options.minimumSwipeMargin {
-            swipedDirection = direction
-            isUserInteractionEnabled = false
-            animator.applySwipeAnimation(direction: direction, directionVector: recognizer.translation(in: superview)) { _ in
-                self.removeFromSuperview()
-            }
-            delegate?.card(didSwipe: self, with: direction)
-            return
-        }
-        
-        cancelSwipe()
-    }
-    
-    private func cancelSwipe() {
-        animator.applyResetAnimation { finished in
-            if finished {
-                self.layer.shouldRasterize = false
-            }
-        }
-        delegate?.card(didCancelSwipe: self)
-    }
-    
-    //MARK: - Actions
-    
-    public func swipe(withDirection direction: SwipeDirection) {
-        if !swipeDirections.contains(direction) { return }
-        swipedDirection = direction
-        isUserInteractionEnabled = false
-        layer.rasterizationScale = UIScreen.main.scale
-        layer.shouldRasterize = true
-        animator.applyForcedSwipeAnimation(direction: direction) { _ in
-            self.removeFromSuperview()
-        }
-        delegate?.card(didSwipe: self, with: direction)
-    }
-    
-    public func undoSwipe() {
-        guard let direction = swipedDirection else { return }
-        animator.applyReverseSwipeAnimation { finished in
-            if finished {
-                self.isUserInteractionEnabled = true
-                self.layer.shouldRasterize = false
-            }
-        }
-        delegate?.card(didUndoSwipe: self, from: direction)
-        swipedDirection = nil
     }
     
 }

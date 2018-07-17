@@ -24,12 +24,11 @@ open class MGCardStackView: UIView {
     
     private var options = MGCardStackViewOptions()
     
+    private var animator = CardStackAnimator()
+    
     private var visibleCards: [MGSwipeCard] = []
     private var topCard: MGSwipeCard? {
         return visibleCards.first ?? nil
-    }
-    private var topCardIsSwipeAnimating: Bool {
-        return topCard?.isSwipeAnimating ?? false
     }
     
     private var lastSwipedCard: MGSwipeCard?
@@ -135,15 +134,8 @@ open class MGCardStackView: UIView {
                 insertCard(card, at: index)
             }
         }
-        updateLastSwipedCard()
-    }
-    
-    private func insertCard(_ card: MGSwipeCard, at index: Int) {
-        cardStack.insertSubview(card, at: visibleCards.count - index)
-        visibleCards.insert(card, at: index)
-    }
-    
-    private func updateLastSwipedCard() {
+        
+        //update last swiped card
         if states.count <= 1 {
             lastSwipedCard = nil
         } else {
@@ -152,22 +144,84 @@ open class MGCardStackView: UIView {
         }
     }
     
+    private func insertCard(_ card: MGSwipeCard, at index: Int) {
+        cardStack.insertSubview(card, at: visibleCards.count - index)
+        visibleCards.insert(card, at: index)
+    }
+    
     //MARK: - Main Methods
     
     public func swipe(_ direction: SwipeDirection) {
-        if lastSwipedCardIsVisible || topCardIsSwipeAnimating { return }
-        topCard?.swipe(withDirection: direction)
+        if lastSwipedCardIsVisible || animator.isResettingCard { return }
+        if let topCard = topCard {
+            animator.applySwipeAnimation(to: topCard, direction: direction, forced: true) { finished in
+                if finished {
+                    topCard.removeFromSuperview()
+                }
+            }
+            swipe(topCard, direction: direction)
+        }
     }
     
+    private func swipe(_ card: MGSwipeCard, direction: SwipeDirection) {
+        if lastSwipedCardIsVisible || animator.isResettingCard { return }
+        delegate?.cardStack(self, didSwipeCardAt: currentCardIndex, with: direction)
+        visibleCards.remove(at: 0)
+        lastSwipedCard = card
+        states.append(Array(currentState.dropFirst()))
+
+        if currentState.count == 0 {
+            delegate?.didSwipeAllCards(self)
+            return
+        }
+
+        if currentState.count - visibleCards.count > 0 {
+            let bottomCardIndex = currentState[visibleCards.count]
+            if let card = reloadCard(at: bottomCardIndex) {
+                insertCard(card, at: visibleCards.count)
+                layoutCard(card, at: visibleCards.count)
+            }
+        }
+        
+        UIView.animate(withDuration: options.backgroundCardResetAnimationDuration, delay: card.options.overlayFadeInOutDuration, options: .curveLinear, animations: {
+            self.layoutCardStack()
+        }, completion: nil)
+        
+        topCard?.isUserInteractionEnabled = false
+
+        Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(handleUserInteractionTimer), userInfo: nil, repeats: true)
+    }
+    
+    @objc private func handleUserInteractionTimer(_ timer: Timer) {
+        if !lastSwipedCardIsVisible {
+            if visibleCards.count > 0 {
+                topCard?.isUserInteractionEnabled = true
+            }
+            timer.invalidate()
+        }
+    }
+    
+    //need to save swipe direction
     public func undoLastSwipe() {
         if states.count <= 1 { return }
-        if lastSwipedCardIsVisible || topCardIsSwipeAnimating { return }
-        lastSwipedCard?.undoSwipe()
+        if lastSwipedCardIsVisible || animator.isResettingCard { return }
+        guard let card = lastSwipedCard else { return }
+        animator.applyReverseSwipeAnimation(on: card) { (finished) in
+            if finished {
+                card.isUserInteractionEnabled = true
+            }
+        }
+        loadState(at: self.states.count - 2)
+        delegate?.cardStack(self, didUndoSwipeOnCardAt: currentCardIndex)
+        
+        UIView.animate(withDuration: options.backgroundCardResetAnimationDuration, animations: {
+            self.layoutBackgroundCards()
+        })
     }
 
     public func shift(withDistance distance: Int = 1) {
         if distance == 0 || visibleCards.count <= 1 { return }
-        if lastSwipedCardIsVisible || topCardIsSwipeAnimating { return }
+        if lastSwipedCardIsVisible || animator.isResettingCard { return }
         let newState = currentState.shift(withDistance: distance)
         states.removeLast()
         states.append(newState)
@@ -198,10 +252,23 @@ extension MGCardStackView: MGSwipeCardDelegate {
     }
     
     public func card(didBeginSwipe card: MGSwipeCard) {
-        //stop next card from animating
+        animator.removeAllSwipeAnimations(on: card)
     }
     
     public func card(didContinueSwipe card: MGSwipeCard) {
+        
+        func alphaForOverlay(_ card: MGSwipeCard, with direction: SwipeDirection) -> CGFloat {
+            if direction != card.activeDirection { return 0 }
+            let totalPercentage = card.swipeDirections.reduce(0) { (percentage, direction) in
+                return percentage + card.swipePercentage(on: direction)
+            }
+            return min((2 * card.swipePercentage(on: direction) - totalPercentage)/card.options.minimumSwipeMargin, 1)
+        }
+        
+        card.swipeDirections.forEach { direction in
+            card.overlay(forDirection: direction)?.alpha = alphaForOverlay(card, with: direction)
+        }
+        
         if visibleCards.count <= 1 { return }
         guard let topCard = topCard else { return }
         let translation = topCard.panGestureRecognizer.translation(in: cardStack)
@@ -213,54 +280,19 @@ extension MGCardStackView: MGSwipeCardDelegate {
     }
     
     public func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection) {
-        delegate?.cardStack(self, didSwipeCardAt: currentCardIndex, with: direction)
-        visibleCards.remove(at: 0)
-        lastSwipedCard = card
-        states.append(Array(currentState.dropFirst()))
-        
-        if currentState.count == 0 {
-            delegate?.didSwipeAllCards(self)
-            return
+        card.isUserInteractionEnabled = false
+        animator.applySwipeAnimation(to: card, direction: direction) { _ in
+            card.removeFromSuperview()
         }
-
-        if currentState.count - visibleCards.count > 0 {
-            let bottomCardIndex = currentState[visibleCards.count]
-            if let card = reloadCard(at: bottomCardIndex) {
-                insertCard(card, at: visibleCards.count)
-                layoutCard(card, at: visibleCards.count)
-            }
-        }
-        
-        let delay = card.options.overlayFadeInOutDuration
-        UIView.animate(withDuration: options.backgroundCardResetAnimationDuration, delay: delay, options: .curveLinear, animations: {
-            self.layoutCardStack()
-        }, completion: nil)
-        
-        Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(handleUserInteractionTimer), userInfo: nil, repeats: true)
-    }
-    
-    @objc private func handleUserInteractionTimer(_ timer: Timer) {
-        if !lastSwipedCardIsVisible {
-            if visibleCards.count > 0 {
-                topCard?.isUserInteractionEnabled = true
-            }
-            timer.invalidate()
-        }
+        swipe(card, direction: direction)
     }
     
     public func card(didCancelSwipe card: MGSwipeCard) {
+        animator.applyResetAnimation(to: card, completion: nil)
         if visibleCards.count <= 1 { return }
         UIView.animate(withDuration: options.backgroundCardResetAnimationDuration, delay: 0, options: .curveLinear, animations: {
             self.layoutBackgroundCards()
         }, completion: nil)
-    }
-    
-    public func card(didUndoSwipe card: MGSwipeCard, from direction: SwipeDirection) {
-        loadState(at: self.states.count - 2)
-        delegate?.cardStack(self, didUndoSwipeOnCardAt: currentCardIndex, from: direction)
-        UIView.animate(withDuration: options.backgroundCardResetAnimationDuration, animations: {
-            self.layoutBackgroundCards()
-        })
     }
     
 }

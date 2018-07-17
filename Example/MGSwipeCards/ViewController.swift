@@ -202,8 +202,8 @@ extension ViewController: MGCardStackViewDelegate {
         return options
     }
     
-    func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection) {
-        print("Undo swipe \(direction) on \(cards[index].model?.name ?? "")")
+    func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int) {
+        print("Undo swipe on \(cards[index].model?.name ?? "")")
     }
     
     func shouldDisableShiftAnimation(_ cardStack: MGCardStackView) -> Bool {

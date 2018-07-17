@@ -14,7 +14,8 @@ public protocol MGCardStackViewDelegate {
     func additionalOptions(_ cardStack: MGCardStackView) -> MGCardStackViewOptions
     func shouldDisableShiftAnimation(_ cardStack: MGCardStackView) -> Bool
     func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection)
-    func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection)
+    func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int)
+    //func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection)
     func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, touchPoint: CGPoint)
     func cardStack(_ cardStack: MGCardStackView, additionalOptionsForCardAt index: Int) -> MGSwipeCardOptions
 }
