@@ -12,50 +12,71 @@ open class CardStackAnimator {
 
     public var isResettingCard: Bool = false
     
+    private var cardStack: MGCardStackView
+    
+    init(cardStack: MGCardStackView) {
+        self.cardStack = cardStack
+    }
+    
     //MARK: - Public
     
-    open func applySwipeAnimation(to card: MGSwipeCard, direction: SwipeDirection, forced: Bool = false, completion: ((Bool) -> Void)?) {
+    open func applySwipeAnimation(to card: MGSwipeCard?, direction: SwipeDirection, forced: Bool = false, completion: ((Bool) -> Void)?) {
+        guard let card = card else { return }
         removeAllSwipeAnimations(on: card)
-        
+
         card.layer.shouldRasterize = true
         card.layer.rasterizationScale = UIScreen.main.scale
         
-        let overlayDuration = forced ? card.options.overlayFadeInOutDuration : 0
+        let overlayDuration = forced ? cardStack.options.cardOverlayFadeInOutDuration : 0
         let rotation = forced ? randomRotationForSwipe(card, direction: direction) : rotationForSwipe(card, direction: direction)
-        let swipeDelay = forced ? card.options.overlayFadeInOutDuration : 0
-        let translation = forced ? translationPoint(card, direction: direction, dragTranslation: direction.point) : translationPoint(card, direction: direction, dragTranslation: card.panGestureRecognizer.translation(in: card.superview))
+        let dragTranslation = forced ? direction.point : card.panGestureRecognizer.translation(in: card.superview)
+        let translation = translationPoint(card, direction: direction, dragTranslation: dragTranslation)
         
-        UIView.animate(withDuration: overlayDuration, delay: 0, options: .curveLinear, animations: {
-            self.updateOverlays(on: card, direction: direction)
-        }, completion: nil)
-        
-        applyRotationAnimation(to: card, toValue: rotation, beginTime: CACurrentMediaTime() + swipeDelay, duration: card.options.swipeAnimationMaximumDuration)
-        applyTranslationAnimation(to: card, toValue: translation, beginTime: CACurrentMediaTime() + swipeDelay, duration: card.options.swipeAnimationMaximumDuration) { (_, finished) in
-            card.layer.shouldRasterize = false
-            completion?(finished)
+        applyOverlayAnimations(to: card, showDirection: direction, duration: overlayDuration) { (_, finished) in
+            if finished {
+                self.applyRotationAnimation(to: card, toValue: rotation, duration: self.cardStack.options.cardSwipeAnimationMaximumDuration)
+                self.applyTranslationAnimation(to: card, toValue: translation, duration: self.cardStack.options.cardSwipeAnimationMaximumDuration) { _, finished in
+                    if finished {
+                        card.layer.shouldRasterize = false
+                    }
+                    completion?(finished)
+                }
+            }
         }
     }
 
-    open func applyReverseSwipeAnimation(on card: MGSwipeCard, completion: ((Bool) -> Void)?) {
+    open func applyReverseSwipeAnimation(to card: MGSwipeCard?, from direction: SwipeDirection, completion: ((Bool) -> Void)?) {
+        guard let card = card else { return }
         removeAllSwipeAnimations(on: card)
         isResettingCard = true
         
-        applyRotationAnimation(to: card, toValue: 0, duration: card.options.undoSwipeAnimationDuration)
-        applyTranslationAnimation(to: card, toValue: .zero, duration: card.options.undoSwipeAnimationDuration) { (_, finished) in
-            card.layer.shouldRasterize = false
+        //recreate swipe transform
+        card.transform = CGAffineTransform.identity
+        card.transform.tx = translationPoint(card, direction: direction, dragTranslation: direction.point).x
+        card.transform.ty = translationPoint(card, direction: direction, dragTranslation: direction.point).y
+        if direction == .left {
+            card.transform = card.transform.rotated(by: -cardStack.options.cardUndoAnimationMaximumRotationAngle )
+        } else if direction == .right {
+            card.transform = card.transform.rotated(by: cardStack.options.cardUndoAnimationMaximumRotationAngle)
         }
+        card.overlay(forDirection: direction)?.alpha = 1
         
-        UIView.animate(withDuration: card.options.overlayFadeInOutDuration, delay: card.options.undoSwipeAnimationDuration, options: .curveLinear, animations: {
-            self.updateOverlays(on: card, direction: nil)
-        }) { finished in
+        applyRotationAnimation(to: card, toValue: 0, duration: cardStack.options.cardUndoAnimationDuration)
+        applyTranslationAnimation(to: card, toValue: .zero, duration: cardStack.options.cardUndoAnimationDuration) { _, finished in
             if finished {
-                self.isResettingCard = false
+                card.layer.shouldRasterize = false
+                self.applyOverlayAnimations(to: card, showDirection: nil, duration: self.cardStack.options.cardOverlayFadeInOutDuration, completionBlock: { _, finished in
+                    if finished {
+                        self.isResettingCard = false
+                    }
+                    completion?(finished)
+                })
             }
-            completion?(finished)
         }
     }
     
-    open func applyResetAnimation(to card: MGSwipeCard, completion: ((Bool) -> Void)?) {
+    open func applyResetAnimation(to card: MGSwipeCard?, completion: ((Bool) -> Void)?) {
+        guard let card = card else { return }
         removeAllSwipeAnimations(on: card)
         isResettingCard = true
         
@@ -64,8 +85,8 @@ open class CardStackAnimator {
 
         if let resetTranslationAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY) {
             resetTranslationAnimation.toValue = CGPoint.zero
-            resetTranslationAnimation.springBounciness = card.options.resetAnimationSpringBounciness
-            resetTranslationAnimation.springSpeed = card.options.resetAnimationSpringSpeed
+            resetTranslationAnimation.springBounciness = cardStack.options.cardResetAnimationSpringBounciness
+            resetTranslationAnimation.springSpeed = cardStack.options.cardResetAnimationSpringSpeed
             resetTranslationAnimation.completionBlock = { _, finished in
                 if finished {
                     card.layer.shouldRasterize = false
@@ -78,21 +99,23 @@ open class CardStackAnimator {
         
         if let resetRotationAnimation = POPSpringAnimation(propertyNamed: kPOPLayerRotation) {
             resetRotationAnimation.toValue = 0
-            resetRotationAnimation.springBounciness = card.options.resetAnimationSpringBounciness
-            resetRotationAnimation.springSpeed = card.options.resetAnimationSpringSpeed
+            resetRotationAnimation.springBounciness = cardStack.options.cardResetAnimationSpringBounciness
+            resetRotationAnimation.springSpeed = cardStack.options.cardResetAnimationSpringSpeed
             card.layer.pop_add(resetRotationAnimation, forKey: CardStackAnimator.springRotationKey)
         }
 
-        guard let direction = card.activeDirection else { return }
-        if let resetOverlayAnimation = POPSpringAnimation(propertyNamed: kPOPViewAlpha) {
-            resetOverlayAnimation.toValue = 0
-            resetOverlayAnimation.springBounciness = card.options.resetAnimationSpringBounciness
-            resetOverlayAnimation.springSpeed = card.options.resetAnimationSpringSpeed
-            card.overlay(forDirection: direction)?.pop_add(resetOverlayAnimation, forKey: CardStackAnimator.springOverlayAlphaKey)
+        card.swipeDirections.forEach { direction in
+            if let resetOverlayAnimation = POPSpringAnimation(propertyNamed: kPOPViewAlpha) {
+                resetOverlayAnimation.toValue = 0
+                resetOverlayAnimation.springBounciness = cardStack.options.cardResetAnimationSpringBounciness
+                resetOverlayAnimation.springSpeed = cardStack.options.cardResetAnimationSpringSpeed
+                card.overlay(forDirection: direction)?.pop_add(resetOverlayAnimation, forKey: CardStackAnimator.springOverlayAlphaKey)
+            }
         }
     }
     
-    open func removeAllSwipeAnimations(on card: MGSwipeCard) {
+    open func removeAllSwipeAnimations(on card: MGSwipeCard?) {
+        guard let card = card else { return }
         isResettingCard = false
         for key in CardStackAnimator.cardLayerPopAnimationKeys {
             card.layer.pop_removeAnimation(forKey: key)
@@ -108,37 +131,6 @@ open class CardStackAnimator {
 
     //MARK: - Private
     
-    private func applyTranslationAnimation(to card: MGSwipeCard, toValue: CGPoint, beginTime: CFTimeInterval = 0, duration: CFTimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
-        if let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY) {
-            translationAnimation.duration = duration
-            translationAnimation.beginTime = beginTime
-            translationAnimation.toValue = toValue
-            if completionBlock != nil {
-                translationAnimation.completionBlock = completionBlock
-            }
-            card.layer.pop_add(translationAnimation, forKey: CardStackAnimator.translationKey)
-        }
-    }
-
-    private func applyRotationAnimation(to card: MGSwipeCard, toValue: CGFloat, beginTime: CFTimeInterval = 0, duration: CFTimeInterval) {
-        if let rotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation) {
-            rotationAnimation.duration = duration
-            rotationAnimation.beginTime = beginTime
-            rotationAnimation.toValue = toValue
-            card.layer.pop_add(rotationAnimation, forKey: CardStackAnimator.rotationKey)
-        }
-    }
-    
-    private func updateOverlays(on card: MGSwipeCard, direction: SwipeDirection?) {
-        card.swipeDirections.forEach { swipeDirection in
-            if swipeDirection == direction {
-                card.overlay(forDirection: swipeDirection)?.alpha = 1
-            } else {
-                card.overlay(forDirection: swipeDirection)?.alpha = 0
-            }
-        }
-    }
-
     //not totally precise with fast swipes. Becomes more accurate the smaller card.options.maximumSwipeDuration is
     private func translationPoint(_ card: MGSwipeCard, direction: SwipeDirection, dragTranslation: CGPoint) -> CGPoint {
         let cardDiagonalLength = CGPoint.zero.distance(to: CGPoint(x: card.bounds.width, y: card.bounds.height))
@@ -149,13 +141,12 @@ open class CardStackAnimator {
         return CGPoint(x: velocityFactor * directionVector.x * minimumOffscreenTranslation.x, y: velocityFactor * directionVector.y * minimumOffscreenTranslation.y)
     }
     
-    //not always accurate due to rotation
     private func rotationForSwipe(_ card: MGSwipeCard, direction: SwipeDirection) -> CGFloat {
         if direction == .up || direction == .down { return 0 }
         if let location = card.touchPoint {
-            if (direction == .left && location.y < card.bounds.height / 2) || (direction == .right && location.y >= card.bounds.height / 2) { return -1 }
+            if (direction == .left && location.y < card.bounds.height / 2) || (direction == .right && location.y >= card.bounds.height / 2) { return -card.options.maximumRotationAngle }
         }
-        return 1
+        return card.options.maximumRotationAngle
     }
     
     private func randomRotationForSwipe(_ card: MGSwipeCard, direction: SwipeDirection) -> CGFloat {
@@ -165,12 +156,63 @@ open class CardStackAnimator {
         }
     }
     
+    private func applyTranslationAnimation(to card: MGSwipeCard, toValue: CGPoint, duration: CFTimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
+        if let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY) {
+            translationAnimation.duration = duration
+            translationAnimation.toValue = toValue
+            if completionBlock != nil {
+                translationAnimation.completionBlock = completionBlock
+            }
+            card.layer.pop_add(translationAnimation, forKey: CardStackAnimator.translationKey)
+        }
+    }
+
+    private func applyRotationAnimation(to card: MGSwipeCard, toValue: CGFloat, duration: CFTimeInterval) {
+        if let rotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation) {
+            rotationAnimation.duration = duration
+            rotationAnimation.toValue = toValue
+            card.layer.pop_add(rotationAnimation, forKey: CardStackAnimator.rotationKey)
+        }
+    }
+    
+    private func applyOverlayAnimations(to card: MGSwipeCard, showDirection: SwipeDirection?, duration: CFTimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
+        var completionCalled = false
+        for direction in card.swipeDirections {
+            if direction == showDirection {
+                if let keepOverlayAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha) {
+                    keepOverlayAnimation.duration = duration
+                    keepOverlayAnimation.toValue = 1
+                    keepOverlayAnimation.completionBlock = { animation, finished in
+                        if !completionCalled {
+                            completionBlock?(animation, finished)
+                            completionCalled = true
+                        }
+                    }
+                    card.overlay(forDirection: direction)?.pop_add(keepOverlayAnimation, forKey: CardStackAnimator.overlayAlphaKey)
+                }
+            } else {
+                if let hideOverlayAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha) {
+                    hideOverlayAnimation.duration = duration
+                    hideOverlayAnimation.toValue = 0
+                    hideOverlayAnimation.completionBlock = { animation, finished in
+                        if !completionCalled {
+                            completionBlock?(animation, finished)
+                            completionCalled = true
+                        }
+                    }
+                    card.overlay(forDirection: direction)?.pop_add(hideOverlayAnimation, forKey: CardStackAnimator.overlayAlphaKey)
+                }
+            }
+        }
+    }
+
 }
 
 extension CardStackAnimator {
     
     public static var translationKey = "translationAnimation"
     public static var rotationKey = "rotationAnimation"
+    public static var overlayAlphaKey = "overlayAlphaAnimation"
     public static var springTranslationKey = "springTranslationAnimation"
     public static var springRotationKey = "springRotationAnimation"
     public static var springOverlayAlphaKey = "springOverlayAlphaAnimation"
@@ -183,6 +225,7 @@ extension CardStackAnimator {
     ]
     
     public static var overlayViewPopAnimationKeys = [
+        overlayAlphaKey,
         springOverlayAlphaKey
     ]
 }

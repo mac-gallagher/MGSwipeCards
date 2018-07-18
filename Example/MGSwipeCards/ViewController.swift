@@ -179,7 +179,10 @@ class ViewController: UIViewController {
 extension ViewController: MGCardStackViewDataSource {
     
     func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard {
-        return cards[index]
+        let card = SampleMGSwipeCard()
+        card.model = cardModels[index]
+        return card
+//        return cards[index]
     }
     
     func numberOfCards(in cardStack: MGCardStackView) -> Int {
@@ -202,8 +205,8 @@ extension ViewController: MGCardStackViewDelegate {
         return options
     }
     
-    func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int) {
-        print("Undo swipe on \(cards[index].model?.name ?? "")")
+    func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection) {
+        print("Undo \(direction) swipe on \(cards[index].model?.name ?? "")")
     }
     
     func shouldDisableShiftAnimation(_ cardStack: MGCardStackView) -> Bool {
