@@ -14,16 +14,6 @@ class ViewController: UIViewController {
     
     //MARK: - Subviews
     
-    lazy var cards: [SampleMGSwipeCard] = {
-        var finishedCards = [SampleMGSwipeCard]()
-        for model in cardModels {
-            let card = SampleMGSwipeCard()
-            card.model = model
-            finishedCards.append(card)
-        }
-        return finishedCards
-    }()
-    
     let cardStack = MGCardStackView()
     
     var backgroundGradient: UIView?
@@ -182,11 +172,10 @@ extension ViewController: MGCardStackViewDataSource {
         let card = SampleMGSwipeCard()
         card.model = cardModels[index]
         return card
-//        return cards[index]
     }
     
     func numberOfCards(in cardStack: MGCardStackView) -> Int {
-        return cards.count
+        return cardModels.count
     }
     
 }
@@ -206,7 +195,7 @@ extension ViewController: MGCardStackViewDelegate {
     }
     
     func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection) {
-        print("Undo \(direction) swipe on \(cards[index].model?.name ?? "")")
+        print("Undo \(direction) swipe on \(cardModels[index].name)")
     }
     
     func shouldDisableShiftAnimation(_ cardStack: MGCardStackView) -> Bool {
@@ -214,7 +203,7 @@ extension ViewController: MGCardStackViewDelegate {
     }
     
     func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection) {
-        print("Swiped \(direction) on \(cards[index].model?.name ?? "")")
+        print("Swiped \(direction) on \(cardModels[index].name)")
     }
     
     func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, touchPoint: CGPoint) {

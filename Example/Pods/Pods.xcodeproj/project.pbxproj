@@ -405,7 +405,6 @@
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
-				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				D85BE58BE87DDBB6197873C422D3998F /* Development Pods */,
 				76C0BCA3A375918800E880E176FF6585 /* Frameworks */,
 				83343EFC3DE664419515F74250302381 /* Pods */,
@@ -518,6 +517,7 @@
 		EDD91A0EC9BDD11590F64E5347BCEEC2 /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				D79FADB0E1116AC4D539E649C67EDA58 /* Pods-MGSwipeCards_Example */,
 			);
 			name = "Targets Support Files";
