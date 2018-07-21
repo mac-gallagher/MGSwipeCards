@@ -231,7 +231,7 @@ open class CardStackAnimator {
     }
     
     private func applyAlphaAnimation(to view: UIView?, alpha: CGFloat, duration: CFTimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
-        if duration == 0 {
+        if duration == 0 || view == nil {
             view?.alpha = alpha
             completionBlock?(nil, true)
             return
