@@ -124,9 +124,6 @@ open class MGCardStackView: UIView {
     private func reloadCard(at index: Int) -> MGSwipeCard? {
         guard let dataSource = dataSource else { return nil }
         let card = dataSource.cardStack(self, cardForIndexAt: index)
-        if delegate != nil {
-            card.options = delegate!.cardStack(self, additionalOptionsForCardAt: index)
-        }
         card.delegate = self
         return card
     }
@@ -202,14 +199,15 @@ open class MGCardStackView: UIView {
         }
     }
     
-    public func shift(withDistance distance: Int = 1) {
+    public func shift(withDistance distance: Int = 1, animated: Bool) {
         if distance == 0 || visibleCards.count <= 1 { return }
         if !topCard!.isUserInteractionEnabled || animator.isResettingCard { return }
         let newCurrentState = State(remainingIndices: currentState.remainingIndices.shift(withDistance: distance), lastSwipedCardIndex: currentState.lastSwipedCardIndex, lastSwipedDirection: currentState.lastSwipedDirection)
         states.removeLast()
         states.append(newCurrentState)
         loadState(atStateArrayIndex: self.states.count - 1)
-        if delegate?.shouldDisableShiftAnimation(self) == true { return }
+        
+        if !animated { return }
         if distance > 0 {
             let scaleFactor = options.forwardShiftAnimationInitialScaleFactor
             topCard?.transform = CGAffineTransform(scaleX: scaleFactor, y: scaleFactor)

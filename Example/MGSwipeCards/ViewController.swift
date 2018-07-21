@@ -84,9 +84,9 @@ class ViewController: UIViewController {
     
     @objc func handleShift(_ sender: UIButton) {
         if sender.tag == 1 {
-            cardStack.shift(withDistance: -1)
+            cardStack.shift(withDistance: -1, animated: true)
         } else {
-            cardStack.shift()
+            cardStack.shift(animated: true)
         }
     }
     
@@ -196,10 +196,6 @@ extension ViewController: MGCardStackViewDelegate {
     
     func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection) {
         print("Undo \(direction) swipe on \(cardModels[index].name)")
-    }
-    
-    func shouldDisableShiftAnimation(_ cardStack: MGCardStackView) -> Bool {
-        return false
     }
     
     func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection) {

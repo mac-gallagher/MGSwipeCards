@@ -21,7 +21,7 @@ open class MGSwipeCard: MGSwipeView {
     
     public var delegate: MGSwipeCardDelegate?
     
-    public var options = MGSwipeCardOptions.defaultOptions
+    open var options = MGSwipeCardOptions.defaultOptions
     
     public var touchPoint: CGPoint?
     
