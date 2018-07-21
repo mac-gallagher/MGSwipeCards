@@ -14,16 +14,6 @@ class ViewController: UIViewController {
     
     //MARK: - Subviews
     
-    lazy var cards: [SampleMGSwipeCard] = {
-        var finishedCards = [SampleMGSwipeCard]()
-        for model in cardModels {
-            let card = SampleMGSwipeCard()
-            card.model = model
-            finishedCards.append(card)
-        }
-        return finishedCards
-    }()
-    
     let cardStack = MGCardStackView()
     
     var backgroundGradient: UIView?
@@ -94,9 +84,9 @@ class ViewController: UIViewController {
     
     @objc func handleShift(_ sender: UIButton) {
         if sender.tag == 1 {
-            cardStack.shift(withDistance: -1)
+            cardStack.shift(withDistance: -1, animated: true)
         } else {
-            cardStack.shift()
+            cardStack.shift(animated: true)
         }
     }
     
@@ -179,11 +169,13 @@ class ViewController: UIViewController {
 extension ViewController: MGCardStackViewDataSource {
     
     func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard {
-        return cards[index]
+        let card = SampleMGSwipeCard()
+        card.model = cardModels[index]
+        return card
     }
     
     func numberOfCards(in cardStack: MGCardStackView) -> Int {
-        return cards.count
+        return cardModels.count
     }
     
 }
@@ -203,15 +195,11 @@ extension ViewController: MGCardStackViewDelegate {
     }
     
     func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection) {
-        print("Undo swipe \(direction) on \(cards[index].model?.name ?? "")")
-    }
-    
-    func shouldDisableShiftAnimation(_ cardStack: MGCardStackView) -> Bool {
-        return false
+        print("Undo \(direction) swipe on \(cardModels[index].name)")
     }
     
     func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection) {
-        print("Swiped \(direction) on \(cards[index].model?.name ?? "")")
+        print("Swiped \(direction) on \(cardModels[index].name)")
     }
     
     func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, touchPoint: CGPoint) {

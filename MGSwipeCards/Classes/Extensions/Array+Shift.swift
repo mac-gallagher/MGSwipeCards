@@ -18,16 +18,14 @@ extension Array {
         return Array(self[index ..< endIndex] + self[startIndex ..< index])
     }
     
-    mutating func shiftInPlace(withDistance distance: Int = 1) {
-        self = shift(withDistance: distance)
-    }
-    
 }
 
 extension Array where Element: Hashable {
+    
     func difference(from other: [Element]) -> [Element] {
         let thisSet = Set<Element>(self)
         let otherSet = Set<Element>(other)
         return Array(thisSet.symmetricDifference(otherSet))
     }
+    
 }
