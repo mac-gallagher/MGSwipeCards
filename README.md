@@ -16,7 +16,7 @@
 - [x] Smooth overlay view transitions
 - [x] Dynamic card loading using data source/delegate pattern
 
-# Table of Contents
+***
 
 - [Example](#example)
 - [Requirements](#requirements)
@@ -26,8 +26,7 @@
 - [Architecture](#architecture)
    - [MGCardStackView](#mgcardstackview)
       - [Useful Methods](#useful-methods)
-      - [MGCardStackViewDataSource](#mgcardstackviewdatasource)
-      - [MGCardStackViewDelegate](#mgcardstackviewdelegate)
+      - [Data source & delegates](#data-source-&-delegates)
       - [MGCardStackViewOptions](#mgcardstackviewoptions)
    - [MGSwipeCard](#mgswipecard)
       - [Card Appearance](#card-appearance)
@@ -175,7 +174,7 @@ func shift(withDistance distance: Int = 1, animated: Bool)
 
 ![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/shift.gif)
 
-### `MGCardStackViewDataSource`
+### Data source & delegates
 To populate your card stack, you must conform your view controller to the `MGCardStackViewDataSource` protocol and implement the following required functions:
 
 ```swift
@@ -184,7 +183,6 @@ func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwi
 ```
 Once your card stack's `dataSource` property is set, your card stack will automatically be populated. 
 
-### `MGCardStackViewDelegate`
 To react to swipes and other related events, you must conform your view controller to the `MGCardStackViewDelegate` protocol. The protocol contains the following (optional) methods:
 
 ```swift
@@ -192,7 +190,8 @@ func didSwipeAllCards(_ cardStack: MGCardStackView)
 func additionalOptions(_ cardStack: MGCardStackView) -> MGCardStackViewOptions
 func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection)
 func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection)
-func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, touchPoint: CGPoint)
+func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int)
+func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, tapCorner: UIRectCorner)
 ```
 
 **NOTE:** The `didSwipeCardAt` and `didSwipeAllCards ` methods are called regardless if a card was swiped programmatically or by the user.
