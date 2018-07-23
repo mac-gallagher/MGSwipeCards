@@ -228,8 +228,17 @@ open class MGCardStackView: UIView {
 
 extension MGCardStackView: MGSwipeCardDelegate {
     
-    public func card(didTap card: MGSwipeCard, location: CGPoint) {
-        delegate?.cardStack(self, didSelectCardAt: currentCardIndex, touchPoint: location)
+    public func card(didTap card: MGSwipeCard) {
+        delegate?.cardStack(self, didSelectCardAt: currentCardIndex)
+        
+        let location = card.tapGestureRecognizer.location(in: card.superview)
+        let topCorner: UIRectCorner
+        if location.x < card.bounds.width / 2 {
+            topCorner = location.y < card.bounds.height / 2 ? .topLeft : .bottomLeft
+        } else {
+            topCorner = location.y < card.bounds.height / 2 ? .topRight : .bottomRight
+        }
+        delegate?.cardStack(self, didSelectCardAt: currentCardIndex, tapCorner: topCorner)
     }
     
     public func card(didBeginSwipe card: MGSwipeCard) {

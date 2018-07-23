@@ -10,7 +10,7 @@ import UIKit
 
 public protocol MGSwipeCardDelegate {
 
-    func card(didTap card: MGSwipeCard, location: CGPoint)
+    func card(didTap card: MGSwipeCard)
     func card(didBeginSwipe card: MGSwipeCard)
     func card(didContinueSwipe card: MGSwipeCard)
     func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection)
@@ -126,7 +126,7 @@ open class MGSwipeCard: MGSwipeView {
     private var rotationDirectionY: CGFloat = 1
     
     open override func didTap(on view: MGSwipeView, recognizer: UITapGestureRecognizer) {
-        delegate?.card(didTap: self, location: recognizer.location(in: self))
+        delegate?.card(didTap: self)
     }
     
     open override func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {

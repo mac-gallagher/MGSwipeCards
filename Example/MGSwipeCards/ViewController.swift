@@ -202,8 +202,21 @@ extension ViewController: MGCardStackViewDelegate {
         print("Swiped \(direction) on \(cardModels[index].name)")
     }
     
-    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, touchPoint: CGPoint) {
-        print("Tapped with location \(touchPoint)")
+    func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, tapCorner: UIRectCorner) {
+        var cornerString: String
+        switch tapCorner {
+        case .topLeft:
+            cornerString = "top left"
+        case .topRight:
+            cornerString = "top right"
+        case .bottomRight:
+            cornerString = "bottom right"
+        case .bottomLeft:
+            cornerString = "bottom left"
+        default:
+            cornerString = ""
+        }
+        print("Card tapped at \(cornerString)")
     }
     
 }
