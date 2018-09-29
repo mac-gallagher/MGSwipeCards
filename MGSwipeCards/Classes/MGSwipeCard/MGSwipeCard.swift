@@ -80,10 +80,10 @@ open class MGSwipeCard: MGSwipeView {
     
     private func updateViewHierarchy() {
         if contentView != nil {
-            sendSubview(toBack: contentView!)
+            sendSubviewToBack(contentView!)
         }
         if overlayContainer != nil {
-            bringSubview(toFront: overlayContainer!)
+            bringSubviewToFront(overlayContainer!)
         }
     }
     

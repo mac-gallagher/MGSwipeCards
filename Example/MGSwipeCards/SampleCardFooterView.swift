@@ -39,14 +39,14 @@ class SampleCardFooterView: UIView {
     }
     
     private func initializeLabel() {
-        let attributedText = NSMutableAttributedString(string: (title ?? "") + "\n", attributes: NSAttributedStringKey.titleAttributes)
+        let attributedText = NSMutableAttributedString(string: (title ?? "") + "\n", attributes: NSAttributedString.Key.titleAttributes)
         
         if subtitle != nil && subtitle != "" {
-            attributedText.append(NSMutableAttributedString(string: subtitle!, attributes: NSAttributedStringKey.subtitleAttributes))
+            attributedText.append(NSMutableAttributedString(string: subtitle!, attributes: NSAttributedString.Key.subtitleAttributes))
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 4
             paragraphStyle.lineBreakMode = .byTruncatingTail
-            attributedText.addAttributes([NSAttributedStringKey.paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: attributedText.length))
+            attributedText.addAttributes([NSAttributedString.Key.paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: attributedText.length))
             label.numberOfLines = 2
         }
         
@@ -63,7 +63,7 @@ class SampleCardFooterView: UIView {
     
 }
 
-extension NSAttributedStringKey {
+extension NSAttributedString.Key {
     
     static var shadowAttribute: NSShadow = {
         let shadow = NSShadow()
@@ -73,16 +73,16 @@ extension NSAttributedStringKey {
         return shadow
     }()
     
-    static var titleAttributes: [NSAttributedStringKey: Any] = [
-        NSAttributedStringKey.font: UIFont(name: "ArialRoundedMTBold", size: 24)!,
-        NSAttributedStringKey.foregroundColor: UIColor.white,
-        NSAttributedStringKey.shadow: NSAttributedStringKey.shadowAttribute
+    static var titleAttributes: [NSAttributedString.Key: Any] = [
+        NSAttributedString.Key.font: UIFont(name: "ArialRoundedMTBold", size: 24)!,
+        NSAttributedString.Key.foregroundColor: UIColor.white,
+        NSAttributedString.Key.shadow: NSAttributedString.Key.shadowAttribute
     ]
     
-    static var subtitleAttributes: [NSAttributedStringKey: Any] = [
-        NSAttributedStringKey.font: UIFont(name: "Arial", size: 17)!,
-        NSAttributedStringKey.foregroundColor: UIColor.white,
-        NSAttributedStringKey.shadow: NSAttributedStringKey.shadowAttribute
+    static var subtitleAttributes: [NSAttributedString.Key: Any] = [
+        NSAttributedString.Key.font: UIFont(name: "Arial", size: 17)!,
+        NSAttributedString.Key.foregroundColor: UIColor.white,
+        NSAttributedString.Key.shadow: NSAttributedString.Key.shadowAttribute
     ]
     
 }

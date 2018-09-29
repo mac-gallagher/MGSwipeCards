@@ -9,7 +9,7 @@ import Foundation
 
 open class MGSwipeCardOptions {
     
-    open static var defaultOptions = MGSwipeCardOptions()
+    public static var defaultOptions = MGSwipeCardOptions()
 
     ///The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1600.
     open var minimumSwipeSpeed: CGFloat = 1600

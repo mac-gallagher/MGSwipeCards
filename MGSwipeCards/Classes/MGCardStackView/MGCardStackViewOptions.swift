@@ -9,7 +9,7 @@ import Foundation
 
 open class MGCardStackViewOptions {
     
-    open static var defaultOptions = MGCardStackViewOptions()
+    public static var defaultOptions = MGCardStackViewOptions()
     
     open var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     open var numberOfVisibleCards: Int = 2

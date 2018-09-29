@@ -38,7 +38,7 @@ class SampleCardOverlay: UIView {
     private func initializeLabel() {
         let label = UILabel()
         label.textAlignment = .center
-        label.attributedText = NSAttributedString(string: title ?? "", attributes: NSAttributedStringKey.overlayAttributes)
+        label.attributedText = NSAttributedString(string: title ?? "", attributes: NSAttributedString.Key.overlayAttributes)
         label.textColor = color
         
         addSubview(label)
@@ -47,11 +47,11 @@ class SampleCardOverlay: UIView {
     
 }
 
-extension NSAttributedStringKey {
+extension NSAttributedString.Key {
 
-    static var overlayAttributes: [NSAttributedStringKey: Any] = [
-        NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Bold", size: 42)!,
-        NSAttributedStringKey.kern: 5.0
+    static var overlayAttributes: [NSAttributedString.Key: Any] = [
+        NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Bold", size: 42)!,
+        NSAttributedString.Key.kern: 5.0
     ]
 
 }
