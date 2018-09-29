@@ -1,5 +1,5 @@
 # MGSwipeCards
-![Swift-Version](https://img.shields.io/badge/Swift-4.1-orange.svg)
+![Swift-Version](https://img.shields.io/badge/Swift-4.2-orange.svg)
 ![CocoaPods](https://img.shields.io/cocoapods/v/MGSwipeCards.svg)
 ![license](https://img.shields.io/cocoapods/l/MGSwipeCards.svg)
 ![CocoaPods](https://img.shields.io/cocoapods/p/MGSwipeCards.svg)
@@ -26,7 +26,7 @@
 - [Architecture](#architecture)
    - [MGCardStackView](#mgcardstackview)
       - [Useful Methods](#useful-methods)
-      - [Data source & delegates](#data-source-&-delegates)
+      - [Data Source & Delegates](#data-source--delegates)
       - [MGCardStackViewOptions](#mgcardstackviewoptions)
    - [MGSwipeCard](#mgswipecard)
       - [Card Appearance](#card-appearance)
@@ -174,7 +174,7 @@ func shift(withDistance distance: Int = 1, animated: Bool)
 
 ![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/shift.gif)
 
-### Data source & delegates
+### Data Source & Delegates
 To populate your card stack, you must conform your view controller to the `MGCardStackViewDataSource` protocol and implement the following required functions:
 
 ```swift
