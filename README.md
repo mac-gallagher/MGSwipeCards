@@ -188,6 +188,7 @@ To react to swipes and other related events, you must conform your view controll
 ```swift
 func didSwipeAllCards(_ cardStack: MGCardStackView)
 func additionalOptions(_ cardStack: MGCardStackView) -> MGCardStackViewOptions
+
 func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection)
 func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection)
 func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int)
@@ -205,8 +206,10 @@ The following properties of `MGCardStackViewOptions` are available:
 var backgroundCardScaleFactor: CGFloat = 0.95
 var backgroundCardResetAnimationDuration: TimeInterval = 0.3
 var backgroundCardScaleAnimationDuration: TimeInterval = 0.4
+
 var forwardShiftAnimationInitialScaleFactor: CGFloat = 0.98
 var backwardShiftAnimationInitialScaleFactor: CGFloat = 1.02
+
 var cardOverlayFadeInOutDuration: TimeInterval = 0.15
 var cardUndoAnimationDuration: TimeInterval = 0.2
 var cardSwipeAnimationMaximumDuration: TimeInterval = 0.8
