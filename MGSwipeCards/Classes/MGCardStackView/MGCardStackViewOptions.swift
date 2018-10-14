@@ -5,19 +5,22 @@
 //  Created by Mac Gallagher on 7/14/18.
 //
 
-import Foundation
-
 open class MGCardStackViewOptions {
     
     public static var defaultOptions = MGCardStackViewOptions()
     
     open var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    
+    ///The maximum number of cards to be displayed on screen.
     open var numberOfVisibleCards: Int = 2
+    
     open var backgroundCardScaleFactor: CGFloat = 0.95
     open var backgroundCardResetAnimationDuration: TimeInterval = 0.3
     open var backgroundCardScaleAnimationDuration: TimeInterval = 0.4
+    
     open var forwardShiftAnimationInitialScaleFactor: CGFloat = 0.98
     open var backwardShiftAnimationInitialScaleFactor: CGFloat = 1.02
+    
     open var cardOverlayFadeInOutDuration: TimeInterval = 0.15
     open var cardUndoAnimationDuration: TimeInterval = 0.2
     

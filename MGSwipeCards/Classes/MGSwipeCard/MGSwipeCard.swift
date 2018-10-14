@@ -6,10 +6,7 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-import UIKit
-
 public protocol MGSwipeCardDelegate {
-
     func card(didTap card: MGSwipeCard)
     func card(didBeginSwipe card: MGSwipeCard)
     func card(didContinueSwipe card: MGSwipeCard)
@@ -17,16 +14,16 @@ public protocol MGSwipeCardDelegate {
     func card(didCancelSwipe card: MGSwipeCard)
 }
 
-open class MGSwipeCard: MGSwipeView {
+/**
+ A wrapper around `MGDraggableSwipeView` which provides UI options for the user.
+*/
+open class MGSwipeCard: MGDraggableSwipeView {
     
     public var delegate: MGSwipeCardDelegate?
     
-    open var options = MGSwipeCardOptions.defaultOptions
-    
-    public var touchPoint: CGPoint?
-    
     public private(set) var contentView: UIView?
     public private(set) var footerView: UIView?
+    
     private var overlayContainer: UIView?
     private var overlays: [SwipeDirection: UIView?] = [:]
     
@@ -49,16 +46,12 @@ open class MGSwipeCard: MGSwipeView {
         layoutFooterView()
         layoutContentView()
         layoutOverlays()
-        updateViewHierarchy()
-    }
-    
-    private func layoutContentView() {
-        guard let content = contentView else { return }
-        NSLayoutConstraint.deactivate(contentViewConstraints)
-        if footerView == nil || footerIsTransparent {
-            contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
-        } else {
-            contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: footerView!.topAnchor, right: rightAnchor)
+        
+        if contentView != nil {
+            sendSubviewToBack(contentView!)
+        }
+        if overlayContainer != nil {
+            bringSubviewToFront(overlayContainer!)
         }
     }
     
@@ -68,42 +61,44 @@ open class MGSwipeCard: MGSwipeView {
         footerViewConstraints = footer.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, heightConstant: footerHeight)
     }
     
-    private func layoutOverlays() {
-        guard let overlayContainer = overlayContainer else { return }
-        NSLayoutConstraint.deactivate(overlayContainerConstraints)
-        if footerView == nil {
-            overlayContainerConstraints = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
+    private func layoutContentView() {
+        guard let content = contentView else { return }
+        NSLayoutConstraint.deactivate(contentViewConstraints)
+        
+        if let footer = footerView, !footerIsTransparent {
+            contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
         } else {
-            overlayContainerConstraints = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: footerView!.topAnchor, right: rightAnchor)
+            contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
         }
     }
     
-    private func updateViewHierarchy() {
-        if contentView != nil {
-            sendSubviewToBack(contentView!)
-        }
-        if overlayContainer != nil {
-            bringSubviewToFront(overlayContainer!)
+    private func layoutOverlays() {
+        guard let overlayContainer = overlayContainer else { return }
+        NSLayoutConstraint.deactivate(overlayContainerConstraints)
+        if let footer = footerView {
+            overlayContainerConstraints = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
+        } else {
+            overlayContainerConstraints = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
         }
     }
     
     //MARK: - Setters/Getters
     
-    public func setContentView(_ content: UIView?) {
+    open func setContentView(_ content: UIView?) {
         guard let content = content else { return }
         contentView = content
-        addSubview(contentView!)
+        addSubview(content)
         setNeedsLayout()
     }
     
-    public func setFooterView(_ footer: UIView?) {
+    open func setFooterView(_ footer: UIView?) {
         guard let footer = footer else { return }
         footerView = footer
-        addSubview(footerView!)
+        addSubview(footer)
         setNeedsLayout()
     }
     
-    public func setOverlay(forDirection direction: SwipeDirection, overlay: UIView?) {
+    open func setOverlay(forDirection direction: SwipeDirection, overlay: UIView?) {
         guard let overlay = overlay else { return }
         if overlayContainer == nil {
             overlayContainer = UIView()
@@ -120,61 +115,26 @@ open class MGSwipeCard: MGSwipeView {
     public func overlay(forDirection direction: SwipeDirection) -> UIView? {
         return overlays[direction] ?? nil
     }
-
-    //MARK: - Gesture Handling
     
-    private var rotationDirectionY: CGFloat = 1
+    //MARK: MGDraggableSwipeView Overrides
     
-    open override func didTap(on view: MGSwipeView, recognizer: UITapGestureRecognizer) {
+    open override func didTap(on view: MGDraggableSwipeView) {
         delegate?.card(didTap: self)
     }
     
-    open override func beginSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-        layer.rasterizationScale = UIScreen.main.scale
-        layer.shouldRasterize = true
-        let touchPoint = recognizer.location(in: self)
-        if touchPoint.y < bounds.height / 2 {
-            rotationDirectionY = 1
-        } else {
-            rotationDirectionY = -1
-        }
-        self.touchPoint = touchPoint
+    open override func didBeginSwipe(on view: MGDraggableSwipeView) {
         delegate?.card(didBeginSwipe: self)
     }
     
-    open override func continueSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-        let translation = recognizer.translation(in: self)
-        var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
-        let superviewTranslation = recognizer.translation(in: superview)
-        let rotationStrength = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
-        let rotationAngle = max(-CGFloat.pi/2, min(rotationDirectionY * abs(options.maximumRotationAngle) * rotationStrength, CGFloat.pi/2))
-        transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngle))
-        layer.setAffineTransform(transform)
+    open override func didContinueSwipe(on view: MGDraggableSwipeView) {
         delegate?.card(didContinueSwipe: self)
     }
     
-    open override func endSwiping(on view: MGSwipeView, recognizer: UIPanGestureRecognizer) {
-        layer.shouldRasterize = false
-        if let direction = activeDirection {
-            if swipeSpeed(on: direction) >= options.minimumSwipeSpeed {
-                delegate?.card(didSwipe: self, with: direction)
-            } else if swipePercentage(on: direction) >= options.minimumSwipeMargin {
-                delegate?.card(didSwipe: self, with: direction)
-            } else {
-                delegate?.card(didCancelSwipe: self)
-            }
-        } else {
-            delegate?.card(didCancelSwipe: self)
-        }
+    open override func didSwipe(on view: MGDraggableSwipeView, with direction: SwipeDirection) {
+        delegate?.card(didSwipe: self, with: direction)
     }
     
+    open override func didCancelSwipe(on view: MGDraggableSwipeView) {
+        delegate?.card(didCancelSwipe: self)
+    }
 }
-
-
-
-
-
-
-
-
-

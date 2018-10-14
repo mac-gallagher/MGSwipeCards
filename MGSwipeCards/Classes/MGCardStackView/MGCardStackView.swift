@@ -6,46 +6,67 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-import UIKit
+/**
+ A data structure is used to represent the current state of the card stack.
+ 
+ A new state is created each time a user *swipes*, *shifts*, or *undos* a card on the stack. Each state contains a reference to the state before it.
+*/
+private class CardStackState {
+    static var emptyState = CardStackState(remainingIndices: [], previousSwipe: nil, previousState: nil)
+    
+    /**
+     The indices of the data source which have yet to be swiped by the user.
+     
+     This array reflects the current order of the card stack, with the first element equal to the index of the top card. The order of this array accounts for both previously swiped cards and cards which may have been reordered in the stack.
+    */
+    var remainingIndices: [Int]
+    
+    /**
+     The swipe which occured in the previous state.
+     
+     The `index` parameter refers to the index of the card which was swiped.
+     */
+    var previousSwipe: (index: Int, direction: SwipeDirection)?
+    
+    /**
+     A reference to the previous card stack state.
+    */
+    var previousState: CardStackState?
+    
+    init(remainingIndices: [Int], previousSwipe: (index: Int, direction: SwipeDirection)?, previousState: CardStackState?) {
+        self.remainingIndices = remainingIndices
+        self.previousSwipe = previousSwipe
+        self.previousState = previousState
+    }
+}
 
 open class MGCardStackView: UIView {
     
-    private struct State {
-        static var emptyState = State(remainingIndices: [], lastSwipedCardIndex: nil, lastSwipedDirection: nil)
-        var remainingIndices: [Int]
-        var lastSwipedCardIndex: Int?
-        var lastSwipedDirection: SwipeDirection?
-    }
-    
-    public var delegate: MGCardStackViewDelegate? {
-        didSet {
-            reloadData()
-            layoutIfNeeded()
-        }
-    }
+    public var delegate: MGCardStackViewDelegate?
 
     public var dataSource: MGCardStackViewDataSource? {
         didSet { reloadData() }
     }
     
-    public var options: MGCardStackViewOptions {
-        return delegate?.additionalOptions(self) ?? MGCardStackViewOptions.defaultOptions
+    public var options: MGCardStackViewOptions = .defaultOptions {
+        didSet { layoutIfNeeded() }
     }
     
-    private lazy var animator = CardStackAnimator(cardStack: self)
+    public var currentCardIndex: Int {
+        return currentState.remainingIndices.first ?? 0
+    }
     
     private var visibleCards: [MGSwipeCard] = []
+
     private var topCard: MGSwipeCard? {
         return visibleCards.first ?? nil
     }
     
-    private var states: [State] = []
-    private var currentState: State {
-        return states.last ?? State.emptyState
+    private var currentState: CardStackState = .emptyState {
+        didSet { loadCurrentState() }
     }
-    public var currentCardIndex: Int {
-        return currentState.remainingIndices.first ?? 0
-    }
+    
+    private lazy var animator = CardStackAnimator(cardStack: self)
     
     private var cardStack = UIView()
     
@@ -78,23 +99,21 @@ open class MGCardStackView: UIView {
                                  y: options.cardStackInsets.top,
                                  width: bounds.width - options.cardStackInsets.left - options.cardStackInsets.right,
                                  height: bounds.height - options.cardStackInsets.top - options.cardStackInsets.bottom)
-        layoutCards()
-    }
-    
-    private func layoutCards() {
+        
         for (index, card) in visibleCards.enumerated() {
             layoutCard(card, at: index)
         }
     }
-    
-    private func layoutCard(_ card: MGSwipeCard?, at index: Int) {
-        card?.transform = CGAffineTransform.identity
-        card?.frame = cardStack.bounds
+
+    //TODO: Allow user to set their own frame
+    private func layoutCard(_ card: MGSwipeCard, at index: Int) {
+        card.transform = CGAffineTransform.identity
+        card.frame = cardStack.bounds
         if index == 0 {
-            card?.isUserInteractionEnabled = true
+            card.isUserInteractionEnabled = true
         } else {
-            card?.isUserInteractionEnabled = false
-            card?.transform = CGAffineTransform(scaleX: options.backgroundCardScaleFactor, y: options.backgroundCardScaleFactor)
+            card.isUserInteractionEnabled = false
+            card.transform = CGAffineTransform(scaleX: options.backgroundCardScaleFactor, y: options.backgroundCardScaleFactor)
         }
     }
     
@@ -103,25 +122,22 @@ open class MGCardStackView: UIView {
     public func reloadData() {
         guard let dataSource = dataSource else { return }
         let numberOfCards = dataSource.numberOfCards(in: self)
-        states = []
-        states.append(State(remainingIndices: Array(0..<numberOfCards), lastSwipedCardIndex: nil, lastSwipedDirection: nil))
-        loadState(atStateArrayIndex: 0)
+        currentState = CardStackState(remainingIndices: Array(0..<numberOfCards), previousSwipe: nil, previousState: nil)
     }
     
-    private func loadState(atStateArrayIndex index: Int) {
+    private func loadCurrentState() {
         visibleCards.forEach { card in
             card.removeFromSuperview()
         }
-        visibleCards = []
-        states.removeLast(states.count - (index + 1))
+        visibleCards.removeAll()
         for index in 0..<min(currentState.remainingIndices.count, options.numberOfVisibleCards) {
-            if let card = reloadCard(at: currentState.remainingIndices[index]) {
+            if let card = loadCard(at: currentState.remainingIndices[index]) {
                 insertCard(card, at: index)
             }
         }
     }
     
-    private func reloadCard(at index: Int) -> MGSwipeCard? {
+    private func loadCard(at index: Int) -> MGSwipeCard? {
         guard let dataSource = dataSource else { return nil }
         let card = dataSource.cardStack(self, cardForIndexAt: index)
         card.delegate = self
@@ -136,36 +152,36 @@ open class MGCardStackView: UIView {
     
     //MARK: - Main Methods
     
-    public func swipe(_ direction: SwipeDirection, randomLeftRightRotation: Bool = true) {
-        if let topCard = topCard {
-            if !topCard.isUserInteractionEnabled || animator.isResettingCard { return }
-            topCard.isUserInteractionEnabled = false
-            animator.applySwipeAnimation(to: topCard, direction: direction, forced: true) { finished in
-                if finished {
-                    topCard.removeFromSuperview()
-                }
+    public func swipe(_ direction: SwipeDirection) {
+        guard let topCard = topCard else { return }
+        
+        if !topCard.isUserInteractionEnabled || animator.isResettingCard { return }
+        topCard.isUserInteractionEnabled = false
+        animator.applySwipeAnimation(to: topCard, direction: direction, forced: true) { finished in
+            if finished {
+                topCard.removeFromSuperview()
             }
-            handleSwipe(topCard, direction: direction)
         }
+        handleSwipe(topCard, direction: direction)
     }
     
     private func handleSwipe(_ card: MGSwipeCard, direction: SwipeDirection) {
         delegate?.cardStack(self, didSwipeCardAt: currentCardIndex, with: direction)
         visibleCards.remove(at: 0)
-        let newCurrentState = State(remainingIndices: Array(currentState.remainingIndices.dropFirst()), lastSwipedCardIndex: currentCardIndex, lastSwipedDirection: direction)
-        states.append(newCurrentState)
-
+        let newCurrentState = CardStackState(remainingIndices: Array(currentState.remainingIndices.dropFirst()), previousSwipe: (index: currentCardIndex, direction: direction), previousState: currentState)
+        currentState = newCurrentState
+        
+        //no cards left
         if newCurrentState.remainingIndices.count == 0 {
             delegate?.didSwipeAllCards(self)
             return
         }
 
+        //more cards to load
         if newCurrentState.remainingIndices.count - visibleCards.count > 0 {
             let bottomCardIndex = currentState.remainingIndices[visibleCards.count]
-            if let card = reloadCard(at: bottomCardIndex) {
-                cardStack.insertSubview(card, at: 0)
-                visibleCards.insert(card, at: visibleCards.count)
-                layoutCard(card, at: visibleCards.count)
+            if let card = loadCard(at: bottomCardIndex) {
+                insertCard(card, at: visibleCards.count)
             }
         }
 
@@ -174,23 +190,24 @@ open class MGCardStackView: UIView {
                 self.topCard?.isUserInteractionEnabled = true
             }
         }
-        
     }
     
     public func undoLastSwipe() {
-        if states.count <= 1 || animator.isResettingCard { return }
+        if currentState.previousState == nil || animator.isResettingCard { return }
         if topCard != nil && !topCard!.isUserInteractionEnabled { return }
-        guard let lastSwipedIndex = currentState.lastSwipedCardIndex, let direction = currentState.lastSwipedDirection else { return }
+        guard let lastSwipe = currentState.previousSwipe else { return }
 
-        delegate?.cardStack(self, didUndoSwipeOnCardAt: lastSwipedIndex, from: direction)
+        delegate?.cardStack(self, didUndoSwipeOnCardAt: lastSwipe.index, from: lastSwipe.direction)
         
-        loadState(atStateArrayIndex: self.states.count - 2)
+        currentState = currentState.previousState!
+        
         topCard?.isUserInteractionEnabled = false
-        animator.applyReverseSwipeAnimation(to: topCard, from: direction) { finished in
+        animator.applyReverseSwipeAnimation(to: topCard, from: lastSwipe.direction) { finished in
             if finished {
                 self.topCard?.isUserInteractionEnabled = true
             }
         }
+        
         if visibleCards.count > 1 {
             visibleCards[1].transform = CGAffineTransform.identity
             for index in 1..<visibleCards.count {
@@ -202,10 +219,9 @@ open class MGCardStackView: UIView {
     public func shift(withDistance distance: Int = 1, animated: Bool) {
         if distance == 0 || visibleCards.count <= 1 { return }
         if !topCard!.isUserInteractionEnabled || animator.isResettingCard { return }
-        let newCurrentState = State(remainingIndices: currentState.remainingIndices.shift(withDistance: distance), lastSwipedCardIndex: currentState.lastSwipedCardIndex, lastSwipedDirection: currentState.lastSwipedDirection)
-        states.removeLast()
-        states.append(newCurrentState)
-        loadState(atStateArrayIndex: self.states.count - 1)
+        
+        let newCurrentState = CardStackState(remainingIndices: currentState.remainingIndices.shift(withDistance: distance), previousSwipe: currentState.previousSwipe, previousState: currentState.previousState)
+        currentState = newCurrentState
         
         if !animated { return }
         if distance > 0 {
@@ -221,7 +237,6 @@ open class MGCardStackView: UIView {
             self.topCard?.isUserInteractionEnabled = true
         }
     }
-    
 }
 
 //MARK: - MGSwipeCardDelegate
@@ -265,7 +280,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
             let totalPercentage = card.swipeDirections.reduce(0) { (percentage, direction) in
                 return percentage + card.swipePercentage(on: direction)
             }
-            return min((2 * card.swipePercentage(on: direction) - totalPercentage)/card.options.minimumSwipeMargin, 1)
+            return min((2 * card.swipePercentage(on: direction) - totalPercentage)/card.minimumSwipeMargin, 1)
         }
     }
     
@@ -283,17 +298,4 @@ extension MGCardStackView: MGSwipeCardDelegate {
             animator.applyScaleAnimation(to: visibleCards[index], at: index, duration: options.backgroundCardResetAnimationDuration, completion: nil)
         }
     }
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
