@@ -19,35 +19,22 @@ open class CardStackAnimator {
     
     //MARK: - Public
     
-    open func applyScaleAnimation(to card: MGSwipeCard?, at index: Int, duration: TimeInterval, delay: TimeInterval = 0, completion: ((Bool) -> Void)?) {
-        guard let card = card else { return }
-        if index == 0 {
-            POPAnimation.applyScaleAnimation(to: card, scaleFactor: 1, beginTime: CACurrentMediaTime() + delay, duration: duration) { _, finished in
-                completion?(finished)
-            }
-        } else {
-            POPAnimation.applyScaleAnimation(to: card, scaleFactor: cardStack.options.backgroundCardScaleFactor, duration: duration) { _, finished in
-                completion?(finished)
-            }
-        }
-    }
-    
     open func applySwipeAnimation(to card: MGSwipeCard?, direction: SwipeDirection, forced: Bool = false, completion: ((Bool) -> Void)?) {
         guard let card = card else { return }
         removeAllAnimations(on: card)
 
         card.layer.shouldRasterize = true
         card.layer.rasterizationScale = UIScreen.main.scale
-        
+
         let overlayDuration = forced ? cardStack.options.cardOverlayFadeInOutDuration : 0
-        let rotation = forced ? randomRotationForSwipe(card, direction: direction) : rotationForSwipe(card, direction: direction)
+        let rotation = rotationForSwipe(card, direction: direction)
         let dragTranslation = forced ? direction.point : card.panGestureRecognizer.translation(in: card.superview)
         let translation = translationPoint(card, direction: direction, dragTranslation: dragTranslation)
-        
+
         applyOverlayAnimations(to: card, showDirection: direction, duration: overlayDuration) { (_, finished) in
             if finished {
-                POPAnimation.applyRotationAnimation(to: card, rotationAngle: rotation, duration: self.cardStack.options.cardSwipeAnimationMaximumDuration, completionBlock: nil)
-                POPAnimation.applyTranslationAnimation(to: card, translation: translation, duration: self.cardStack.options.cardSwipeAnimationMaximumDuration) { _, finished in
+                POPAnimator.applyRotationAnimation(to: card, toValue: rotation, duration: self.cardStack.options.cardSwipeAnimationMaximumDuration, completionBlock: nil)
+                POPAnimator.applyTranslationAnimation(to: card, toValue: translation, duration: self.cardStack.options.cardSwipeAnimationMaximumDuration) { _, finished in
                     if finished {
                         card.layer.shouldRasterize = false
                     }
@@ -61,7 +48,7 @@ open class CardStackAnimator {
         guard let card = card else { return }
         removeAllAnimations(on: card)
         isResettingCard = true
-        
+
         //recreate swipe transform
         card.transform = CGAffineTransform.identity
         card.transform.tx = translationPoint(card, direction: direction, dragTranslation: direction.point).x
@@ -72,9 +59,9 @@ open class CardStackAnimator {
             card.transform = card.transform.rotated(by: 2 * card.maximumRotationAngle)
         }
         applyOverlayAnimations(to: card, showDirection: direction, duration: 0, completionBlock: nil)
-        
-        POPAnimation.applyRotationAnimation(to: card, rotationAngle: 0, duration: cardStack.options.cardUndoAnimationDuration, completionBlock: nil)
-        POPAnimation.applyTranslationAnimation(to: card, translation: .zero, duration: cardStack.options.cardUndoAnimationDuration) { _, finished in
+
+        POPAnimator.applyRotationAnimation(to: card, toValue: 0, duration: cardStack.options.cardUndoAnimationDuration, completionBlock: nil)
+        POPAnimator.applyTranslationAnimation(to: card, toValue: .zero, duration: cardStack.options.cardUndoAnimationDuration) { _, finished in
             if finished {
                 card.layer.shouldRasterize = false
                 self.applyOverlayAnimations(to: card, showDirection: nil, duration: self.cardStack.options.cardOverlayFadeInOutDuration, completionBlock: { _, finished in
@@ -129,12 +116,10 @@ open class CardStackAnimator {
     open func removeAllAnimations(on card: MGSwipeCard?) {
         guard let card = card else { return }
         isResettingCard = false
-        for key in CardStackAnimator.cardAnimationKeys {
-            card.layer.pop_removeAnimation(forKey: key)
-            card.pop_removeAnimation(forKey: key)
-            card.swipeDirections.forEach { direction in
-                card.overlay(forDirection: direction)?.pop_removeAnimation(forKey: key)
-            }
+        card.layer.pop_removeAllAnimations()
+        card.pop_removeAllAnimations()
+        card.swipeDirections.forEach { direction in
+            card.overlay(forDirection: direction)?.pop_removeAllAnimations()
         }
         card.layer.shouldRasterize = false
     }
@@ -168,15 +153,27 @@ open class CardStackAnimator {
         }
     }
     
+    //TODO: Clean this
     private func applyOverlayAnimations(to card: MGSwipeCard, showDirection: SwipeDirection?, duration: CFTimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
-        var completionCalled = false
+        var overlays = [UIView]()
         for direction in card.swipeDirections {
-            let overlay = card.overlay(forDirection: direction)
-            let alpha: CGFloat = direction == showDirection ? 1 : 0
-            POPAnimation.applyAlphaAnimation(to: overlay, alpha: alpha, duration: duration) { (animation, finished) in
-                if !completionCalled {
-                    completionBlock?(animation, finished)
-                    completionCalled = true
+            if let overlay = card.overlay(forDirection: direction) {
+                overlays.append(overlay)
+            }
+        }
+        
+        if overlays.isEmpty {
+            completionBlock?(nil, true)
+        } else {
+            var completionCalled = false
+            for direction in card.swipeDirections {
+                let alpha: CGFloat = direction == showDirection ? 1 : 0
+                let overlay = card.overlay(forDirection: direction)
+                POPAnimator.applyAlphaAnimation(to: overlay, toValue: alpha, duration: duration) { (animation, finished) in
+                    if !completionCalled {
+                        completionBlock?(animation, finished)
+                        completionCalled = true
+                    }
                 }
             }
         }
@@ -192,5 +189,5 @@ extension CardStackAnimator {
         springTranslationKey,
         springRotationKey,
         springOverlayAlphaKey
-    ] + POPAnimation.viewAnimationKeys
+    ]
 }

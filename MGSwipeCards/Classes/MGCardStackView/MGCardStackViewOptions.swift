@@ -9,12 +9,11 @@ open class MGCardStackViewOptions {
     
     public static var defaultOptions = MGCardStackViewOptions()
     
-    open var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    open var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
     
     ///The maximum number of cards to be displayed on screen.
-    open var numberOfVisibleCards: Int = 2
+    open var numberOfVisibleCards: Int = 3
     
-    open var backgroundCardScaleFactor: CGFloat = 0.95
     open var backgroundCardResetAnimationDuration: TimeInterval = 0.3
     open var backgroundCardScaleAnimationDuration: TimeInterval = 0.4
     

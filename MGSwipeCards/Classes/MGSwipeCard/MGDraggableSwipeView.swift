@@ -8,6 +8,7 @@
 
 open class MGDraggableSwipeView: UIView {
     
+    ///The directions to be registered by the view
     open var swipeDirections = SwipeDirection.allDirections
     
     ///The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1600.

@@ -1,7 +1,7 @@
 PODS:
-  - MGSwipeCards (1.1.0):
+  - MGSwipeCards (2.0.3):
     - pop (~> 1.0)
-  - pop (1.0.10)
+  - pop (1.0.12)
   - PopBounceButton (1.1.1):
     - pop (~> 1.0)
 
@@ -19,8 +19,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  MGSwipeCards: 7b39d28dc2dd05d1e062e762245a2fe3aa2e1048
-  pop: 82ca6b068ce9278fd350fd9dd09482a0ce9492e6
+  MGSwipeCards: a3919ad014acb7aab88bcc9e92eab0c4b8b1e027
+  pop: d582054913807fd11fd50bfe6a539d91c7e1a55a
   PopBounceButton: 25518b306611afd2c4dfab742fbe0424aab3213a
 
 PODFILE CHECKSUM: b2af244655535042f681d0fafe6f018e39a82fa9

@@ -84,9 +84,9 @@ class ViewController: UIViewController {
     
     @objc func handleShift(_ sender: UIButton) {
         if sender.tag == 1 {
-            cardStack.shift(withDistance: -1, animated: true)
+            cardStack.shift(withDistance: -1)
         } else {
-            cardStack.shift(animated: true)
+            cardStack.shift()
         }
     }
     
