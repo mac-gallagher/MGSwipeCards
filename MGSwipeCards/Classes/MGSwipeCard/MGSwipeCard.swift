@@ -6,6 +6,8 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
+import pop
+
 public protocol MGSwipeCardDelegate {
     func card(didTap card: MGSwipeCard)
     func card(didBeginSwipe card: MGSwipeCard)
@@ -15,11 +17,28 @@ public protocol MGSwipeCardDelegate {
 }
 
 /**
- A wrapper around `MGDraggableSwipeView` which provides UI options for the user.
+ A wrapper around `MGDraggableSwipeView` which provides UI options for the user and swipe animations.
 */
 open class MGSwipeCard: MGDraggableSwipeView {
     
     public var delegate: MGSwipeCardDelegate?
+    
+    /**
+    The minimum duration of the off-screen swipe animation. Measured in seconds. Defaults to 0.8.
+    */
+    public var cardSwipeAnimationDuration: TimeInterval = 0.8
+    
+    public var overlayFadeDuration: TimeInterval = 0.15
+    
+    /**
+     The effective bounciness of the swipe spring animation upon a cancelled swipe. Higher values increase spring movement range resulting in more oscillations and springiness. Defined as a value in the range [0, 20]. Defaults to 12.
+    */
+    open var resetAnimationSpringBounciness: CGFloat = 12.0
+    
+    /**
+     The effective speed of the spring animation upon a cancelled swipe. Higher values increase the dampening power of the spring. Defined as a value in the range [0, 20]. Defaults to 20.
+     */
+    open var resetAnimationSpringSpeed: CGFloat = 20.0
     
     public private(set) var contentView: UIView?
     public private(set) var footerView: UIView?
@@ -124,17 +143,37 @@ open class MGSwipeCard: MGDraggableSwipeView {
     
     open override func didBeginSwipe(on view: MGDraggableSwipeView) {
         delegate?.card(didBeginSwipe: self)
+        POPAnimator.removeAllCardAnimations(on: self)
     }
     
     open override func didContinueSwipe(on view: MGDraggableSwipeView) {
         delegate?.card(didContinueSwipe: self)
+        swipeDirections.forEach { direction in
+            overlay(forDirection: direction)?.alpha = alphaForOverlay(with: direction)
+        }
+    }
+    
+    private func alphaForOverlay(with direction: SwipeDirection) -> CGFloat {
+        if direction != activeDirection { return 0 }
+        let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
+            return percentage + swipePercentage(on: direction)
+        }
+        return min((2 * swipePercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
     }
     
     open override func didSwipe(on view: MGDraggableSwipeView, with direction: SwipeDirection) {
         delegate?.card(didSwipe: self, with: direction)
+        isUserInteractionEnabled = false
+        
+        POPAnimator.applySwipeAnimation(to: self, direction: direction, duration: cardSwipeAnimationDuration, overlayFadeDuration: overlayFadeDuration) { (finished) in
+            if finished {
+                self.removeFromSuperview()
+            }
+        }
     }
     
     open override func didCancelSwipe(on view: MGDraggableSwipeView) {
         delegate?.card(didCancelSwipe: self)
+        POPAnimator.applyResetAnimation(to: self, springBounciness: resetAnimationSpringBounciness, springSpeed: resetAnimationSpringSpeed, completion: nil)
     }
 }

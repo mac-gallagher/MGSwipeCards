@@ -16,7 +16,7 @@ struct SampleCardModel {
     let image: UIImage?
 }
 
-class SampleMGSwipeCard: MGSwipeCard {
+class SampleCard: MGSwipeCard {
     
     var model: SampleCardModel? {
         didSet {
@@ -169,8 +169,6 @@ class SampleCardFooterView: UIView {
     var label = UILabel()
     
     private var gradientLayer: CAGradientLayer?
-    
-    //MARK: - Initialization
     
     init(title: String?, subtitle: String?) {
         super.init(frame: CGRect.zero)

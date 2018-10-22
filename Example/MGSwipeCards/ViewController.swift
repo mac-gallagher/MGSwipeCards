@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     
     //MARK: - Subviews
     
-    let cardStack = MGCardStackView()
+    let cardStack = SampleCardStack()
     
     var backgroundGradient: UIView?
     
@@ -168,7 +168,7 @@ class ViewController: UIViewController {
 extension ViewController: MGCardStackViewDataSource {
     
     func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard {
-        let card = SampleMGSwipeCard()
+        let card = SampleCard()
         card.model = cardModels[index]
         return card
     }
