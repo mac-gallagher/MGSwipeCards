@@ -19,7 +19,5 @@ open class MGCardStackViewOptions {
     open var backgroundCardResetAnimationDuration: TimeInterval = 0.3
     open var backgroundCardScaleAnimationDuration: TimeInterval = 0.4
     
-    open var cardUndoAnimationDuration: TimeInterval = 0.2
-    
     public init() {}
 }

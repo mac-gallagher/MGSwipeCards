@@ -13,6 +13,7 @@ public protocol MGSwipeCardDelegate {
     func card(didBeginSwipe card: MGSwipeCard)
     func card(didContinueSwipe card: MGSwipeCard)
     func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection)
+    func card(didUndo card: MGSwipeCard, from direction: SwipeDirection)
     func card(didCancelSwipe card: MGSwipeCard)
 }
 
@@ -26,9 +27,11 @@ open class MGSwipeCard: MGDraggableSwipeView {
     /**
     The minimum duration of the off-screen swipe animation. Measured in seconds. Defaults to 0.8.
     */
-    public var cardSwipeAnimationDuration: TimeInterval = 0.8
+    open var cardSwipeAnimationDuration: TimeInterval = 0.8
     
-    public var overlayFadeDuration: TimeInterval = 0.15
+    open var overlayFadeAnimationDuration: TimeInterval = 0.15
+    
+    open var undoAnimationDuration: TimeInterval = 0.2
     
     /**
      The effective bounciness of the swipe spring animation upon a cancelled swipe. Higher values increase spring movement range resulting in more oscillations and springiness. Defined as a value in the range [0, 20]. Defaults to 12.
@@ -135,6 +138,31 @@ open class MGSwipeCard: MGDraggableSwipeView {
         return overlays[direction] ?? nil
     }
     
+    //MARK: - Main Methods
+    
+    public func swipe(direction: SwipeDirection) {
+        handleSwipe(direction: direction)
+    }
+    
+    private func handleSwipe(direction: SwipeDirection) {
+        delegate?.card(didSwipe: self, with: direction)
+        isUserInteractionEnabled = false
+        POPAnimator.applySwipeAnimation(to: self, direction: direction, forced: true) { finished in
+            if finished {
+                self.removeFromSuperview()
+            }
+        }
+    }
+    
+    public func undo(from direction: SwipeDirection) {
+        delegate?.card(didUndo: self, from: direction)
+        POPAnimator.applyUndoAnimation(to: self, from: direction) { finished in
+            if finished {
+                self.isUserInteractionEnabled = true
+            }
+        }
+    }
+    
     //MARK: MGDraggableSwipeView Overrides
     
     open override func didTap(on view: MGDraggableSwipeView) {
@@ -162,18 +190,11 @@ open class MGSwipeCard: MGDraggableSwipeView {
     }
     
     open override func didSwipe(on view: MGDraggableSwipeView, with direction: SwipeDirection) {
-        delegate?.card(didSwipe: self, with: direction)
-        isUserInteractionEnabled = false
-        
-        POPAnimator.applySwipeAnimation(to: self, direction: direction, duration: cardSwipeAnimationDuration, overlayFadeDuration: overlayFadeDuration) { (finished) in
-            if finished {
-                self.removeFromSuperview()
-            }
-        }
+        handleSwipe(direction: direction)
     }
     
     open override func didCancelSwipe(on view: MGDraggableSwipeView) {
         delegate?.card(didCancelSwipe: self)
-        POPAnimator.applyResetAnimation(to: self, springBounciness: resetAnimationSpringBounciness, springSpeed: resetAnimationSpringSpeed, completion: nil)
+        POPAnimator.applyResetAnimation(to: self, completion: nil)
     }
 }
