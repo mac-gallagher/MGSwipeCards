@@ -42,7 +42,6 @@ private class CardStackState {
     }
 }
 
-//TODO: Make this a view controller
 open class MGCardStackView: UIView {
     
     public var delegate: MGCardStackViewDelegate?
@@ -51,9 +50,15 @@ open class MGCardStackView: UIView {
         didSet { reloadData() }
     }
     
-    public var options: MGCardStackViewOptions = .defaultOptions {
-        didSet { layoutIfNeeded() }
-    }
+    /**
+     The maximum number of cards to be displayed on screen.
+     */
+    open var numberOfVisibleCards: Int = 6
+    
+    open var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    
+    open var backgroundCardResetAnimationDuration: TimeInterval = 0.3
+    open var backgroundCardTransformAnimationDuration: TimeInterval = 0.4
     
     public var currentCardIndex: Int {
         return currentState.remainingIndices.first ?? 0
@@ -94,10 +99,10 @@ open class MGCardStackView: UIView {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
-        cardStack.frame = CGRect(x: options.cardStackInsets.left,
-                                 y: options.cardStackInsets.top,
-                                 width: bounds.width - options.cardStackInsets.left - options.cardStackInsets.right,
-                                 height: bounds.height - options.cardStackInsets.top - options.cardStackInsets.bottom)
+        cardStack.frame = CGRect(x: cardStackInsets.left,
+                                 y: cardStackInsets.top,
+                                 width: bounds.width - cardStackInsets.left - cardStackInsets.right,
+                                 height: bounds.height - cardStackInsets.top - cardStackInsets.bottom)
         
         for (index, card) in visibleCards.enumerated() {
             card.transform = .identity
@@ -115,7 +120,6 @@ open class MGCardStackView: UIView {
         return CGAffineTransform.identity.scaledBy(x: 0.95, y: 0.95)
     }
     
-    //Should only be called when adding new card to card stack
     private func insertCard(_ card: MGSwipeCard, at index: Int) {
         cardStack.insertSubview(card, at: visibleCards.count - index)
         card.frame =  cardStack.bounds
@@ -124,34 +128,52 @@ open class MGCardStackView: UIView {
         visibleCards.insert(card, at: index)
     }
     
-    //MARK: - Main Methods (handles user interactions)
-    
-    //TODO: Fix user interactions
+    //MARK: - Main Methods
     
     public func swipe(_ direction: SwipeDirection) {
         guard let topCard = topCard else { return }
-        if !topCard.isUserInteractionEnabled { return }
+        if !isUserInteractionEnabled { return }
         topCard.swipe(direction: direction)
     }
     
     public func undoLastSwipe() {
         guard let lastSwipe = currentState.previousSwipe else { return }
+        if !isUserInteractionEnabled { return }
+        isUserInteractionEnabled = false
         delegate?.cardStack(self, didUndoSwipeOnCardAt: lastSwipe.index, from: lastSwipe.direction)
 
         currentState = currentState.previousState!
         reloadCurrentState()
 
-        topCard?.undo(from: lastSwipe.direction)
+        topCard?.undo(from: lastSwipe.direction) {
+            self.isUserInteractionEnabled = true
+        }
     }
     
-    //TODO: Make animatable
-    public func shift(withDistance distance: Int = 1) {
+    public func shift(withDistance distance: Int = 1, animated: Bool = true) {
         if distance == 0 || visibleCards.count <= 1 { return }
-        if !topCard!.isUserInteractionEnabled || topCard!.isResetAnimating { return }
-
+        if !isUserInteractionEnabled { return }
         let newCurrentState = CardStackState(remainingIndices: currentState.remainingIndices.shift(withDistance: distance), previousSwipe: currentState.previousSwipe, previousState: currentState.previousState)
         currentState = newCurrentState
         reloadCurrentState()
+        
+        if !animated { return }
+        
+        //place background cards in old positions
+        if distance > 0 {
+            for i in 0..<visibleCards.count {
+                visibleCards[i].transform = transformForCard(at: i + 1)
+            }
+        } else {
+            for i in 1..<visibleCards.count {
+                visibleCards[i].transform = transformForCard(at: i - 1)
+            }
+        }
+        
+        //animate background cards to new positions
+        for i in 0..<visibleCards.count {
+            POPAnimator.applyTransformAnimation(to: visibleCards[i], toValue: transformForCard(at: i), duration: backgroundCardResetAnimationDuration, completionBlock: nil)
+        }
     }
     
     //MARK: - Data Source
@@ -168,7 +190,7 @@ open class MGCardStackView: UIView {
             card.removeFromSuperview()
         }
         visibleCards.removeAll()
-        for index in 0..<min(currentState.remainingIndices.count, options.numberOfVisibleCards) {
+        for index in 0..<min(currentState.remainingIndices.count, numberOfVisibleCards) {
             if let card = loadCard(at: currentState.remainingIndices[index]) {
                 insertCard(card, at: index)
             }
@@ -184,6 +206,8 @@ open class MGCardStackView: UIView {
 }
 
 //MARK: - MGSwipeCardDelegate
+
+//TODO: Move code to external animator class?
 
 extension MGCardStackView: MGSwipeCardDelegate {
     
@@ -226,6 +250,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
     
     public func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection) {
         delegate?.cardStack(self, didSwipeCardAt: currentCardIndex, with: direction)
+        isUserInteractionEnabled = false
         
         //remove swiped card
         visibleCards.remove(at: 0)
@@ -237,6 +262,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
         //no cards left
         if newCurrentState.remainingIndices.count == 0 {
             delegate?.didSwipeAllCards(self)
+            self.isUserInteractionEnabled = true
             return
         }
         
@@ -250,9 +276,10 @@ extension MGCardStackView: MGSwipeCardDelegate {
         
         //animate background cards to new positions
         for (index, card) in visibleCards.enumerated() {
-            POPAnimator.applyTransformAnimation(to: card, toValue: transformForCard(at: index), delay: card.overlayFadeAnimationDuration, duration: options.backgroundCardScaleAnimationDuration) { (_, finished) in
+            POPAnimator.applyTransformAnimation(to: card, toValue: transformForCard(at: index), delay: card.overlayFadeAnimationDuration, duration: backgroundCardTransformAnimationDuration) { (_, finished) in
                 if finished {
                     self.topCard?.isUserInteractionEnabled = true
+                    self.isUserInteractionEnabled = true
                 }
             }
         }
@@ -266,13 +293,13 @@ extension MGCardStackView: MGSwipeCardDelegate {
         
         //animate background cards to new positions
         for i in 1..<visibleCards.count {
-            POPAnimator.applyTransformAnimation(to: visibleCards[i], toValue: transformForCard(at: i), duration: options.backgroundCardResetAnimationDuration, completionBlock: nil)
+            POPAnimator.applyTransformAnimation(to: visibleCards[i], toValue: transformForCard(at: i), duration: backgroundCardResetAnimationDuration, completionBlock: nil)
         }
     }
     
     public func card(didCancelSwipe card: MGSwipeCard) {
         for i in 1..<visibleCards.count {
-            POPAnimator.applyTransformAnimation(to: visibleCards[i], toValue: transformForCard(at: i), duration: options.backgroundCardResetAnimationDuration, completionBlock: nil)
+            POPAnimator.applyTransformAnimation(to: visibleCards[i], toValue: transformForCard(at: i), duration: backgroundCardResetAnimationDuration, completionBlock: nil)
         }
     }
 }

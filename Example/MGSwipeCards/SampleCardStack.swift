@@ -22,7 +22,7 @@ class SampleCardStack: MGCardStackView {
     }
     
     private func sharedInit() {
-        options.cardStackInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
+        cardStackInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
     }
     
     override func transformForCard(at index: Int) -> CGAffineTransform {

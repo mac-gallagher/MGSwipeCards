@@ -26,17 +26,16 @@ extension POPAnimator {
         card.layer.shouldRasterize = true
         card.layer.rasterizationScale = UIScreen.main.scale
         
+        let overlayDuration = forced ? card.overlayFadeAnimationDuration : 0
         let rotation = rotationForSwipe(card, direction: direction, forced: forced)
         let dragTranslation = forced ? direction.point : card.panGestureRecognizer.translation(in: card.superview)
         let translation = translationPoint(card, direction: direction, dragTranslation: dragTranslation)
         
         //apply rotation + translation + overlay fade animations
-        applyOverlayFadeAnimations(to: card, showDirection: direction) { _, _ in
+        applyOverlayFadeAnimations(to: card, showDirection: direction, duration: overlayDuration) { _, _ in
             POPAnimator.applyRotationAnimation(to: card, toValue: rotation, duration: card.cardSwipeAnimationDuration, completionBlock: nil)
             POPAnimator.applyTranslationAnimation(to: card, toValue: translation, duration: card.cardSwipeAnimationDuration) { _, finished in
-                if finished {
-                    card.layer.shouldRasterize = false
-                }
+                card.layer.shouldRasterize = false
                 POPAnimator.cardAnimations.removeValue(forKey: card)
                 completion?(finished)
             }
@@ -60,9 +59,7 @@ extension POPAnimator {
             resetTranslationAnimation.springBounciness = card.resetAnimationSpringBounciness
             resetTranslationAnimation.springSpeed = card.resetAnimationSpringSpeed
             resetTranslationAnimation.completionBlock = { _, finished in
-                if finished {
-                    card.layer.shouldRasterize = false
-                }
+                card.layer.shouldRasterize = false
                 POPAnimator.cardAnimations.removeValue(forKey: card)
                 completion?(finished)
             }
@@ -108,10 +105,8 @@ extension POPAnimator {
         //animate back to original position
         POPAnimator.applyRotationAnimation(to: card, toValue: 0, duration: card.undoAnimationDuration, completionBlock: nil)
         POPAnimator.applyTranslationAnimation(to: card, toValue: .zero, duration: card.undoAnimationDuration) { _, finished in
-            POPAnimator.applyOverlayFadeAnimations(to: card, showDirection: nil, completionBlock: { _, finished in
-                if finished {
-                    card.layer.shouldRasterize = false
-                }
+            POPAnimator.applyOverlayFadeAnimations(to: card, showDirection: nil, duration: card.overlayFadeAnimationDuration, completionBlock: { _, finished in
+                card.layer.shouldRasterize = false
                 POPAnimator.cardAnimations.removeValue(forKey: card)
                 completion?(finished)
             })
@@ -147,12 +142,12 @@ extension POPAnimator {
         return 2 * card.maximumRotationAngle
     }
     
-    private static func applyOverlayFadeAnimations(to card: MGSwipeCard, showDirection: SwipeDirection?, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
+    private static func applyOverlayFadeAnimations(to card: MGSwipeCard, showDirection: SwipeDirection?, duration: TimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
         var completionCalled  = false
         for direction in card.swipeDirections {
             let overlay = card.overlay(forDirection: direction)
             let alpha: CGFloat = direction == showDirection ? 1 : 0
-            POPAnimator.applyFadeAnimation(to: overlay, toValue: alpha, duration: card.overlayFadeAnimationDuration) { (animation, finished) in
+            POPAnimator.applyFadeAnimation(to: overlay, toValue: alpha, duration: duration) { (animation, finished) in
                 if !completionCalled {
                     completionBlock?(animation, finished)
                 }
@@ -164,6 +159,8 @@ extension POPAnimator {
     static func removeAllCardAnimations(on card: MGSwipeCard) {
         card.pop_removeAllAnimations()
         card.layer.pop_removeAllAnimations()
+        card.layer.shouldRasterize = false
+        
         card.swipeDirections.forEach { direction in
             let overlay = card.overlay(forDirection: direction)
             overlay?.pop_removeAllAnimations()
@@ -190,7 +187,7 @@ extension POPAnimator {
     
     static func applyScaleAnimation(to view: UIView?, toValue: CGPoint, delay: TimeInterval = 0, duration: TimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
         if let scaleAnimation = POPBasicAnimation(propertyNamed: kPOPViewScaleXY) {
-            scaleAnimation.duration = duration + 0.0001
+            scaleAnimation.duration = duration
             scaleAnimation.toValue = toValue
             scaleAnimation.beginTime = CACurrentMediaTime() + delay
             scaleAnimation.completionBlock = completionBlock
@@ -202,7 +199,7 @@ extension POPAnimator {
     
     static func applyTranslationAnimation(to view: UIView?, toValue: CGPoint, delay: TimeInterval = 0, duration: TimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
         if let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY) {
-            translationAnimation.duration = duration + 0.0001
+            translationAnimation.duration = duration
             translationAnimation.toValue = toValue
             translationAnimation.beginTime = CACurrentMediaTime() + delay
             translationAnimation.completionBlock = completionBlock
@@ -214,7 +211,7 @@ extension POPAnimator {
     
     static func applyRotationAnimation(to view: UIView?, toValue: CGFloat, delay: TimeInterval = 0, duration: TimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
         if let rotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation) {
-            rotationAnimation.duration = duration + 0.0001
+            rotationAnimation.duration = duration
             rotationAnimation.toValue = toValue
             rotationAnimation.beginTime = CACurrentMediaTime() + delay
             rotationAnimation.completionBlock = completionBlock
@@ -226,7 +223,7 @@ extension POPAnimator {
     
     static func applyFadeAnimation(to view: UIView?, toValue: CGFloat, duration: TimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
         if let alphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha) {
-            alphaAnimation.duration = duration + 0.0001
+            alphaAnimation.duration = duration
             alphaAnimation.toValue = toValue
             alphaAnimation.completionBlock = { animation, finished in
                 completionBlock?(animation, finished)

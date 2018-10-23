@@ -79,7 +79,6 @@
 		E4E3051721B0043CE469B83EF5E52953 /* POPPropertyAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 10E11FBF31B8ED88A13D2670C231B3FA /* POPPropertyAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E5353760B928D19E5B1FAC4C63D54365 /* POPSpringAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = D70E809284AB672911E74F725E40AFA4 /* POPSpringAnimation.mm */; };
 		EAAEB766C20164DC98C4EFDD2BE01EEA /* POPAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1484F45FFAC2AF0B1C2436CB993D4930 /* POPAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EF91D8F11C42DF574810A700D2087EAB /* MGCardStackViewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA88F368552B5F3A74C3DA2594BAD0 /* MGCardStackViewOptions.swift */; };
 		F117707B26B0B4C014100C991BABAAFE /* POPCGUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A8476ADC368FFFC755E1ACE687CFB31 /* POPCGUtils.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		F3DD0505C5D2BE3F104C16D6E5C543C1 /* POPAction.h in Headers */ = {isa = PBXBuildFile; fileRef = E11FE8803A00A882FC6E910C99B3AD58 /* POPAction.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		F96DE501BB31AF9729150141B9242F96 /* POPAnimationEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE435A49D4AB7FDFC1CEC49161525A /* POPAnimationEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -178,7 +177,6 @@
 		9195C444857C74D2016BF25A3B44C2EC /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9682F9B5231467AD029B33D8FCA6F1FC /* MGSwipeCards-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MGSwipeCards-prefix.pch"; sourceTree = "<group>"; };
-		98EA88F368552B5F3A74C3DA2594BAD0 /* MGCardStackViewOptions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MGCardStackViewOptions.swift; sourceTree = "<group>"; };
 		9C9D9D3B69AA0AE637B62733C4AF966E /* MGCardStackViewDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MGCardStackViewDataSource.swift; sourceTree = "<group>"; };
 		9DCBDBC49F691C37991D3C90E424BD03 /* UnitBezier.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = UnitBezier.h; path = pop/WebCore/UnitBezier.h; sourceTree = "<group>"; };
 		9E0B9C38516FFEA3DFBDE28341C1470B /* MGCardStackViewDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MGCardStackViewDelegate.swift; sourceTree = "<group>"; };
@@ -419,7 +417,6 @@
 				40F39F40DBA23233257C55F84567A63C /* MGCardStackView.swift */,
 				9C9D9D3B69AA0AE637B62733C4AF966E /* MGCardStackViewDataSource.swift */,
 				9E0B9C38516FFEA3DFBDE28341C1470B /* MGCardStackViewDelegate.swift */,
-				98EA88F368552B5F3A74C3DA2594BAD0 /* MGCardStackViewOptions.swift */,
 			);
 			name = MGCardStackView;
 			path = MGSwipeCards/Classes/MGCardStackView;
@@ -710,7 +707,6 @@
 				45EABB937CDBF306E1C538D513A82489 /* MGCardStackView.swift in Sources */,
 				395A26753E266AB633E2D4E341EA3925 /* MGCardStackViewDataSource.swift in Sources */,
 				1BA17301E045B2C016AF446FA51BB365 /* MGCardStackViewDelegate.swift in Sources */,
-				EF91D8F11C42DF574810A700D2087EAB /* MGCardStackViewOptions.swift in Sources */,
 				7CF7B0DBE48469E5946F6CEDE42E2A6E /* MGDraggableSwipeView.swift in Sources */,
 				BA67EDD8D64E3AB7F962B27E76398877 /* MGSwipeCard.swift in Sources */,
 				BE2D601101FECF0C73A266C26B92433B /* MGSwipeCards-dummy.m in Sources */,

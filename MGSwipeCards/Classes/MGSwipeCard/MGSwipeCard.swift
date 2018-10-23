@@ -140,25 +140,24 @@ open class MGSwipeCard: MGDraggableSwipeView {
     
     //MARK: - Main Methods
     
-    public func swipe(direction: SwipeDirection) {
-        handleSwipe(direction: direction)
-    }
-    
-    private func handleSwipe(direction: SwipeDirection) {
+    public func swipe(direction: SwipeDirection, completion: (() ->())? = nil) {
         delegate?.card(didSwipe: self, with: direction)
         isUserInteractionEnabled = false
         POPAnimator.applySwipeAnimation(to: self, direction: direction, forced: true) { finished in
             if finished {
                 self.removeFromSuperview()
+                completion?()
             }
         }
     }
     
-    public func undo(from direction: SwipeDirection) {
+    public func undo(from direction: SwipeDirection, completion: (() ->())? = nil) {
         delegate?.card(didUndo: self, from: direction)
+        isUserInteractionEnabled = false
         POPAnimator.applyUndoAnimation(to: self, from: direction) { finished in
             if finished {
                 self.isUserInteractionEnabled = true
+                completion?()
             }
         }
     }
@@ -190,7 +189,13 @@ open class MGSwipeCard: MGDraggableSwipeView {
     }
     
     open override func didSwipe(on view: MGDraggableSwipeView, with direction: SwipeDirection) {
-        handleSwipe(direction: direction)
+        delegate?.card(didSwipe: self, with: direction)
+        isUserInteractionEnabled = false
+        POPAnimator.applySwipeAnimation(to: self, direction: direction, forced: false) { finished in
+            if finished {
+                self.removeFromSuperview()
+            }
+        }
     }
     
     open override func didCancelSwipe(on view: MGDraggableSwipeView) {
