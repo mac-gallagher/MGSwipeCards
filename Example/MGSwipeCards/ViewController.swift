@@ -27,37 +27,59 @@ class ViewController: UIViewController {
     
     let undoButton: PopBounceButton = {
         let button = PopBounceButton()
-        button.setImage(#imageLiteral(resourceName: "undo"))
+        button.setImage(UIImage(named: "undo"))
         button.tag = 1
         return button
     }()
     
     let passButton: PopBounceButton = {
         let button = PopBounceButton()
-        button.setImage(#imageLiteral(resourceName: "pass"))
+        button.setImage(UIImage(named: "pass"))
         button.tag = 2
         return button
     }()
     
     let superLikeButton: PopBounceButton = {
         let button = PopBounceButton()
-        button.setImage(#imageLiteral(resourceName: "star"))
+        button.setImage(UIImage(named: "star"))
         button.tag = 3
         return button
     }()
     
     let likeButton: PopBounceButton = {
         let button = PopBounceButton()
-        button.setImage(#imageLiteral(resourceName: "heart"))
+        button.setImage(UIImage(named: "heart"))
         button.tag = 4
         return button
     }()
     
     let boostButton: PopBounceButton = {
         let button = PopBounceButton()
-        button.setImage(#imageLiteral(resourceName: "lightning"))
+        button.setImage(UIImage(named: "lightning"))
         button.tag = 5
         return button
+    }()
+    
+    let cardModels: [SampleCardModel] = {
+        var models = [SampleCardModel]()
+        
+        let michelle = SampleCardModel(name: "Michelle", age: 26, occupation: "Graphic Designer", image: UIImage(named: "michelle"))
+        let joshua = SampleCardModel(name: "Joshua", age: 27, occupation: "Business Services Sales Representative", image: UIImage(named: "joshua"))
+        let daiane = SampleCardModel(name: "Daiane", age: 23, occupation: "Graduate Student", image: UIImage(named: "daiane"))
+        let andrew = SampleCardModel(name: "Andrew", age: 26, occupation: nil, image: UIImage(named: "andrew"))
+        let julian = SampleCardModel(name: "Julian", age: 25, occupation: "Model/Photographer", image: UIImage(named: "julian"))
+        let bailey = SampleCardModel(name: "Bailey", age: 25, occupation: "Software Engineer", image: UIImage(named: "bailey"))
+        let rachel = SampleCardModel(name: "Rachel", age: 27, occupation: "Interior Designer", image: UIImage(named: "rachel"))
+        
+        models.append(michelle)
+        models.append(joshua)
+        models.append(daiane)
+        models.append(andrew)
+        models.append(julian)
+        models.append(bailey)
+        models.append(rachel)
+        
+        return models
     }()
     
     //MARK: - Methods
@@ -161,7 +183,6 @@ class ViewController: UIViewController {
             break
         }
     }
-    
 }
 
 //MARK: - Data Source
@@ -169,7 +190,7 @@ class ViewController: UIViewController {
 extension ViewController: MGCardStackViewDataSource {
     
     func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard {
-        let card = SampleMGSwipeCard()
+        let card = SampleCard()
         card.model = cardModels[index]
         return card
     }
@@ -177,7 +198,6 @@ extension ViewController: MGCardStackViewDataSource {
     func numberOfCards(in cardStack: MGCardStackView) -> Int {
         return cardModels.count
     }
-    
 }
 
 //MARK: - Delegate
@@ -186,12 +206,6 @@ extension ViewController: MGCardStackViewDelegate {
     
     func didSwipeAllCards(_ cardStack: MGCardStackView) {
         print("Swiped all cards!")
-    }
-    
-    func additionalOptions(_ cardStack: MGCardStackView) -> MGCardStackViewOptions {
-        let options = MGCardStackViewOptions()
-        options.cardStackInsets = UIEdgeInsets(top: 14, left: 10, bottom: 14, right: 10)
-        return options
     }
     
     func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection) {
@@ -218,42 +232,4 @@ extension ViewController: MGCardStackViewDelegate {
         }
         print("Card tapped at \(cornerString)")
     }
-    
 }
-
-
-//MARK: - Card Models
-
-extension ViewController {
-    
-    var cardModels: [SampleCardModel] {
-        var models = [SampleCardModel]()
-        
-        let michelle = SampleCardModel(name: "Michelle", age: 26, occupation: "Graphic Designer", image:#imageLiteral(resourceName: "michelle"))
-        let joshua = SampleCardModel(name: "Joshua", age: 27, occupation: "Business Services Sales Representative", image: #imageLiteral(resourceName: "joshua"))
-        let daiane = SampleCardModel(name: "Daiane", age: 23, occupation: "Graduate Student", image: #imageLiteral(resourceName: "daiane"))
-        let andrew = SampleCardModel(name: "Andrew", age: 26, occupation: nil, image: #imageLiteral(resourceName: "andrew"))
-        let julian = SampleCardModel(name: "Julian", age: 25, occupation: "Model/Photographer", image: #imageLiteral(resourceName: "julian"))
-        let bailey = SampleCardModel(name: "Bailey", age: 25, occupation: "Software Engineer", image: #imageLiteral(resourceName: "bailey"))
-        let rachel = SampleCardModel(name: "Rachel", age: 27, occupation: "Interior Designer", image: #imageLiteral(resourceName: "rachel"))
-        
-        models.append(michelle)
-        models.append(joshua)
-        models.append(daiane)
-        models.append(andrew)
-        models.append(julian)
-        models.append(bailey)
-        models.append(rachel)
-        
-        return models
-    }
-    
-    
-}
-
-
-
-
-
-
-

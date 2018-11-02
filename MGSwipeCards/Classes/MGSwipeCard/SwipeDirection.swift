@@ -6,10 +6,7 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-import UIKit
-
 public enum SwipeDirection: Int {
-    
     case left, right, up, down
     
     public static var allDirections: [SwipeDirection] {
@@ -28,5 +25,4 @@ public enum SwipeDirection: Int {
             return CGPoint(x: 0, y: 1)
         }
     }
-    
 }

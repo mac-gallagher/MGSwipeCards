@@ -14,6 +14,7 @@
 - [x] Programmatic swiping
 - [x] Animated undo and card stack reordering
 - [x] Smooth overlay view transitions
+- [x] Custom card stack layouts
 - [x] Dynamic card loading using data source/delegate pattern
 
 ***
@@ -71,7 +72,7 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
     
         var model: SampleCardModel? {
             didSet {
-                self.setContentView(UIImageView(model.image))
+                setContentView(UIImageView(model.image))
             }
         }
     
@@ -89,7 +90,7 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
     
         let cardStack = MGCardStackView()
         
-        var cardModels: [SampleCardModel] {
+        var cardModels: [SampleCardModel] = {
             var models = [SampleCardModel]()
         
             let model1 = SampleCardModel(image: UIImage(named: "cardImage1"))
@@ -101,7 +102,7 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
             models.append(model3)
         
             return models
-        }
+        }()
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -117,8 +118,8 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
         extension ViewController: MGCardStackViewDataSource {
 
 	     func numberOfCards() -> Int {
-		      return cards.count
-         }
+	         return cards.count
+	     }
         
 	     func card(forItemAtIndex index: Int) -> MGSwipeCard {
 	         let card = SampleCard()
@@ -132,7 +133,7 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
 3. Happy swiping!
 
 # Architecture
-There are two major components in the `MGSwipeCards` framework. The first is the `MGCardStackView` which displays the cards. It is responsible for managing the lifetime of the cards and handling all animations. The second component is the cards themselves. Each draggable `MGSwipeCard` contains the swipe logic and is responsible for notifying the card stack of a registered swipe.
+There are two major components in the `MGSwipeCards` framework. The first is the `MGCardStackView` which displays the cards. It is responsible for managing the lifetime of the cards. The second component is the cards themselves. Each draggable `MGSwipeCard` contains the swipe logic and is responsible for notifying the card stack of a registered swipe.
 
 ## `MGCardStackView`
 To use a `MGCardStackView`, add it to your view and implement the `MGCardStackViewDataSource` protocol. Once the card stack's data source is set, the cards you provided will automatically be loaded. `MGCardStackView` exposes the following variables:
@@ -140,8 +141,14 @@ To use a `MGCardStackView`, add it to your view and implement the `MGCardStackVi
 ```swift
 var delegate: MGCardStackViewDelegate?
 var dataSource: MGCardStackViewDataSource?
-var options: MGCardStackViewOptions
+
+var numberOfVisibleCards: Int = 2
 var currentCardIndex: Int
+
+var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+var backgroundCardResetAnimationDuration: TimeInterval = 0.3
+var backgroundCardTransformAnimationDuration: TimeInterval = 0.4
 ```
 
 ### Useful Methods
@@ -174,6 +181,14 @@ func shift(withDistance distance: Int = 1, animated: Bool)
 
 ![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/shift.gif)
 
+### Custom Layouts
+While the default card stack layout works great for a quick implementation, you can achieve your own layout by overriding the following method:
+
+```swift
+func transformForCard(at index: Int) -> CGAffineTransform
+```
+For all card stack layouts, the background cards will animate to their next position in response to any of the actions above.
+
 ### Data Source & Delegates
 To populate your card stack, you must conform your view controller to the `MGCardStackViewDataSource` protocol and implement the following required functions:
 
@@ -187,44 +202,13 @@ To react to swipes and other related events, you must conform your view controll
 
 ```swift
 func didSwipeAllCards(_ cardStack: MGCardStackView)
-func additionalOptions(_ cardStack: MGCardStackView) -> MGCardStackViewOptions
-
 func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection)
-func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection)
+func cardStack(_ cardStack: MGCardStackView, didUndoCardAt index: Int, from direction: SwipeDirection)
 func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int)
 func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, tapCorner: UIRectCorner)
 ```
 
 **NOTE:** The `didSwipeCardAt` and `didSwipeAllCards ` methods are called regardless if a card was swiped programmatically or by the user.
-
-### `MGCardStackViewOptions`
-All of the animations in `MGCardStackView` can be adjusted. Simply create a new instance of `MGCardStackViewOptions` and attach it to your card stack using the `additionalOptions ` delegate method.
-
-The following properties of `MGCardStackViewOptions` are available:
-
-```swift
-var backgroundCardScaleFactor: CGFloat = 0.95
-var backgroundCardResetAnimationDuration: TimeInterval = 0.3
-var backgroundCardScaleAnimationDuration: TimeInterval = 0.4
-
-var forwardShiftAnimationInitialScaleFactor: CGFloat = 0.98
-var backwardShiftAnimationInitialScaleFactor: CGFloat = 1.02
-
-var cardOverlayFadeInOutDuration: TimeInterval = 0.15
-var cardUndoAnimationDuration: TimeInterval = 0.2
-var cardSwipeAnimationMaximumDuration: TimeInterval = 0.8
-var cardResetAnimationSpringBounciness: CGFloat = 12.0
-var cardResetAnimationSpringSpeed: CGFloat = 20.0
-```
-
-Additionally, `MGCardStackViewOptions` manages the following UI-related properties:
-
-```swift
-var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-var numberOfVisibleCards: Int = 2
-```
-
-The default options work great for a quick implementation.
 
 ## `MGSwipeCard`
 The `MGSwipeCard` is a UIView with added gesture recognizers to handle swipe recognition and achieve the visual drag effect. It is also responsible for informing its parent card stack of a registered (or cancelled) swipe. To use a `MGSwipeCard `, you first need to subclass it. In the initialization methods, set your card's appearance using the methods outlined in the section below.
@@ -234,13 +218,17 @@ Each `MGSwipeCard` exposes the following properties:
 ```swift
 var swipeDirections = SwipeDirection.allDirections
 var activeDirection: SwipeDirection?
-var options = MGSwipeCardOptions.defaultOptions
-var delegate: MGSwipeCardDelegate?
-var touchPoint: CGPoint?
+
 var contentView: UIView?
 var footerView: UIView?
 var footerIsTransparent = false
 var footerHeight: CGFloat = 100
+
+var cardSwipeAnimationDuration: TimeInterval = 0.8
+var overlayFadeAnimationDuration: TimeInterval = 0.15
+var reverseSwipeAnimationDuration: TimeInterval = 0.2
+var resetAnimationSpringBounciness: CGFloat = 12.0
+var resetAnimationSpringSpeed: CGFloat = 20.0
 ```
 
 ### Card Appearance
@@ -264,8 +252,8 @@ An *overlay view* is a view whose alpha value reacts to the user's dragging. The
 func setOverlay(forDirection direction: SwipeDirection, overlay: UIView?)
 ```
 
-### `MGSwipeCardOptions`
-The swipe recognition settings can be modified via `MGSwipeCardOptions`, which exposes the following properties:
+### `MGDraggableSwipeView`
+Each `MGSwipeCard` is a subclass of `MGDraggableSwipeView`. It is here that the swipe recognition settings can be modified. The following properties of `MGDraggableSwipeView ` are available:
 
 ```swift
 var minimumSwipeSpeed: CGFloat = 1600

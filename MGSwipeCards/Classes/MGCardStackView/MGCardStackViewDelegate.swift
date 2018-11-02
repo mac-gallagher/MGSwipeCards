@@ -6,12 +6,8 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-import Foundation
-
 public protocol MGCardStackViewDelegate {
-    
     func didSwipeAllCards(_ cardStack: MGCardStackView)
-    func additionalOptions(_ cardStack: MGCardStackView) -> MGCardStackViewOptions
     func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection)
     func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection)
     func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int)
@@ -19,9 +15,7 @@ public protocol MGCardStackViewDelegate {
 }
 
 public extension MGCardStackViewDelegate {
-    
     func didSwipeAllCards(_ cardStack: MGCardStackView) {}
-    func additionalOptions(_ cardStack: MGCardStackView) -> MGCardStackViewOptions { return MGCardStackViewOptions.defaultOptions }
     func cardStack(_ cardStack: MGCardStackView, didSwipeCardAt index: Int, with direction: SwipeDirection) {}
     func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection) {}
     func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int) {}
