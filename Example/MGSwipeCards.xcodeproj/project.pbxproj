@@ -17,7 +17,6 @@
 		ADBB333E20E9DB78006A16C4 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = ADBB333B20E9DB78006A16C4 /* LICENSE */; };
 		ADBB333F20E9DB78006A16C4 /* MGSwipeCards.podspec in Resources */ = {isa = PBXBuildFile; fileRef = ADBB333C20E9DB78006A16C4 /* MGSwipeCards.podspec */; };
 		ADBB334020E9DB78006A16C4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = ADBB333D20E9DB78006A16C4 /* README.md */; };
-		ADEF2086217D58C000261872 /* SampleCardStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEF2085217D58C000261872 /* SampleCardStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +31,6 @@
 		ADBB333B20E9DB78006A16C4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		ADBB333C20E9DB78006A16C4 /* MGSwipeCards.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MGSwipeCards.podspec; path = ../MGSwipeCards.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ADBB333D20E9DB78006A16C4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		ADEF2085217D58C000261872 /* SampleCardStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardStack.swift; sourceTree = "<group>"; };
 		CAB467A67ACC85F4D1AB7ED9 /* Pods-MGSwipeCards_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGSwipeCards_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MGSwipeCards_Example/Pods-MGSwipeCards_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		D99357C68CC26763419BB0B8 /* Pods-MGSwipeCards_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGSwipeCards_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-MGSwipeCards_Example/Pods-MGSwipeCards_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FD00FB837C1D5D4BC52105CA /* Pods_MGSwipeCards_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MGSwipeCards_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,7 +89,6 @@
 			children = (
 				ADBB332B20E9D799006A16C4 /* AppDelegate.swift */,
 				ADAEDF0120F83A3800172438 /* SampleCard.swift */,
-				ADEF2085217D58C000261872 /* SampleCardStack.swift */,
 				ADBB332520E9D799006A16C4 /* ViewController.swift */,
 				ADBB332720E9D799006A16C4 /* UIView+Anchor.swift */,
 				ADBB333820E9D7FE006A16C4 /* Assets.xcassets */,
@@ -243,7 +240,6 @@
 				ADAEDF0220F83A3800172438 /* SampleCard.swift in Sources */,
 				ADBB333020E9D799006A16C4 /* UIView+Anchor.swift in Sources */,
 				ADBB332E20E9D799006A16C4 /* ViewController.swift in Sources */,
-				ADEF2086217D58C000261872 /* SampleCardStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

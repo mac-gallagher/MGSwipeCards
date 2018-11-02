@@ -18,44 +18,40 @@ public protocol MGSwipeCardDelegate {
 }
 
 /**
- A wrapper around `MGDraggableSwipeView` which provides UI options for the user and swipe animations.
+ A wrapper around `MGDraggableSwipeView` which provides UI customization and swipe animations.
 */
 open class MGSwipeCard: MGDraggableSwipeView {
     
-    public var delegate: MGSwipeCardDelegate?
+    var delegate: MGSwipeCardDelegate?
     
-    /**
-    The minimum duration of the off-screen swipe animation. Measured in seconds. Defaults to 0.8.
-    */
+    /// The duration of the animated swipe translation. Measured in seconds. Defaults to 0.8.
     open var cardSwipeAnimationDuration: TimeInterval = 0.8
     
+    /// The duration of the fade animation applied to the overlays before the animated swipe translation, and after the reverse swipe translation.
     open var overlayFadeAnimationDuration: TimeInterval = 0.15
     
-    open var undoAnimationDuration: TimeInterval = 0.2
+    /// The duration of the animated reverse swipe translation. Measured in seconds. Defaults to 0.2.
+    open var reverseSwipeAnimationDuration: TimeInterval = 0.2
     
-    /**
-     The effective bounciness of the swipe spring animation upon a cancelled swipe. Higher values increase spring movement range resulting in more oscillations and springiness. Defined as a value in the range [0, 20]. Defaults to 12.
-    */
+    ///The effective bounciness of the spring animation upon a cancelled swipe. Higher values increase spring movement range resulting in more oscillations and springiness. Defined as a value in the range [0, 20]. Defaults to 12.
     open var resetAnimationSpringBounciness: CGFloat = 12.0
     
-    /**
-     The effective speed of the spring animation upon a cancelled swipe. Higher values increase the dampening power of the spring. Defined as a value in the range [0, 20]. Defaults to 20.
-     */
+    /// The effective speed of the spring animation upon a cancelled swipe. Higher values increase the dampening power of the spring. Defined as a value in the range [0, 20]. Defaults to 20.
     open var resetAnimationSpringSpeed: CGFloat = 20.0
+    
+    open var footerIsTransparent = false {
+        didSet { setNeedsLayout() }
+    }
+    
+    open var footerHeight: CGFloat = 100 {
+        didSet { setNeedsLayout() }
+    }
     
     public private(set) var contentView: UIView?
     public private(set) var footerView: UIView?
     
     private var overlayContainer: UIView?
     private var overlays: [SwipeDirection: UIView?] = [:]
-    
-    public var footerIsTransparent = false {
-        didSet { setNeedsLayout() }
-    }
-    
-    public var footerHeight: CGFloat = 100 {
-        didSet { setNeedsLayout() }
-    }
     
     private var contentViewConstraints: [NSLayoutConstraint] = []
     private var footerViewConstraints: [NSLayoutConstraint] = []
@@ -68,13 +64,6 @@ open class MGSwipeCard: MGDraggableSwipeView {
         layoutFooterView()
         layoutContentView()
         layoutOverlays()
-        
-        if contentView != nil {
-            sendSubviewToBack(contentView!)
-        }
-        if overlayContainer != nil {
-            bringSubviewToFront(overlayContainer!)
-        }
     }
     
     private func layoutFooterView() {
@@ -86,12 +75,12 @@ open class MGSwipeCard: MGDraggableSwipeView {
     private func layoutContentView() {
         guard let content = contentView else { return }
         NSLayoutConstraint.deactivate(contentViewConstraints)
-        
         if let footer = footerView, !footerIsTransparent {
             contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
         } else {
-            contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
+            contentViewConstraints = content.anchorToSuperview()
         }
+        sendSubviewToBack(content)
     }
     
     private func layoutOverlays() {
@@ -100,14 +89,16 @@ open class MGSwipeCard: MGDraggableSwipeView {
         if let footer = footerView {
             overlayContainerConstraints = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
         } else {
-            overlayContainerConstraints = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
+            overlayContainerConstraints = overlayContainer.anchorToSuperview()
         }
+        bringSubviewToFront(overlayContainer)
     }
     
     //MARK: - Setters/Getters
     
     open func setContentView(_ content: UIView?) {
         guard let content = content else { return }
+        contentView?.removeFromSuperview()
         contentView = content
         addSubview(content)
         setNeedsLayout()
@@ -115,6 +106,7 @@ open class MGSwipeCard: MGDraggableSwipeView {
     
     open func setFooterView(_ footer: UIView?) {
         guard let footer = footer else { return }
+        footerView?.removeFromSuperview()
         footerView = footer
         addSubview(footer)
         setNeedsLayout()
@@ -130,7 +122,7 @@ open class MGSwipeCard: MGDraggableSwipeView {
         overlays[direction] = overlay
         overlays[direction]??.alpha = 0
         overlayContainer?.addSubview(overlay)
-        _ = overlay.anchor(top: overlayContainer?.topAnchor, left: overlayContainer?.leftAnchor, bottom: overlayContainer?.bottomAnchor, right: overlayContainer?.rightAnchor)
+        _ = overlay.anchorToSuperview()
         setNeedsLayout()
     }
     
@@ -140,25 +132,25 @@ open class MGSwipeCard: MGDraggableSwipeView {
     
     //MARK: - Main Methods
     
-    public func swipe(direction: SwipeDirection, completion: (() ->())? = nil) {
+    public func swipe(direction: SwipeDirection, completion: ((Bool) ->())?) {
         delegate?.card(didSwipe: self, with: direction)
         isUserInteractionEnabled = false
         POPAnimator.applySwipeAnimation(to: self, direction: direction, forced: true) { finished in
             if finished {
                 self.removeFromSuperview()
-                completion?()
             }
+            completion?(finished)
         }
     }
     
-    public func undo(from direction: SwipeDirection, completion: (() ->())? = nil) {
+    public func reverseSwipe(from direction: SwipeDirection, completion: ((Bool) ->())?) {
         delegate?.card(didUndo: self, from: direction)
         isUserInteractionEnabled = false
         POPAnimator.applyUndoAnimation(to: self, from: direction) { finished in
             if finished {
                 self.isUserInteractionEnabled = true
-                completion?()
             }
+            completion?(finished)
         }
     }
     
@@ -183,9 +175,9 @@ open class MGSwipeCard: MGDraggableSwipeView {
     private func alphaForOverlay(with direction: SwipeDirection) -> CGFloat {
         if direction != activeDirection { return 0 }
         let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
-            return percentage + swipePercentage(on: direction)
+            return percentage + dragPercentage(on: direction)
         }
-        return min((2 * swipePercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
+        return min((2 * dragPercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
     }
     
     open override func didSwipe(on view: MGDraggableSwipeView, with direction: SwipeDirection) {

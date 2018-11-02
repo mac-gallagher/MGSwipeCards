@@ -30,9 +30,7 @@ private class CardStackState {
      */
     var previousSwipe: (index: Int, direction: SwipeDirection)?
     
-    /**
-     A reference to the previous card stack state.
-    */
+    /// A reference to the previous card stack state.
     var previousState: CardStackState?
     
     init(remainingIndices: [Int], previousSwipe: (index: Int, direction: SwipeDirection)?, previousState: CardStackState?) {
@@ -50,14 +48,15 @@ open class MGCardStackView: UIView {
         didSet { reloadData() }
     }
     
-    /**
-     The maximum number of cards to be displayed on screen.
-     */
-    open var numberOfVisibleCards: Int = 6
+    /// The maximum number of cards to be displayed on screen.
+    open var numberOfVisibleCards: Int = 2
     
     open var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     
+    /// The amount of time it takes for the background cards to reset to their original position after a *cancelled swipe*.
     open var backgroundCardResetAnimationDuration: TimeInterval = 0.3
+    
+    /// The amount of time it takes for the background cards to reset to their original position after a *swipe*, *shift*, or *undo*.
     open var backgroundCardTransformAnimationDuration: TimeInterval = 0.4
     
     public var currentCardIndex: Int {
@@ -133,7 +132,7 @@ open class MGCardStackView: UIView {
     public func swipe(_ direction: SwipeDirection) {
         guard let topCard = topCard else { return }
         if !isUserInteractionEnabled { return }
-        topCard.swipe(direction: direction)
+        topCard.swipe(direction: direction, completion: nil)
     }
     
     public func undoLastSwipe() {
@@ -145,12 +144,12 @@ open class MGCardStackView: UIView {
         currentState = currentState.previousState!
         reloadCurrentState()
 
-        topCard?.undo(from: lastSwipe.direction) {
+        topCard?.reverseSwipe(from: lastSwipe.direction) { _ in
             self.isUserInteractionEnabled = true
         }
     }
     
-    public func shift(withDistance distance: Int = 1, animated: Bool = true) {
+    public func shift(withDistance distance: Int = 1, animated: Bool) {
         if distance == 0 || visibleCards.count <= 1 { return }
         if !isUserInteractionEnabled { return }
         let newCurrentState = CardStackState(remainingIndices: currentState.remainingIndices.shift(withDistance: distance), previousSwipe: currentState.previousSwipe, previousState: currentState.previousState)

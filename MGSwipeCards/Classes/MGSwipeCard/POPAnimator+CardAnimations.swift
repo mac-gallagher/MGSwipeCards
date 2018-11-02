@@ -103,8 +103,8 @@ extension POPAnimator {
         }
         
         //animate back to original position
-        POPAnimator.applyRotationAnimation(to: card, toValue: 0, duration: card.undoAnimationDuration, completionBlock: nil)
-        POPAnimator.applyTranslationAnimation(to: card, toValue: .zero, duration: card.undoAnimationDuration) { _, finished in
+        POPAnimator.applyRotationAnimation(to: card, toValue: 0, duration: card.reverseSwipeAnimationDuration, completionBlock: nil)
+        POPAnimator.applyTranslationAnimation(to: card, toValue: .zero, duration: card.reverseSwipeAnimationDuration) { _, finished in
             POPAnimator.applyOverlayFadeAnimations(to: card, showDirection: nil, duration: card.overlayFadeAnimationDuration, completionBlock: { _, finished in
                 card.layer.shouldRasterize = false
                 POPAnimator.cardAnimations.removeValue(forKey: card)
@@ -119,7 +119,7 @@ extension POPAnimator {
         let minimumOffscreenTranslation = CGPoint(x: UIScreen.main.bounds.width + cardDiagonalLength, y: UIScreen.main.bounds.height + cardDiagonalLength)
         let maxLength = max(abs(dragTranslation.x), abs(dragTranslation.y))
         let directionVector = CGPoint(x: dragTranslation.x / maxLength, y: dragTranslation.y / maxLength)
-        let velocityFactor = max(1, card.swipeSpeed(on: direction) / card.minimumSwipeSpeed)
+        let velocityFactor = max(1, card.dragSpeed(on: direction) / card.minimumSwipeSpeed)
         return CGPoint(x: velocityFactor * directionVector.x * minimumOffscreenTranslation.x, y: velocityFactor * directionVector.y * minimumOffscreenTranslation.y)
     }
     

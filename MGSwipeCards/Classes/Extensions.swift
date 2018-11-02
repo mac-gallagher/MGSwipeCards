@@ -69,6 +69,10 @@ extension UIView {
         
         return anchors
     }
+    
+    func anchorToSuperview() -> [NSLayoutConstraint] {
+        return anchor(top: superview?.topAnchor, left: superview?.leftAnchor, bottom: superview?.bottomAnchor, right: superview?.rightAnchor)
+    }
 }
 
 extension CGAffineTransform {

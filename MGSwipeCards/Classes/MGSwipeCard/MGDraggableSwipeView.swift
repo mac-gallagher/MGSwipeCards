@@ -8,16 +8,16 @@
 
 open class MGDraggableSwipeView: UIView {
     
-    ///The directions to be registered by the view
+    /// The swipe directions to be recognized by the view
     open var swipeDirections = SwipeDirection.allDirections
     
-    ///The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1600.
+    /// The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1600.
     open var minimumSwipeSpeed: CGFloat = 1600
     
-    ///The minimum required drag distance on the intended direction to trigger a swipe. Measured from the initial touch point. Defined as a value in the range [0, 2]. Defaults to 0.5.
+    /// The minimum required drag distance on the intended direction to trigger a swipe. Measured from the initial touch point. Defined as a value in the range [0, 2], where 2 represents the entire length or width of the card. Defaults to 0.5.
     open var minimumSwipeMargin: CGFloat = 0.5
     
-    ///The maximum rotation angle of the card. Measured in radians. Defined as a value in the range [0, `CGFloat.pi`/2]. Defaults to `CGFloat.pi`/10.
+    /// The maximum rotation angle of the card. Measured in radians. Defined as a value in the range [0, `CGFloat.pi`/2]. Defaults to `CGFloat.pi`/10.
     open var maximumRotationAngle: CGFloat = CGFloat.pi / 10
     
     public private(set) lazy var panGestureRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
@@ -49,7 +49,7 @@ open class MGDraggableSwipeView: UIView {
     
     public var activeDirection: SwipeDirection? {
         return swipeDirections.reduce((highestPercentage: 0, direction: nil), { (percentage, direction) -> (CGFloat, SwipeDirection?) in
-            let swipePercent = swipePercentage(on: direction)
+            let swipePercent = dragPercentage(on: direction)
             if swipePercent > percentage.highestPercentage {
                 return (swipePercent, direction)
             }
@@ -57,15 +57,14 @@ open class MGDraggableSwipeView: UIView {
         }).direction
     }
     
-    /**
-     The velocity of the user's swipe projected onto the specified direction.
-    */
-    public func swipeSpeed(on direction: SwipeDirection) -> CGFloat {
+    /// The velocity of the user's drag projected onto the specified direction.
+    public func dragSpeed(on direction: SwipeDirection) -> CGFloat {
         let velocity = panGestureRecognizer.velocity(in: superview)
         return abs(direction.point.dotProduct(with: velocity))
     }
     
-    public func swipePercentage(on direction: SwipeDirection) -> CGFloat {
+    /// The proportion of the card's initial bounds that the user's drag attains in the specified direction.
+    public func dragPercentage(on direction: SwipeDirection) -> CGFloat {
         let translation = panGestureRecognizer.translation(in: superview)
         let normalizedTranslation = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
         let percentage = normalizedTranslation.dotProduct(with: direction.point)
@@ -123,7 +122,7 @@ open class MGDraggableSwipeView: UIView {
     
     private func endSwiping(on view: MGDraggableSwipeView, recognizer: UIPanGestureRecognizer) {
         if let direction = activeDirection {
-            if swipeSpeed(on: direction) >= minimumSwipeSpeed || swipePercentage(on: direction) >= minimumSwipeMargin {
+            if dragSpeed(on: direction) >= minimumSwipeSpeed || dragPercentage(on: direction) >= minimumSwipeMargin {
                 didSwipe(on: self, with: direction)
             } else {
                 didCancelSwipe(on: self)
