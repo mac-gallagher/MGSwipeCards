@@ -13,7 +13,7 @@ public protocol MGSwipeCardDelegate {
     func card(didBeginSwipe card: MGSwipeCard)
     func card(didContinueSwipe card: MGSwipeCard)
     func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection)
-    func card(didUndo card: MGSwipeCard, from direction: SwipeDirection)
+    func card(didReverseSwipe card: MGSwipeCard, from direction: SwipeDirection)
     func card(didCancelSwipe card: MGSwipeCard)
 }
 
@@ -22,22 +22,7 @@ public protocol MGSwipeCardDelegate {
 */
 open class MGSwipeCard: MGDraggableSwipeView {
     
-    var delegate: MGSwipeCardDelegate?
-    
-    /// The duration of the animated swipe translation. Measured in seconds. Defaults to 0.8.
-    open var cardSwipeAnimationDuration: TimeInterval = 0.8
-    
-    /// The duration of the fade animation applied to the overlays before the animated swipe translation, and after the reverse swipe translation.
-    open var overlayFadeAnimationDuration: TimeInterval = 0.15
-    
-    /// The duration of the animated reverse swipe translation. Measured in seconds. Defaults to 0.2.
-    open var reverseSwipeAnimationDuration: TimeInterval = 0.2
-    
-    ///The effective bounciness of the spring animation upon a cancelled swipe. Higher values increase spring movement range resulting in more oscillations and springiness. Defined as a value in the range [0, 20]. Defaults to 12.
-    open var resetAnimationSpringBounciness: CGFloat = 12.0
-    
-    /// The effective speed of the spring animation upon a cancelled swipe. Higher values increase the dampening power of the spring. Defined as a value in the range [0, 20]. Defaults to 20.
-    open var resetAnimationSpringSpeed: CGFloat = 20.0
+    open var animationOptions: CardAnimationOptions = .defaultOptions
     
     open var footerIsTransparent = false {
         didSet { setNeedsLayout() }
@@ -49,6 +34,8 @@ open class MGSwipeCard: MGDraggableSwipeView {
     
     public private(set) var contentView: UIView?
     public private(set) var footerView: UIView?
+    
+    var delegate: MGSwipeCardDelegate?
     
     private var overlayContainer: UIView?
     private var overlays: [SwipeDirection: UIView?] = [:]
@@ -144,7 +131,7 @@ open class MGSwipeCard: MGDraggableSwipeView {
     }
     
     public func reverseSwipe(from direction: SwipeDirection, completion: ((Bool) ->())?) {
-        delegate?.card(didUndo: self, from: direction)
+        delegate?.card(didReverseSwipe: self, from: direction)
         isUserInteractionEnabled = false
         POPAnimator.applyUndoAnimation(to: self, from: direction) { finished in
             if finished {
