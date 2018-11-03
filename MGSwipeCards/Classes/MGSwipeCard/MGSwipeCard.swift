@@ -22,15 +22,10 @@ public protocol MGSwipeCardDelegate {
 */
 open class MGSwipeCard: MGDraggableSwipeView {
     
-    open var animationOptions: CardAnimationOptions = .defaultOptions
-    
-    open var footerIsTransparent = false {
-        didSet { setNeedsLayout() }
-    }
-    
-    open var footerHeight: CGFloat = 100 {
-        didSet { setNeedsLayout() }
-    }
+    open var animationOptions: CardAnimationOptions { return .defaultOptions }
+
+    open var footerIsTransparent: Bool { return false }
+    open var footerHeight: CGFloat { return 100 }
     
     public private(set) var contentView: UIView?
     public private(set) var footerView: UIView?

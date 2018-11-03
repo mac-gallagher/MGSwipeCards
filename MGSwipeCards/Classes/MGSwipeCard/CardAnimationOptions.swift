@@ -22,5 +22,4 @@ open class CardAnimationOptions: NSObject {
     
     /// The effective speed of the spring animation upon a cancelled swipe. Higher values increase the dampening power of the spring. Defined as a value in the range [0, 20]. Defaults to 20.
     open var resetAnimationSpringSpeed: CGFloat = 20.0
-    
 }

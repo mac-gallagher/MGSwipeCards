@@ -18,6 +18,10 @@ struct SampleCardModel {
 
 class SampleCard: MGSwipeCard {
     
+    override var footerIsTransparent: Bool { return true }
+    override var footerHeight: CGFloat { return 80 }
+    override var swipeDirections: [SwipeDirection] { return [.left, .up, .right] }
+    
     var model: SampleCardModel? {
         didSet {
             configureCard()
@@ -25,9 +29,6 @@ class SampleCard: MGSwipeCard {
     }
     
     private func configureCard() {
-        footerIsTransparent = true
-        footerHeight = 80
-        swipeDirections = [.left, .up, .right]
         setContentView(SampleCardContentView(image: model?.image))
         setFooterView(SampleCardFooterView(title: "\(model?.name ?? ""), \(model?.age ?? 0)", subtitle: model?.occupation))
         swipeDirections.forEach { direction in
@@ -93,9 +94,9 @@ class SampleCardContentView: UIView {
     
     private func sharedInit() {
         addSubview(backgroundView)
-        backgroundView.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
+        backgroundView.anchorToSuperview()
         backgroundView.addSubview(imageView)
-        imageView.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, bottom: backgroundView.bottomAnchor, right: backgroundView.rightAnchor)
+        imageView.anchorToSuperview()
         configureShadow()
     }
     
