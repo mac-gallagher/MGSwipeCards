@@ -60,27 +60,13 @@ class ViewController: UIViewController {
         return button
     }()
     
-    let cardModels: [SampleCardModel] = {
-        var models = [SampleCardModel]()
-        
-        let michelle = SampleCardModel(name: "Michelle", age: 26, occupation: "Graphic Designer", image: UIImage(named: "michelle"))
-        let joshua = SampleCardModel(name: "Joshua", age: 27, occupation: "Business Services Sales Representative", image: UIImage(named: "joshua"))
-        let daiane = SampleCardModel(name: "Daiane", age: 23, occupation: "Graduate Student", image: UIImage(named: "daiane"))
-        let andrew = SampleCardModel(name: "Andrew", age: 26, occupation: nil, image: UIImage(named: "andrew"))
-        let julian = SampleCardModel(name: "Julian", age: 25, occupation: "Model/Photographer", image: UIImage(named: "julian"))
-        let bailey = SampleCardModel(name: "Bailey", age: 25, occupation: "Software Engineer", image: UIImage(named: "bailey"))
-        let rachel = SampleCardModel(name: "Rachel", age: 27, occupation: "Interior Designer", image: UIImage(named: "rachel"))
-        
-        models.append(michelle)
-        models.append(joshua)
-        models.append(daiane)
-        models.append(andrew)
-        models.append(julian)
-        models.append(bailey)
-        models.append(rachel)
-        
-        return models
-    }()
+    let cardModels: [SampleCardModel] = [
+        SampleCardModel(name: "Michelle", age: 26, occupation: "Graphic Designer", image: UIImage(named: "michelle")),
+        SampleCardModel(name: "Joshua", age: 27, occupation: "Business Services Sales Representative", image: UIImage(named: "joshua")),
+        SampleCardModel(name: "Julian", age: 25, occupation: "Model/Photographer", image: UIImage(named: "julian")),
+        SampleCardModel(name: "Bailey", age: 25, occupation: "Software Engineer", image: UIImage(named: "bailey")),
+        SampleCardModel(name: "Rachel", age: 27, occupation: "Interior Designer", image: UIImage(named: "rachel"))
+    ]
     
     //MARK: - Methods
     
