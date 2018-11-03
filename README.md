@@ -9,12 +9,11 @@
 ![Tinder Demo](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe_example.gif)
 
 # Features
-- [x] Maximum customizability - create your own card template!
+- [x] Maximum customizability - create your own card template and card stack layout!
 - [x] Accurate swipe recognition based on velocity and card position
 - [x] Programmatic swiping
 - [x] Animated undo and card stack reordering
 - [x] Smooth overlay view transitions
-- [x] Custom card stack layouts
 - [x] Dynamic card loading using data source/delegate pattern
 
 ***
@@ -27,11 +26,11 @@
 - [Architecture](#architecture)
    - [MGCardStackView](#mgcardstackview)
       - [Useful Methods](#useful-methods)
+      - [Custom Layouts](#custom-layouts)
       - [Data Source & Delegates](#data-source--delegates)
-      - [MGCardStackViewOptions](#mgcardstackviewoptions)
    - [MGSwipeCard](#mgswipecard)
       - [Card Appearance](#card-appearance)
-      - [MGSwipeCardOptions](#mgswipecardoptions)
+      - [MGDraggableSwipeView](#mgdraggableswipeview)
 - [Sources](#sources)
 - [Author](#author)
 - [License](#license)
@@ -44,7 +43,7 @@ The example project uses the Tinder-inspired framework [PopBounceButton](<https:
 # Requirements
 * iOS 9.0+
 * Xcode 9.0+
-* Swift 4.0+
+* Swift 4.2
 
 # Installation
 
@@ -75,7 +74,6 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
                 setContentView(UIImageView(model.image))
             }
         }
-    
     }
     
     struct SampleCardModel {
@@ -90,19 +88,11 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
     
         let cardStack = MGCardStackView()
         
-        var cardModels: [SampleCardModel] = {
-            var models = [SampleCardModel]()
-        
-            let model1 = SampleCardModel(image: UIImage(named: "cardImage1"))
-            let model2 = SampleCardModel(image: UIImage(named: "cardImage2"))
-            let model3 = SampleCardModel(image: UIImage(named: "cardImage3"))
-                
-            models.append(model1)
-            models.append(model2)
-            models.append(model3)
-        
-            return models
-        }()
+        var cardModels: [SampleCardModel] = [
+            SampleCardModel(image: UIImage(named: "cardImage1")),
+            SampleCardModel(image: UIImage(named: "cardImage2")),
+            SampleCardModel(image: UIImage(named: "cardImage3"))
+            ]
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -110,7 +100,6 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
             cardStack.frame = view.safeAreaLayoutGuide.bounds.insetBy(dx: 10, dy: 50)
             cardStack.dataSource = self
         }
-        
     }
 
     //MARK: - Data Source Methods
@@ -126,7 +115,6 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
 	         card.model = models[index]
 	         return card
 	     }
-	
     }
     ```
     
@@ -143,12 +131,10 @@ var delegate: MGCardStackViewDelegate?
 var dataSource: MGCardStackViewDataSource?
 
 var numberOfVisibleCards: Int = 2
-var currentCardIndex: Int
+var topCardIndex: Int
 
 var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-
-var backgroundCardResetAnimationDuration: TimeInterval = 0.3
-var backgroundCardTransformAnimationDuration: TimeInterval = 0.4
+var animationOptions: CardStackAnimationOptions = .defaultOptions
 ```
 
 ### Useful Methods
@@ -187,7 +173,7 @@ While the default card stack layout works great for a quick implementation, you 
 ```swift
 func transformForCard(at index: Int) -> CGAffineTransform
 ```
-For all card stack layouts, the background cards will animate to their next position in response to any of the actions above.
+For all card stack layouts, the background cards will animate to their next position in response to any of the actions listed above.
 
 ### Data Source & Delegates
 To populate your card stack, you must conform your view controller to the `MGCardStackViewDataSource` protocol and implement the following required functions:
@@ -224,29 +210,25 @@ var footerView: UIView?
 var footerIsTransparent = false
 var footerHeight: CGFloat = 100
 
-var cardSwipeAnimationDuration: TimeInterval = 0.8
-var overlayFadeAnimationDuration: TimeInterval = 0.15
-var reverseSwipeAnimationDuration: TimeInterval = 0.2
-var resetAnimationSpringBounciness: CGFloat = 12.0
-var resetAnimationSpringSpeed: CGFloat = 20.0
+var animationOptions: CardAnimationOptions = .defaultOptions
 ```
 
 ### Card Appearance
 Each `MGSwipeCard` consists of three UI components: its *content view*, *footer view*, and *overlay view(s)*.
 
-The *content view* is the card's primary view. You can include your own card template here. The content view is set with
+The content view is the card's primary view. You can include your own card template here. The content view is set with
 
 ```swift 
 func setContentView(_ content: UIView?)
 ```
 
-The card's *footer view* is set just below the card's content view. To have the card's content continue past the footer view, set `isFooterTransparent` is to `true`. The footer's height is modified with `footerHeight`. The card's footer is set with 
+The card's footer view is set just below the card's content view. To have the card's content continue past the footer view, set `isFooterTransparent` is to `true`. The footer's height is modified with `footerHeight`. The card's footer is set with 
 
 ```swift 
 func setFooterView(_ footer: UIView?)
 ```
 
-An *overlay view* is a view whose alpha value reacts to the user's dragging. The overlays are laid out above the card's footer, regardless if the footer is transparent or not. The card's overlays are set with
+An overlay view is a view whose alpha value reacts to the user's dragging. The overlays are laid out above the card's footer, regardless if the footer is transparent or not. The card's overlays are set with
 
 ```swift 
 func setOverlay(forDirection direction: SwipeDirection, overlay: UIView?)
