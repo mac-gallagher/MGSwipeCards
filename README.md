@@ -207,8 +207,8 @@ var activeDirection: SwipeDirection?
 
 var contentView: UIView?
 var footerView: UIView?
-var footerIsTransparent = false
-var footerHeight: CGFloat = 100
+var footerIsTransparent //defaults to false
+var footerHeight: CGFloat //defaults to 100
 
 var animationOptions: CardAnimationOptions = .defaultOptions
 ```
@@ -238,9 +238,9 @@ func setOverlay(forDirection direction: SwipeDirection, overlay: UIView?)
 Each `MGSwipeCard` is a subclass of `MGDraggableSwipeView`. It is here that the swipe recognition settings can be modified. The following properties of `MGDraggableSwipeView ` are available:
 
 ```swift
-var minimumSwipeSpeed: CGFloat = 1600
-var minimumSwipeMargin: CGFloat = 0.5
-var maximumRotationAngle: CGFloat = CGFloat.pi / 10
+var minimumSwipeSpeed: CGFloat //defaults to 1600
+var minimumSwipeMargin: CGFloat //defaults to 0.5
+var maximumRotationAngle: CGFloat // defaults to CGFloat.pi / 10
 ```
 The default options work and should feel natural.
 
