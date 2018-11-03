@@ -6,7 +6,7 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-open class MGDraggableSwipeView: UIView {
+open class MGDraggableSwipeView: UIViewHelper {
     
     /// The swipe directions to be recognized by the view
     open var swipeDirections = SwipeDirection.allDirections
@@ -25,22 +25,7 @@ open class MGDraggableSwipeView: UIView {
     
     //MARK: - Initialization
     
-    public init() {
-        super.init(frame: .zero)
-        initializeGestureRecognizers()
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        initializeGestureRecognizers()
-    }
-    
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        initializeGestureRecognizers()
-    }
-    
-    private func initializeGestureRecognizers() {
+    open override func initialize() {
         addGestureRecognizer(panGestureRecognizer)
         addGestureRecognizer(tapGestureRecognizer)
     }
