@@ -9,16 +9,16 @@
 open class MGDraggableSwipeView: UIViewHelper {
     
     /// The swipe directions to be recognized by the view
-    open var swipeDirections = SwipeDirection.allDirections
+    open var swipeDirections: [SwipeDirection] { return SwipeDirection.allDirections }
     
     /// The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1600.
-    open var minimumSwipeSpeed: CGFloat = 1600
+    open var minimumSwipeSpeed: CGFloat { return 1600 }
     
     /// The minimum required drag distance on the intended direction to trigger a swipe. Measured from the initial touch point. Defined as a value in the range [0, 2], where 2 represents the entire length or width of the card. Defaults to 0.5.
-    open var minimumSwipeMargin: CGFloat = 0.5
+    open var minimumSwipeMargin: CGFloat { return 0.5 }
     
     /// The maximum rotation angle of the card. Measured in radians. Defined as a value in the range [0, `CGFloat.pi`/2]. Defaults to `CGFloat.pi`/10.
-    open var maximumRotationAngle: CGFloat = CGFloat.pi / 10
+    open var maximumRotationAngle: CGFloat { return CGFloat.pi / 10 }
     
     public private(set) lazy var panGestureRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
     public private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
