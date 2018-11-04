@@ -8,7 +8,7 @@
 
 import pop
 
-public protocol MGSwipeCardDelegate {
+protocol MGSwipeCardDelegate {
     func card(didTap card: MGSwipeCard)
     func card(didBeginSwipe card: MGSwipeCard)
     func card(didContinueSwipe card: MGSwipeCard)

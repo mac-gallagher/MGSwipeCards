@@ -126,6 +126,19 @@ extension POPAnimator {
     }
     
     private static func applyOverlayFadeAnimations(to card: MGSwipeCard, showDirection: SwipeDirection?, duration: TimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
+        var hasOverlay = false
+        for direction in card.swipeDirections {
+            if card.overlay(forDirection: direction) != nil {
+                hasOverlay = true
+                break
+            }
+        }
+        
+        if !hasOverlay {
+            completionBlock?(nil, true)
+            return
+        }
+        
         var completionCalled  = false
         for direction in card.swipeDirections {
             let overlay = card.overlay(forDirection: direction)
