@@ -207,7 +207,7 @@ var activeDirection: SwipeDirection?
 
 var contentView: UIView?
 var footerView: UIView?
-var footerIsTransparent //defaults to false
+var isFooterTransparent //defaults to false
 var footerHeight: CGFloat //defaults to 100
 
 var animationOptions: CardAnimationOptions // defaults to defaultOptions

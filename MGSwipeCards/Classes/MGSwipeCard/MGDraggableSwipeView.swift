@@ -28,6 +28,19 @@ open class MGDraggableSwipeView: UIViewHelper {
     open override func initialize() {
         addGestureRecognizer(panGestureRecognizer)
         addGestureRecognizer(tapGestureRecognizer)
+        applySubviewRasterization()
+    }
+    
+    ///Should return all static subviews of the card to improve performance.
+    open func rasterizedSubviews() -> [UIView?] {
+        return [self]
+    }
+    
+    private func applySubviewRasterization() {
+        for subview in rasterizedSubviews() {
+            subview?.layer.rasterizationScale = UIScreen.main.scale
+            subview?.layer.shouldRasterize = true
+        }
     }
     
     //MARK: - Swipe Calculations
@@ -83,8 +96,6 @@ open class MGDraggableSwipeView: UIViewHelper {
     private var rotationDirectionY: CGFloat = 1
     
     private func beginSwiping(on view: MGDraggableSwipeView, recognizer: UIPanGestureRecognizer) {
-        layer.rasterizationScale = UIScreen.main.scale
-        layer.shouldRasterize = true
         let touchPoint = recognizer.location(in: self)
         if touchPoint.y < bounds.height / 2 {
             rotationDirectionY = 1
@@ -115,7 +126,6 @@ open class MGDraggableSwipeView: UIViewHelper {
         } else {
             didCancelSwipe(on: self)
         }
-        layer.shouldRasterize = false
     }
     
     open func didTap(on view: MGDraggableSwipeView) {}

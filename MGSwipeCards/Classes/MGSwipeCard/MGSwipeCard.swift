@@ -24,7 +24,7 @@ open class MGSwipeCard: MGDraggableSwipeView {
     
     open var animationOptions: CardAnimationOptions { return .defaultOptions }
 
-    open var footerIsTransparent: Bool { return false }
+    open var isFooterTransparent: Bool { return false }
     open var footerHeight: CGFloat { return 100 }
     
     public private(set) var contentView: UIView?
@@ -48,6 +48,10 @@ open class MGSwipeCard: MGDraggableSwipeView {
         layoutOverlays()
     }
     
+    open override func rasterizedSubviews() -> [UIView?] {
+        return [contentView, footerView]
+    }
+    
     private func layoutFooterView() {
         guard let footer = footerView else { return }
         NSLayoutConstraint.deactivate(footerViewConstraints)
@@ -57,7 +61,7 @@ open class MGSwipeCard: MGDraggableSwipeView {
     private func layoutContentView() {
         guard let content = contentView else { return }
         NSLayoutConstraint.deactivate(contentViewConstraints)
-        if let footer = footerView, !footerIsTransparent {
+        if let footer = footerView, !isFooterTransparent {
             contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
         } else {
             contentViewConstraints = content.anchorToSuperview()

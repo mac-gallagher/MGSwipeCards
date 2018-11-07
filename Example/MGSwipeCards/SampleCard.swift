@@ -18,7 +18,7 @@ struct SampleCardModel {
 
 class SampleCard: MGSwipeCard {
     
-    override var footerIsTransparent: Bool { return true }
+    override var isFooterTransparent: Bool { return true }
     override var footerHeight: CGFloat { return 80 }
     override var swipeDirections: [SwipeDirection] { return [.left, .up, .right] }
     

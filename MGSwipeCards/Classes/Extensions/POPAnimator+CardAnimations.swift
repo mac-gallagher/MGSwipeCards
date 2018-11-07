@@ -12,9 +12,6 @@ extension POPAnimator {
     static func applySwipeAnimation(to card: MGSwipeCard, direction: SwipeDirection, forced: Bool = false, completion: ((Bool) -> Void)?) {
         POPAnimator.removeAllCardAnimations(on: card)
         
-        card.layer.shouldRasterize = true
-        card.layer.rasterizationScale = UIScreen.main.scale
-        
         let overlayDuration = forced ? card.animationOptions.overlayFadeAnimationDuration : 0
         let rotation = rotationForSwipe(card, direction: direction, forced: forced)
         let dragTranslation = forced ? direction.point : card.panGestureRecognizer.translation(in: card.superview)
@@ -24,7 +21,6 @@ extension POPAnimator {
         applyOverlayFadeAnimations(to: card, showDirection: direction, duration: overlayDuration) { _, _ in
             POPAnimator.applyRotationAnimation(to: card, toValue: rotation, duration: card.animationOptions.cardSwipeAnimationDuration, completionBlock: nil)
             POPAnimator.applyTranslationAnimation(to: card, toValue: translation, duration: card.animationOptions.cardSwipeAnimationDuration) { _, finished in
-                card.layer.shouldRasterize = false
                 completion?(finished)
             }
         }
@@ -36,8 +32,6 @@ extension POPAnimator {
     
     static func applyResetAnimation(to card: MGSwipeCard, completion: ((Bool) -> Void)?) {
         POPAnimator.removeAllCardAnimations(on: card)
-        card.layer.shouldRasterize = true
-        card.layer.rasterizationScale = UIScreen.main.scale
         
         //apply translation animation
         if let resetTranslationAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY) {
@@ -45,7 +39,6 @@ extension POPAnimator {
             resetTranslationAnimation.springBounciness = card.animationOptions.resetAnimationSpringBounciness
             resetTranslationAnimation.springSpeed = card.animationOptions.resetAnimationSpringSpeed
             resetTranslationAnimation.completionBlock = { _, finished in
-                card.layer.shouldRasterize = false
                 completion?(finished)
             }
             card.layer.pop_add(resetTranslationAnimation, forKey: POPAnimator.cardResetTranslationKey)
@@ -73,9 +66,6 @@ extension POPAnimator {
     static func applyUndoAnimation(to card: MGSwipeCard, from direction: SwipeDirection, completion: ((Bool) -> Void)?) {
         POPAnimator.removeAllCardAnimations(on: card)
         
-        card.layer.shouldRasterize = true
-        card.layer.rasterizationScale = UIScreen.main.scale
-        
         //recreate previous swipe transform
         var transform = CGAffineTransform.identity
         let translationPoint = POPAnimator.translationPoint(card, direction: direction, dragTranslation: direction.point)
@@ -90,7 +80,6 @@ extension POPAnimator {
         POPAnimator.applyRotationAnimation(to: card, toValue: 0, duration: card.animationOptions.reverseSwipeAnimationDuration, completionBlock: nil)
         POPAnimator.applyTranslationAnimation(to: card, toValue: .zero, duration: card.animationOptions.reverseSwipeAnimationDuration) { _, finished in
             POPAnimator.applyOverlayFadeAnimations(to: card, showDirection: nil, duration: card.animationOptions.overlayFadeAnimationDuration, completionBlock: { _, finished in
-                card.layer.shouldRasterize = false
                 completion?(finished)
             })
         }
