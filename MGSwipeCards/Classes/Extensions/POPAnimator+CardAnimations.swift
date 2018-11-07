@@ -53,12 +53,12 @@ extension POPAnimator {
         }
         
         //apply overlay fade animation
-        card.swipeDirections.forEach { direction in
+        for (_, overlay) in card.overlays {
             if let resetOverlayAnimation = POPSpringAnimation(propertyNamed: kPOPViewAlpha) {
                 resetOverlayAnimation.toValue = 0
                 resetOverlayAnimation.springBounciness = card.animationOptions.resetAnimationSpringBounciness
                 resetOverlayAnimation.springSpeed = card.animationOptions.resetAnimationSpringSpeed
-                card.overlay(forDirection: direction)?.pop_add(resetOverlayAnimation, forKey: POPAnimator.cardResetOverlayAlphaKey)
+                overlay.pop_add(resetOverlayAnimation, forKey: POPAnimator.cardResetOverlayAlphaKey)
             }
         }
     }
@@ -71,9 +71,8 @@ extension POPAnimator {
         let translationPoint = POPAnimator.translationPoint(card, direction: direction, dragTranslation: direction.point)
         transform = transform.translatedBy(x: translationPoint.x, y: translationPoint.y)
         card.transform = transform.rotated(by: rotationForSwipe(card, direction: direction))
-        for swipeDirection in card.swipeDirections {
-            let overlay = card.overlay(forDirection: swipeDirection)
-            overlay?.alpha = swipeDirection == direction ? 1 : 0
+        for (swipeDirection, overlay) in card.overlays {
+            overlay.alpha = swipeDirection == direction ? 1 : 0
         }
         
         //animate back to original position
@@ -115,22 +114,13 @@ extension POPAnimator {
     }
     
     private static func applyOverlayFadeAnimations(to card: MGSwipeCard, showDirection: SwipeDirection?, duration: TimeInterval, completionBlock: ((POPAnimation?, Bool) -> Void)?) {
-        var hasOverlay = false
-        for direction in card.swipeDirections {
-            if card.overlay(forDirection: direction) != nil {
-                hasOverlay = true
-                break
-            }
-        }
-        
-        if !hasOverlay {
+        if card.overlays.count == 0 {
             completionBlock?(nil, true)
             return
         }
         
         var completionCalled  = false
-        for direction in card.swipeDirections {
-            let overlay = card.overlay(forDirection: direction)
+        for (direction, overlay) in card.overlays {
             let alpha: CGFloat = direction == showDirection ? 1 : 0
             POPAnimator.applyFadeAnimation(to: overlay, toValue: alpha, duration: duration) { (animation, finished) in
                 if !completionCalled {
@@ -146,10 +136,9 @@ extension POPAnimator {
         card.layer.pop_removeAllAnimations()
         card.layer.shouldRasterize = false
         
-        card.swipeDirections.forEach { direction in
-            let overlay = card.overlay(forDirection: direction)
-            overlay?.pop_removeAllAnimations()
-            overlay?.layer.pop_removeAllAnimations()
+        for (_, overlay) in card.overlays {
+            overlay.pop_removeAllAnimations()
+            overlay.layer.pop_removeAllAnimations()
         }
     }
 }

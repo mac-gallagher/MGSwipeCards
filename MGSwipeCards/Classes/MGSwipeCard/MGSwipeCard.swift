@@ -27,17 +27,27 @@ open class MGSwipeCard: MGDraggableSwipeView {
     open var isFooterTransparent: Bool { return false }
     open var footerHeight: CGFloat { return 100 }
     
-    public private(set) var contentView: UIView?
-    public private(set) var footerView: UIView?
+    public private(set) var content: UIView?
+    public private(set) var footer: UIView?
+    public private(set) var overlays: [SwipeDirection: UIView] = [:]
     
     var delegate: MGSwipeCardDelegate?
     
-    private var overlayContainer: UIView?
-    private var overlays: [SwipeDirection: UIView?] = [:]
+    private var overlayContainer = UIView()
     
-    private var contentViewConstraints: [NSLayoutConstraint] = []
-    private var footerViewConstraints: [NSLayoutConstraint] = []
-    private var overlayContainerConstraints: [NSLayoutConstraint] = []
+    //MARK: - Getters
+    
+    open func contentView() -> UIView? {
+        return nil
+    }
+    
+    open func footerView() -> UIView? {
+        return nil
+    }
+    
+    open func overlay(forDirection direction: SwipeDirection) -> UIView? {
+        return nil
+    }
     
     //MARK: - Layout
     
@@ -45,75 +55,54 @@ open class MGSwipeCard: MGDraggableSwipeView {
         super.layoutSubviews()
         layoutFooterView()
         layoutContentView()
+        layoutOverlayContainer()
         layoutOverlays()
     }
     
     open override func rasterizedSubviews() -> [UIView?] {
-        return [contentView, footerView]
+        return [content, footer]
     }
     
     private func layoutFooterView() {
-        guard let footer = footerView else { return }
-        NSLayoutConstraint.deactivate(footerViewConstraints)
-        footerViewConstraints = footer.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, heightConstant: footerHeight)
+        footer = footerView()
+        if let footer = footer {
+            addSubview(footer)
+            _ = footer.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, heightConstant: footerHeight)
+        }
     }
     
     private func layoutContentView() {
-        guard let content = contentView else { return }
-        NSLayoutConstraint.deactivate(contentViewConstraints)
-        if let footer = footerView, !isFooterTransparent {
-            contentViewConstraints = content.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
-        } else {
-            contentViewConstraints = content.anchorToSuperview()
+        content = contentView()
+        if let content = content {
+            addSubview(content)
+            if let footer = footer, !isFooterTransparent {
+                _ = content.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
+            } else {
+                _ = content.anchorToSuperview()
+            }
+            sendSubviewToBack(content)
         }
-        sendSubviewToBack(content)
     }
     
-    private func layoutOverlays() {
-        guard let overlayContainer = overlayContainer else { return }
-        NSLayoutConstraint.deactivate(overlayContainerConstraints)
-        if let footer = footerView {
-            overlayContainerConstraints = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
+    private func layoutOverlayContainer() {
+        addSubview(overlayContainer)
+        if let footer = footer {
+            _ = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
         } else {
-            overlayContainerConstraints = overlayContainer.anchorToSuperview()
+            _ = overlayContainer.anchorToSuperview()
         }
         bringSubviewToFront(overlayContainer)
     }
     
-    //MARK: - Setters/Getters
-    
-    open func setContentView(_ content: UIView?) {
-        guard let content = content else { return }
-        contentView?.removeFromSuperview()
-        contentView = content
-        addSubview(content)
-        setNeedsLayout()
-    }
-    
-    open func setFooterView(_ footer: UIView?) {
-        guard let footer = footer else { return }
-        footerView?.removeFromSuperview()
-        footerView = footer
-        addSubview(footer)
-        setNeedsLayout()
-    }
-    
-    open func setOverlay(forDirection direction: SwipeDirection, overlay: UIView?) {
-        guard let overlay = overlay else { return }
-        if overlayContainer == nil {
-            overlayContainer = UIView()
-            addSubview(overlayContainer!)
+    private func layoutOverlays() {
+        for direction in swipeDirections {
+            if let overlayView = overlay(forDirection: direction) {
+                overlays[direction] = overlayView
+                overlayView.alpha = 0
+                overlayContainer.addSubview(overlayView)
+                _ = overlayView.anchorToSuperview()
+            }
         }
-        overlays[direction]??.removeFromSuperview()
-        overlays[direction] = overlay
-        overlays[direction]??.alpha = 0
-        overlayContainer?.addSubview(overlay)
-        _ = overlay.anchorToSuperview()
-        setNeedsLayout()
-    }
-    
-    public func overlay(forDirection direction: SwipeDirection) -> UIView? {
-        return overlays[direction] ?? nil
     }
     
     //MARK: - Main Methods
@@ -153,8 +142,8 @@ open class MGSwipeCard: MGDraggableSwipeView {
     
     open override func didContinueSwipe(on view: MGDraggableSwipeView) {
         delegate?.card(didContinueSwipe: self)
-        swipeDirections.forEach { direction in
-            overlay(forDirection: direction)?.alpha = alphaForOverlay(with: direction)
+        for (direction, overlay) in overlays {
+            overlay.alpha = alphaForOverlay(with: direction)
         }
     }
     
