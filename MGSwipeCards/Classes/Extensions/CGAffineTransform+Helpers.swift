@@ -6,7 +6,6 @@
 //
 
 extension CGAffineTransform {
-    
     func scaleFactor() -> CGPoint {
         return CGPoint(x: sqrt(a * a + b * b), y: sqrt(c * c + d * d))
     }

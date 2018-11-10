@@ -6,7 +6,6 @@
 //
 
 open class UIViewHelper: UIView {
-    
     public init() {
         super.init(frame: .zero)
         initialize()

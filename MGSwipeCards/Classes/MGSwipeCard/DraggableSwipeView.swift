@@ -6,8 +6,7 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-open class MGDraggableSwipeView: UIViewHelper {
-    
+open class DraggableSwipeView: UIViewHelper {
     /// The swipe directions to be recognized by the view
     open var swipeDirections: [SwipeDirection] { return SwipeDirection.allDirections }
     
@@ -95,7 +94,7 @@ open class MGDraggableSwipeView: UIViewHelper {
     
     private var rotationDirectionY: CGFloat = 1
     
-    private func beginSwiping(on view: MGDraggableSwipeView, recognizer: UIPanGestureRecognizer) {
+    private func beginSwiping(on view: DraggableSwipeView, recognizer: UIPanGestureRecognizer) {
         let touchPoint = recognizer.location(in: self)
         if touchPoint.y < bounds.height / 2 {
             rotationDirectionY = 1
@@ -105,7 +104,7 @@ open class MGDraggableSwipeView: UIViewHelper {
         didBeginSwipe(on: self)
     }
     
-    private func continueSwiping(on view: MGDraggableSwipeView, recognizer: UIPanGestureRecognizer) {
+    private func continueSwiping(on view: DraggableSwipeView, recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: self)
         var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
         let superviewTranslation = recognizer.translation(in: superview)
@@ -116,7 +115,7 @@ open class MGDraggableSwipeView: UIViewHelper {
         didContinueSwipe(on: self)
     }
     
-    private func endSwiping(on view: MGDraggableSwipeView, recognizer: UIPanGestureRecognizer) {
+    private func endSwiping(on view: DraggableSwipeView, recognizer: UIPanGestureRecognizer) {
         if let direction = activeDirection {
             if dragSpeed(on: direction) >= minimumSwipeSpeed || dragPercentage(on: direction) >= minimumSwipeMargin {
                 didSwipe(on: self, with: direction)
@@ -128,13 +127,13 @@ open class MGDraggableSwipeView: UIViewHelper {
         }
     }
     
-    open func didTap(on view: MGDraggableSwipeView) {}
+    open func didTap(on view: DraggableSwipeView) {}
     
-    open func didBeginSwipe(on view: MGDraggableSwipeView) {}
+    open func didBeginSwipe(on view: DraggableSwipeView) {}
     
-    open func didContinueSwipe(on view: MGDraggableSwipeView) {}
+    open func didContinueSwipe(on view: DraggableSwipeView) {}
     
-    open func didSwipe(on view: MGDraggableSwipeView, with direction: SwipeDirection) {}
+    open func didSwipe(on view: DraggableSwipeView, with direction: SwipeDirection) {}
     
-    open func didCancelSwipe(on view: MGDraggableSwipeView) {}
+    open func didCancelSwipe(on view: DraggableSwipeView) {}
 }

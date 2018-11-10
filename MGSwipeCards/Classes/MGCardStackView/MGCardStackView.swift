@@ -28,7 +28,6 @@ public extension MGCardStackViewDelegate {
 }
 
 open class MGCardStackView: UIViewHelper {
-
     /// The maximum number of cards to be displayed on screen.
     open var numberOfVisibleCards: Int = 2
     
@@ -104,20 +103,14 @@ open class MGCardStackView: UIViewHelper {
     
     public func swipe(_ direction: SwipeDirection) {
         guard let topCard = topCard else { return }
-        if !isUserInteractionEnabled { return }
-        topCard.swipe(direction: direction, completion: nil)
+        topCard.swipe(direction: direction)
     }
     
     public func undoLastSwipe() {
         guard let lastSwipe = currentState.previousSwipe else { return }
-        if !isUserInteractionEnabled { return }
-        isUserInteractionEnabled = false
         delegate?.cardStack(self, didUndoCardAt: lastSwipe.index, from: lastSwipe.direction)
         loadState(currentState.previousState!)
-        
-        topCard?.reverseSwipe(from: lastSwipe.direction) { _ in
-            self.isUserInteractionEnabled = true
-        }
+        topCard?.undoSwipe(from: lastSwipe.direction)
     }
     
     public func shift(withDistance distance: Int = 1, animated: Bool) {
@@ -128,7 +121,7 @@ open class MGCardStackView: UIViewHelper {
                                              previousState: currentState.previousState)
         loadState(newState)
         if animated {
-            backgroundCardAnimator.animateShift(withDistance: distance)
+            backgroundCardAnimator.shift(withDistance: distance)
         }
     }
     

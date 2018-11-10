@@ -1,12 +1,13 @@
 //
-//  MGCardStackView+MGSwipeCardDelegate.swift
+//  MGCardStackView+Delegates.swift
 //  MGSwipeCards
 //
 //  Created by Mac Gallagher on 11/2/18.
 //
 
+//MARK: - MGSwipeCardDelegate
+
 extension MGCardStackView: MGSwipeCardDelegate {
-    
     public func card(didTap card: MGSwipeCard) {
         delegate?.cardStack(self, didSelectCardAt: topCardIndex)
         let location = card.tapGestureRecognizer.location(in: card.superview)
@@ -20,7 +21,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
     }
     
     public func card(didBeginSwipe card: MGSwipeCard) {
-        backgroundCardAnimator.removeAllBackgroundCardAnimations()
+        backgroundCardAnimator.removeAllAnimations()
     }
     
     /**
@@ -41,7 +42,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
         }
     }
     
-    public func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection) {
+    public func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {
         delegate?.cardStack(self, didSwipeCardAt: topCardIndex, with: direction)
         isUserInteractionEnabled = false
         
@@ -67,7 +68,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
             }
         }
         
-        backgroundCardAnimator.animateSwipe { (finished) in
+        backgroundCardAnimator.swipe(forced: forced) { (finished) in
             if finished {
                 self.topCard?.isUserInteractionEnabled = true
                 self.isUserInteractionEnabled = true
@@ -75,11 +76,11 @@ extension MGCardStackView: MGSwipeCardDelegate {
         }
     }
     
-    public func card(didReverseSwipe card: MGSwipeCard, from direction: SwipeDirection) {
-        backgroundCardAnimator.animateUndo()
+    public func card(didUndo card: MGSwipeCard, from direction: SwipeDirection) {
+        backgroundCardAnimator.undo()
     }
     
     public func card(didCancelSwipe card: MGSwipeCard) {
-        backgroundCardAnimator.animateCancelledSwipe()
+        backgroundCardAnimator.cancelSwipe()
     }
 }
