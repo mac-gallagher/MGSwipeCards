@@ -42,7 +42,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
         }
     }
     
-    public func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {
+    public func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {
         delegate?.cardStack(self, didSwipeCardAt: topCardIndex, with: direction)
         isUserInteractionEnabled = false
         
@@ -68,6 +68,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
             }
         }
         
+        //animate background cards, enable interaction once loaded
         BackgroundCardAnimator.swipe(cardStack: self, forced: forced) { (finished) in
             if finished {
                 self.topCard?.isUserInteractionEnabled = true
@@ -76,11 +77,16 @@ extension MGCardStackView: MGSwipeCardDelegate {
         }
     }
     
+    public func card(willUndo card: MGSwipeCard, from direction: SwipeDirection) {
+        isUserInteractionEnabled = false
+        BackgroundCardAnimator.undo(cardStack: self, completion: nil)
+    }
+    
     public func card(didUndo card: MGSwipeCard, from direction: SwipeDirection) {
-        BackgroundCardAnimator.undo(cardStack: self)
+        isUserInteractionEnabled = true
     }
     
     public func card(didCancelSwipe card: MGSwipeCard) {
-        BackgroundCardAnimator.cancelSwipe(cardStack: self)
+        BackgroundCardAnimator.cancelSwipe(cardStack: self, completion: nil)
     }
 }

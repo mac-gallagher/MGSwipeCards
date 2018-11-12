@@ -12,9 +12,24 @@ protocol MGSwipeCardDelegate {
     func card(didTap card: MGSwipeCard)
     func card(didBeginSwipe card: MGSwipeCard)
     func card(didContinueSwipe card: MGSwipeCard)
+    func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool)
     func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool)
+    func card(willUndo card: MGSwipeCard, from direction: SwipeDirection)
     func card(didUndo card: MGSwipeCard, from direction: SwipeDirection)
+    func card(willCancelSwipe card: MGSwipeCard)
     func card(didCancelSwipe card: MGSwipeCard)
+}
+
+extension MGSwipeCardDelegate {
+    func card(didTap card: MGSwipeCard) {}
+    func card(didBeginSwipe card: MGSwipeCard) {}
+    func card(didContinueSwipe card: MGSwipeCard) {}
+    func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {}
+    func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {}
+    func card(willUndo card: MGSwipeCard, from direction: SwipeDirection) {}
+    func card(didUndo card: MGSwipeCard, from direction: SwipeDirection) {}
+    func card(willCancelSwipe card: MGSwipeCard) {}
+    func card(didCancelSwipe card: MGSwipeCard) {}
 }
 
 //MARK: - MGSwipeCard
@@ -114,13 +129,26 @@ open class MGSwipeCard: DraggableSwipeView {
     }
     
     private func swipeAction(direction: SwipeDirection, forced: Bool) {
-        delegate?.card(didSwipe: self, with: direction, forced: forced)
-        CardAnimator.swipe(card: self, direction: direction, forced: forced)
+        isUserInteractionEnabled = false
+        delegate?.card(willSwipe: self, with: direction, forced: forced)
+        CardAnimator.swipe(card: self, direction: direction, forced: forced) { (finished) in
+            if finished {
+                self.isUserInteractionEnabled = true
+                self.removeFromSuperview()
+                self.delegate?.card(didSwipe: self, with: direction, forced: forced)
+            }
+        }
     }
     
     public func undoSwipe(from direction: SwipeDirection) {
-        delegate?.card(didUndo: self, from: direction)
-        CardAnimator.undo(card: self, from: direction)
+        isUserInteractionEnabled = false
+        delegate?.card(willUndo: self, from: direction)
+        CardAnimator.undo(card: self, from: direction) { (finished) in
+            if finished {
+                self.isUserInteractionEnabled = true
+                self.delegate?.card(didUndo: self, from: direction)
+            }
+        }
     }
     
     //MARK: MGDraggableSwipeView Overrides
@@ -155,6 +183,8 @@ open class MGSwipeCard: DraggableSwipeView {
     
     open override func didCancelSwipe(on view: DraggableSwipeView) {
         delegate?.card(didCancelSwipe: self)
-        CardAnimator.reset(card: self)
+        CardAnimator.reset(card: self) { _ in
+            self.delegate?.card(willCancelSwipe: self)
+        }
     }
 }

@@ -11,9 +11,8 @@ import pop
 
 class CardAnimator: NSObject {
     
-    static func swipe(card: MGSwipeCard, direction: SwipeDirection, forced: Bool) {
+    static func swipe(card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
         CardAnimator.removeAllAnimations(on: card)
-        card.isUserInteractionEnabled = false
         
         for (swipeDirection, overlay) in card.overlays {
             if swipeDirection != direction {
@@ -27,26 +26,26 @@ class CardAnimator: NSObject {
         
         POPAnimator.applyFadeAnimation(to: card.overlays[direction], toValue: 1, duration: overlayDuration, timingFunction: CAMediaTimingFunction(name: .easeOut)) { _, _ in
             
-            POPAnimator.applyTransformAnimation(to: card, transform: transform, duration: swipeDuration, completionBlock: { _, _ in
-                card.isUserInteractionEnabled = true
-                card.removeFromSuperview()
+            POPAnimator.applyTransformAnimation(to: card, transform: transform, duration: swipeDuration, completionBlock: { _, finished in
+                completion?(finished)
             })
         }
     }
     
-    static func reset(card: MGSwipeCard) {
+    static func reset(card: MGSwipeCard, completion: ((Bool) -> ())?) {
         CardAnimator.removeAllAnimations(on: card)
         
-        POPAnimator.applySpringTransformAnimation(to: card, transform: .identity, springBounciness: card.animationOptions.resetAnimationSpringBounciness, springSpeed: card.animationOptions.resetAnimationSpringSpeed, completionBlock: nil)
-
+        POPAnimator.applySpringTransformAnimation(to: card, transform: .identity, springBounciness: card.animationOptions.resetAnimationSpringBounciness, springSpeed: card.animationOptions.resetAnimationSpringSpeed) { _, finished in
+            completion?(finished)
+        }
+        
         for (_, overlay) in card.overlays {
             POPAnimator.applySpringFadeAnimation(to: overlay, toValue: .zero, springBounciness: card.animationOptions.resetAnimationSpringBounciness, springSpeed: card.animationOptions.resetAnimationSpringSpeed, completionBlock: nil)
         }
     }
     
-    static func undo(card: MGSwipeCard, from direction: SwipeDirection) {
+    static func undo(card: MGSwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?) {
         removeAllAnimations(on: card)
-        card.isUserInteractionEnabled = false
         
         //recreate swipe
         card.transform = CardAnimator.swipeTransform(forCard: card, forDirection: direction, forced: true)
@@ -55,8 +54,8 @@ class CardAnimator: NSObject {
         }
         
         POPAnimator.applyTransformAnimation(to: card, transform: .identity, duration: card.animationOptions.reverseSwipeAnimationDuration) {  _, _ in
-            POPAnimator.applyFadeAnimation(to: card.overlays[direction], toValue: 0, duration: card.animationOptions.overlayFadeAnimationDuration, timingFunction: CAMediaTimingFunction(name: .easeIn), completionBlock: { _, _ in
-                card.isUserInteractionEnabled = true
+            POPAnimator.applyFadeAnimation(to: card.overlays[direction], toValue: 0, duration: card.animationOptions.overlayFadeAnimationDuration, timingFunction: CAMediaTimingFunction(name: .easeIn), completionBlock: { _, finished in
+                completion?(finished)
             })
         }
     }
@@ -70,7 +69,6 @@ class CardAnimator: NSObject {
             overlay.layer.pop_removeAllAnimations()
         }
     }
-    
     
     private static func swipeTransform(forCard card: MGSwipeCard, forDirection direction: SwipeDirection, forced: Bool) -> CGAffineTransform {
         var transform = CGAffineTransform.identity.rotated(by: CardAnimator.rotationForSwipe(card: card, direction: direction, forced: forced))

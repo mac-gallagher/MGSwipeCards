@@ -194,7 +194,7 @@ extension ViewController: MGCardStackViewDelegate {
         print("Swiped all cards!")
     }
     
-    func cardStack(_ cardStack: MGCardStackView, didUndoSwipeOnCardAt index: Int, from direction: SwipeDirection) {
+    func cardStack(_ cardStack: MGCardStackView, didUndoCardAt index: Int, from direction: SwipeDirection) {
         print("Undo \(direction) swipe on \(cardModels[index].name)")
     }
     

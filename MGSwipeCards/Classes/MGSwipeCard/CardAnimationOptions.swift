@@ -8,8 +8,8 @@
 open class CardAnimationOptions: NSObject {
     public static var defaultOptions = CardAnimationOptions()
     
-    /// The duration of the animated swipe translation. Measured in seconds. Defaults to 0.5.
-    open var cardSwipeAnimationDuration: TimeInterval = 0.5
+    /// The duration of the animated swipe translation. Measured in seconds. Defaults to 0.6.
+    open var cardSwipeAnimationDuration: TimeInterval = 0.6
     
     /// The duration of the fade animation applied to the overlays before the animated swipe translation, and after the reverse swipe translation. Measured in seconds. Defaults to 0.1.
     open var overlayFadeAnimationDuration: TimeInterval = 0.1

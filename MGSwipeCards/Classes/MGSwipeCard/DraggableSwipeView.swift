@@ -11,7 +11,7 @@ open class DraggableSwipeView: UIViewHelper {
     open var swipeDirections: [SwipeDirection] { return SwipeDirection.allDirections }
     
     /// The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1600.
-    open var minimumSwipeSpeed: CGFloat { return 1600 }
+    open var minimumSwipeSpeed: CGFloat { return 1200 }
     
     /// The minimum required drag distance on the intended direction to trigger a swipe. Measured from the initial touch point. Defined as a value in the range [0, 2], where 2 represents the entire length or width of the card. Defaults to 0.5.
     open var minimumSwipeMargin: CGFloat { return 0.5 }

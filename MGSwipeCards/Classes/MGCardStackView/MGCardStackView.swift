@@ -100,11 +100,13 @@ open class MGCardStackView: UIViewHelper {
     
     public func swipe(_ direction: SwipeDirection) {
         guard let topCard = topCard else { return }
+        if !isUserInteractionEnabled { return }
         topCard.swipe(direction: direction)
     }
     
     public func undoLastSwipe() {
         guard let lastSwipe = currentState.previousSwipe else { return }
+        if !isUserInteractionEnabled { return }
         delegate?.cardStack(self, didUndoCardAt: lastSwipe.index, from: lastSwipe.direction)
         loadState(currentState.previousState!)
         topCard?.undoSwipe(from: lastSwipe.direction)
@@ -118,7 +120,7 @@ open class MGCardStackView: UIViewHelper {
                                              previousState: currentState.previousState)
         loadState(newState)
         if animated {
-            BackgroundCardAnimator.shift(cardStack: self, withDistance: distance)
+            BackgroundCardAnimator.shift(cardStack: self, withDistance: distance, completion: nil)
         }
     }
     
