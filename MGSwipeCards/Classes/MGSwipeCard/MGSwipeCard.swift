@@ -34,8 +34,6 @@ open class MGSwipeCard: DraggableSwipeView {
     
     var delegate: MGSwipeCardDelegate?
     
-    lazy var animator = CardAnimator(card: self, options: animationOptions)
-    
     private var overlayContainer = UIView()
     
     //MARK: - Getters
@@ -117,12 +115,12 @@ open class MGSwipeCard: DraggableSwipeView {
     
     private func swipeAction(direction: SwipeDirection, forced: Bool) {
         delegate?.card(didSwipe: self, with: direction, forced: forced)
-        animator.swipe(direction: direction, forced: forced)
+        CardAnimator.swipe(card: self, direction: direction, forced: forced)
     }
     
     public func undoSwipe(from direction: SwipeDirection) {
         delegate?.card(didUndo: self, from: direction)
-        animator.undo(from: direction)
+        CardAnimator.undo(card: self, from: direction)
     }
     
     //MARK: MGDraggableSwipeView Overrides
@@ -133,7 +131,7 @@ open class MGSwipeCard: DraggableSwipeView {
     
     open override func didBeginSwipe(on view: DraggableSwipeView) {
         delegate?.card(didBeginSwipe: self)
-        animator.removeAllCardAnimations()
+        CardAnimator.removeAllAnimations(on: self)
     }
     
     open override func didContinueSwipe(on view: DraggableSwipeView) {
@@ -157,6 +155,6 @@ open class MGSwipeCard: DraggableSwipeView {
     
     open override func didCancelSwipe(on view: DraggableSwipeView) {
         delegate?.card(didCancelSwipe: self)
-        animator.reset()
+        CardAnimator.reset(card: self)
     }
 }

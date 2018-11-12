@@ -13,7 +13,6 @@ import pop
 class BackgroundCardAnimator: NSObject {
     var cardStack: MGCardStackView!
     
-    var options: CardStackAnimationOptions { return cardStack.animationOptions }
     var visibleCards: [MGSwipeCard] { return cardStack.visibleCards }
     
     required init(cardStack: MGCardStackView) {
@@ -23,7 +22,8 @@ class BackgroundCardAnimator: NSObject {
     func swipe(forced: Bool, completion: ((Bool) -> ())?) {
         for (index, card) in visibleCards.enumerated() {
             let delay = forced ? card.animationOptions.overlayFadeAnimationDuration : 0
-            POPAnimator.applyTransformAnimation(to: card, transform: cardStack.transformForCard(at: index), delay: delay, duration: options.backgroundCardTransformAnimationDuration) { (_, finished) in
+            let duration = card.animationOptions.cardSwipeAnimationDuration / 2
+            POPAnimator.applyTransformAnimation(to: card, transform: cardStack.transformForCard(at: index), delay: delay, duration: duration) { (_, finished) in
                 completion?(finished)
             }
         }
@@ -43,13 +43,15 @@ class BackgroundCardAnimator: NSObject {
         
         //animate background cards to new positions
         for i in 0..<cardStack.visibleCards.count {
-            POPAnimator.applyTransformAnimation(to: visibleCards[i], transform: cardStack.transformForCard(at: i), duration: options.backgroundCardResetAnimationDuration, completionBlock: nil)
+            let duration = 0.1
+            POPAnimator.applyTransformAnimation(to: visibleCards[i], transform: cardStack.transformForCard(at: i), duration: duration, completionBlock: nil)
         }
     }
     
     func cancelSwipe() {
         for i in 1..<cardStack.visibleCards.count {
-            POPAnimator.applyTransformAnimation(to: visibleCards[i], transform: cardStack.transformForCard(at: i), duration: options.backgroundCardResetAnimationDuration, completionBlock: nil)
+            let resetDuration: TimeInterval = 0.2
+            POPAnimator.applyTransformAnimation(to: visibleCards[i], transform: cardStack.transformForCard(at: i), duration: resetDuration, completionBlock: nil)
         }
     }
     
@@ -61,13 +63,14 @@ class BackgroundCardAnimator: NSObject {
         
         //animate background cards to new positions
         for i in 1..<cardStack.visibleCards.count {
-            POPAnimator.applyTransformAnimation(to: visibleCards[i], transform: cardStack.transformForCard(at: i), duration: options.backgroundCardResetAnimationDuration, completionBlock: nil)
+            let duration = visibleCards[i].animationOptions.reverseSwipeAnimationDuration
+            POPAnimator.applyTransformAnimation(to: visibleCards[i], transform: cardStack.transformForCard(at: i), duration: duration, completionBlock: nil)
         }
     }
     
     func removeAllAnimations() {
         for i in 1..<visibleCards.count {
-            visibleCards[i].animator.removeAllCardAnimations()
+            CardAnimator.removeAllAnimations(on: visibleCards[i])
         }
     }
 }

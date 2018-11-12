@@ -34,8 +34,6 @@ open class MGCardStackView: UIViewHelper {
     /// The insets between the edge of the view and its cards.
     open var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     
-    open var animationOptions: CardStackAnimationOptions = .defaultOptions
-    
     public var delegate: MGCardStackViewDelegate?
 
     public var dataSource: MGCardStackViewDataSource? {
@@ -83,6 +81,7 @@ open class MGCardStackView: UIViewHelper {
         card.frame =  cardContainer.bounds
         card.layer.setAffineTransform(transformForCard(at: index))
         card.isUserInteractionEnabled = index == 0 ? true : false
+        card.layoutIfNeeded()
     }
 
     /**
