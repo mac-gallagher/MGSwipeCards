@@ -54,8 +54,6 @@ open class MGCardStackView: UIViewHelper {
     
     var cardContainer = UIView()
     
-    lazy var backgroundCardAnimator = BackgroundCardAnimator(cardStack: self)
-    
     //MARK: - Initialization
     
     override open func initialize() {
@@ -120,7 +118,7 @@ open class MGCardStackView: UIViewHelper {
                                              previousState: currentState.previousState)
         loadState(newState)
         if animated {
-            backgroundCardAnimator.shift(withDistance: distance)
+            BackgroundCardAnimator.shift(cardStack: self, withDistance: distance)
         }
     }
     
