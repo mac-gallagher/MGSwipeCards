@@ -22,6 +22,8 @@ open class DraggableSwipeView: UIViewHelper {
     public private(set) lazy var panGestureRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
     public private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
     
+    var touchPoint: CGPoint?
+    
     //MARK: - Initialization
     
     open override func initialize() {
@@ -95,11 +97,9 @@ open class DraggableSwipeView: UIViewHelper {
     private var rotationDirectionY: CGFloat = 1
     
     private func beginSwiping(on view: DraggableSwipeView, recognizer: UIPanGestureRecognizer) {
-        let touchPoint = recognizer.location(in: self)
-        if touchPoint.y < bounds.height / 2 {
-            rotationDirectionY = 1
-        } else {
-            rotationDirectionY = -1
+        touchPoint = recognizer.location(in: self)
+        if let touchPoint = touchPoint {
+            rotationDirectionY = (touchPoint.y < bounds.height / 2) ? 1 : -1
         }
         didBeginSwipe(on: self)
     }

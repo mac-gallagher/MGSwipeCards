@@ -88,8 +88,6 @@ class CardAnimator: NSObject {
         return CGPoint(x: velocityFactor * directionVector.x * minimumOffscreenTranslation.x, y: velocityFactor * directionVector.y * minimumOffscreenTranslation.y)
     }
     
-    //TODO: Fix touch point - rotation not always accurate
-    
     ///Returns the rotation for the swipe animation in radians.
     private static func rotationForSwipe(card: MGSwipeCard, direction: SwipeDirection, forced: Bool = false) -> CGFloat {
         if direction == .up || direction == .down { return 0 }
@@ -100,8 +98,8 @@ class CardAnimator: NSObject {
                 return 2 * card.maximumRotationAngle
             }
         }
-        let location = card.panGestureRecognizer.location(in: card)
-        if (direction == .left && location.y < card.bounds.height / 2) || (direction == .right && location.y >= card.bounds.height / 2) {
+        let touchPoint = card.touchPoint ?? .zero
+        if (direction == .left && touchPoint.y < card.bounds.height / 2) || (direction == .right && touchPoint.y >= card.bounds.height / 2) {
             return -2 * card.maximumRotationAngle
         }
         return 2 * card.maximumRotationAngle
