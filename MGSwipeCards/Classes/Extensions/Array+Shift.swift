@@ -6,7 +6,6 @@
 //
 
 extension Array {
-    
     func shift(withDistance distance: Int = 1) -> Array<Element> {
         let offsetIndex = distance >= 0 ? self.index(startIndex, offsetBy: distance, limitedBy: endIndex) : self.index(endIndex, offsetBy: distance, limitedBy: startIndex)
         guard let index = offsetIndex else { return self }

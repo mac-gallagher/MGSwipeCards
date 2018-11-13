@@ -6,24 +6,40 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-import pop
+//MARK: - MGSwipeCardDelegate
 
 protocol MGSwipeCardDelegate {
     func card(didTap card: MGSwipeCard)
     func card(didBeginSwipe card: MGSwipeCard)
     func card(didContinueSwipe card: MGSwipeCard)
-    func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection)
-    func card(didReverseSwipe card: MGSwipeCard, from direction: SwipeDirection)
+    func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool)
+    func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool)
+    func card(willUndo card: MGSwipeCard, from direction: SwipeDirection)
+    func card(didUndo card: MGSwipeCard, from direction: SwipeDirection)
+    func card(willCancelSwipe card: MGSwipeCard)
     func card(didCancelSwipe card: MGSwipeCard)
 }
 
+extension MGSwipeCardDelegate {
+    func card(didTap card: MGSwipeCard) {}
+    func card(didBeginSwipe card: MGSwipeCard) {}
+    func card(didContinueSwipe card: MGSwipeCard) {}
+    func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {}
+    func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {}
+    func card(willUndo card: MGSwipeCard, from direction: SwipeDirection) {}
+    func card(didUndo card: MGSwipeCard, from direction: SwipeDirection) {}
+    func card(willCancelSwipe card: MGSwipeCard) {}
+    func card(didCancelSwipe card: MGSwipeCard) {}
+}
+
+//MARK: - MGSwipeCard
+
 /**
  A wrapper around `MGDraggableSwipeView` which provides UI customization and swipe animations.
-*/
-open class MGSwipeCard: MGDraggableSwipeView {
-    
+ */
+open class MGSwipeCard: DraggableSwipeView {
     open var animationOptions: CardAnimationOptions { return .defaultOptions }
-
+    
     open var isFooterTransparent: Bool { return false }
     open var footerHeight: CGFloat { return 100 }
     
@@ -55,7 +71,6 @@ open class MGSwipeCard: MGDraggableSwipeView {
         super.layoutSubviews()
         layoutFooterView()
         layoutContentView()
-        layoutOverlayContainer()
         layoutOverlays()
     }
     
@@ -84,7 +99,7 @@ open class MGSwipeCard: MGDraggableSwipeView {
         }
     }
     
-    private func layoutOverlayContainer() {
+    private func layoutOverlays() {
         addSubview(overlayContainer)
         if let footer = footer {
             _ = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
@@ -92,55 +107,62 @@ open class MGSwipeCard: MGDraggableSwipeView {
             _ = overlayContainer.anchorToSuperview()
         }
         bringSubviewToFront(overlayContainer)
+        
+        for direction in swipeDirections {
+            layoutOverlay(forDirection: direction)
+        }
     }
     
-    private func layoutOverlays() {
-        for direction in swipeDirections {
-            if let overlayView = overlay(forDirection: direction) {
-                overlays[direction] = overlayView
-                overlayView.alpha = 0
-                overlayContainer.addSubview(overlayView)
-                _ = overlayView.anchorToSuperview()
-            }
+    private func layoutOverlay(forDirection direction: SwipeDirection) {
+        if let overlayView = overlay(forDirection: direction) {
+            overlays[direction] = overlayView
+            overlayView.alpha = 0
+            overlayContainer.addSubview(overlayView)
+            _ = overlayView.anchorToSuperview()
         }
     }
     
     //MARK: - Main Methods
     
-    public func swipe(direction: SwipeDirection, completion: ((Bool) ->())?) {
-        delegate?.card(didSwipe: self, with: direction)
+    public func swipe(direction: SwipeDirection) {
+        swipeAction(direction: direction, forced: true)
+    }
+    
+    private func swipeAction(direction: SwipeDirection, forced: Bool) {
         isUserInteractionEnabled = false
-        POPAnimator.applySwipeAnimation(to: self, direction: direction, forced: true) { finished in
+        delegate?.card(willSwipe: self, with: direction, forced: forced)
+        CardAnimator.swipe(card: self, direction: direction, forced: forced) { (finished) in
             if finished {
+                self.isUserInteractionEnabled = true
                 self.removeFromSuperview()
+                self.delegate?.card(didSwipe: self, with: direction, forced: forced)
             }
-            completion?(finished)
         }
     }
     
-    public func reverseSwipe(from direction: SwipeDirection, completion: ((Bool) ->())?) {
-        delegate?.card(didReverseSwipe: self, from: direction)
+    public func undoSwipe(from direction: SwipeDirection) {
         isUserInteractionEnabled = false
-        POPAnimator.applyUndoAnimation(to: self, from: direction) { finished in
+        delegate?.card(willUndo: self, from: direction)
+        CardAnimator.undo(card: self, from: direction) { (finished) in
             if finished {
                 self.isUserInteractionEnabled = true
+                self.delegate?.card(didUndo: self, from: direction)
             }
-            completion?(finished)
         }
     }
     
     //MARK: MGDraggableSwipeView Overrides
     
-    open override func didTap(on view: MGDraggableSwipeView) {
+    open override func didTap(on view: DraggableSwipeView) {
         delegate?.card(didTap: self)
     }
     
-    open override func didBeginSwipe(on view: MGDraggableSwipeView) {
+    open override func didBeginSwipe(on view: DraggableSwipeView) {
         delegate?.card(didBeginSwipe: self)
-        POPAnimator.removeAllCardAnimations(on: self)
+        CardAnimator.removeAllAnimations(on: self)
     }
     
-    open override func didContinueSwipe(on view: MGDraggableSwipeView) {
+    open override func didContinueSwipe(on view: DraggableSwipeView) {
         delegate?.card(didContinueSwipe: self)
         for (direction, overlay) in overlays {
             overlay.alpha = alphaForOverlay(with: direction)
@@ -155,18 +177,14 @@ open class MGSwipeCard: MGDraggableSwipeView {
         return min((2 * dragPercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
     }
     
-    open override func didSwipe(on view: MGDraggableSwipeView, with direction: SwipeDirection) {
-        delegate?.card(didSwipe: self, with: direction)
-        isUserInteractionEnabled = false
-        POPAnimator.applySwipeAnimation(to: self, direction: direction, forced: false) { finished in
-            if finished {
-                self.removeFromSuperview()
-            }
-        }
+    open override func didSwipe(on view: DraggableSwipeView, with direction: SwipeDirection) {
+        swipeAction(direction: direction, forced: false)
     }
     
-    open override func didCancelSwipe(on view: MGDraggableSwipeView) {
+    open override func didCancelSwipe(on view: DraggableSwipeView) {
         delegate?.card(didCancelSwipe: self)
-        POPAnimator.applyResetAnimation(to: self, completion: nil)
+        CardAnimator.reset(card: self) { _ in
+            self.delegate?.card(willCancelSwipe: self)
+        }
     }
 }

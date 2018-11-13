@@ -8,14 +8,14 @@
 open class CardAnimationOptions: NSObject {
     public static var defaultOptions = CardAnimationOptions()
     
-    /// The duration of the animated swipe translation. Measured in seconds. Defaults to 0.8.
-    open var cardSwipeAnimationDuration: TimeInterval = 0.8
+    /// The duration of the animated swipe translation. Measured in seconds. Defaults to 0.6.
+    open var cardSwipeAnimationDuration: TimeInterval = 0.6
     
-    /// The duration of the fade animation applied to the overlays before the animated swipe translation, and after the reverse swipe translation.
-    open var overlayFadeAnimationDuration: TimeInterval = 0.15
+    /// The duration of the fade animation applied to the overlays before the animated swipe translation, and after the reverse swipe translation. Measured in seconds. Defaults to 0.1.
+    open var overlayFadeAnimationDuration: TimeInterval = 0.1
     
-    /// The duration of the animated reverse swipe translation. Measured in seconds. Defaults to 0.2.
-    open var reverseSwipeAnimationDuration: TimeInterval = 0.2
+    /// The duration of the animated reverse swipe translation. Measured in seconds. Defaults to 0.1.
+    open var reverseSwipeAnimationDuration: TimeInterval = 0.1
     
     ///The effective bounciness of the spring animation upon a cancelled swipe. Higher values increase spring movement range resulting in more oscillations and springiness. Defined as a value in the range [0, 20]. Defaults to 12.
     open var resetAnimationSpringBounciness: CGFloat = 12.0
