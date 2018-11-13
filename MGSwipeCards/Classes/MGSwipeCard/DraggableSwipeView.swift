@@ -6,13 +6,12 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-open class MGDraggableSwipeView: UIViewHelper {
-    
+open class DraggableSwipeView: UIViewHelper {
     /// The swipe directions to be recognized by the view
     open var swipeDirections: [SwipeDirection] { return SwipeDirection.allDirections }
     
     /// The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1600.
-    open var minimumSwipeSpeed: CGFloat { return 1600 }
+    open var minimumSwipeSpeed: CGFloat { return 1200 }
     
     /// The minimum required drag distance on the intended direction to trigger a swipe. Measured from the initial touch point. Defined as a value in the range [0, 2], where 2 represents the entire length or width of the card. Defaults to 0.5.
     open var minimumSwipeMargin: CGFloat { return 0.5 }
@@ -23,11 +22,26 @@ open class MGDraggableSwipeView: UIViewHelper {
     public private(set) lazy var panGestureRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
     public private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
     
+    var touchPoint: CGPoint?
+    
     //MARK: - Initialization
     
     open override func initialize() {
         addGestureRecognizer(panGestureRecognizer)
         addGestureRecognizer(tapGestureRecognizer)
+        applySubviewRasterization()
+    }
+    
+    ///Should return all static subviews of the card to improve performance.
+    open func rasterizedSubviews() -> [UIView?] {
+        return [self]
+    }
+    
+    private func applySubviewRasterization() {
+        for subview in rasterizedSubviews() {
+            subview?.layer.rasterizationScale = UIScreen.main.scale
+            subview?.layer.shouldRasterize = true
+        }
     }
     
     //MARK: - Swipe Calculations
@@ -82,19 +96,15 @@ open class MGDraggableSwipeView: UIViewHelper {
     
     private var rotationDirectionY: CGFloat = 1
     
-    private func beginSwiping(on view: MGDraggableSwipeView, recognizer: UIPanGestureRecognizer) {
-        layer.rasterizationScale = UIScreen.main.scale
-        layer.shouldRasterize = true
-        let touchPoint = recognizer.location(in: self)
-        if touchPoint.y < bounds.height / 2 {
-            rotationDirectionY = 1
-        } else {
-            rotationDirectionY = -1
+    private func beginSwiping(on view: DraggableSwipeView, recognizer: UIPanGestureRecognizer) {
+        touchPoint = recognizer.location(in: self)
+        if let touchPoint = touchPoint {
+            rotationDirectionY = (touchPoint.y < bounds.height / 2) ? 1 : -1
         }
         didBeginSwipe(on: self)
     }
     
-    private func continueSwiping(on view: MGDraggableSwipeView, recognizer: UIPanGestureRecognizer) {
+    private func continueSwiping(on view: DraggableSwipeView, recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: self)
         var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
         let superviewTranslation = recognizer.translation(in: superview)
@@ -105,7 +115,7 @@ open class MGDraggableSwipeView: UIViewHelper {
         didContinueSwipe(on: self)
     }
     
-    private func endSwiping(on view: MGDraggableSwipeView, recognizer: UIPanGestureRecognizer) {
+    private func endSwiping(on view: DraggableSwipeView, recognizer: UIPanGestureRecognizer) {
         if let direction = activeDirection {
             if dragSpeed(on: direction) >= minimumSwipeSpeed || dragPercentage(on: direction) >= minimumSwipeMargin {
                 didSwipe(on: self, with: direction)
@@ -115,16 +125,15 @@ open class MGDraggableSwipeView: UIViewHelper {
         } else {
             didCancelSwipe(on: self)
         }
-        layer.shouldRasterize = false
     }
     
-    open func didTap(on view: MGDraggableSwipeView) {}
+    open func didTap(on view: DraggableSwipeView) {}
     
-    open func didBeginSwipe(on view: MGDraggableSwipeView) {}
+    open func didBeginSwipe(on view: DraggableSwipeView) {}
     
-    open func didContinueSwipe(on view: MGDraggableSwipeView) {}
+    open func didContinueSwipe(on view: DraggableSwipeView) {}
     
-    open func didSwipe(on view: MGDraggableSwipeView, with direction: SwipeDirection) {}
+    open func didSwipe(on view: DraggableSwipeView, with direction: SwipeDirection) {}
     
-    open func didCancelSwipe(on view: MGDraggableSwipeView) {}
+    open func didCancelSwipe(on view: DraggableSwipeView) {}
 }

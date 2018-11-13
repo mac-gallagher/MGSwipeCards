@@ -1,12 +1,13 @@
 //
-//  MGCardStackView+MGSwipeCardDelegate.swift
+//  MGCardStackView+Delegates.swift
 //  MGSwipeCards
 //
 //  Created by Mac Gallagher on 11/2/18.
 //
 
+//MARK: - MGSwipeCardDelegate
+
 extension MGCardStackView: MGSwipeCardDelegate {
-    
     public func card(didTap card: MGSwipeCard) {
         delegate?.cardStack(self, didSelectCardAt: topCardIndex)
         let location = card.tapGestureRecognizer.location(in: card.superview)
@@ -20,7 +21,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
     }
     
     public func card(didBeginSwipe card: MGSwipeCard) {
-        backgroundCardAnimator.removeAllBackgroundCardAnimations()
+        BackgroundCardAnimator.removeAllAnimations(cardStack: self)
     }
     
     /**
@@ -41,7 +42,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
         }
     }
     
-    public func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection) {
+    public func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {
         delegate?.cardStack(self, didSwipeCardAt: topCardIndex, with: direction)
         isUserInteractionEnabled = false
         
@@ -67,7 +68,8 @@ extension MGCardStackView: MGSwipeCardDelegate {
             }
         }
         
-        backgroundCardAnimator.animateSwipe { (finished) in
+        //animate background cards, enable interaction once loaded
+        BackgroundCardAnimator.swipe(cardStack: self, forced: forced) { (finished) in
             if finished {
                 self.topCard?.isUserInteractionEnabled = true
                 self.isUserInteractionEnabled = true
@@ -75,11 +77,16 @@ extension MGCardStackView: MGSwipeCardDelegate {
         }
     }
     
-    public func card(didReverseSwipe card: MGSwipeCard, from direction: SwipeDirection) {
-        backgroundCardAnimator.animateUndo()
+    public func card(willUndo card: MGSwipeCard, from direction: SwipeDirection) {
+        isUserInteractionEnabled = false
+        BackgroundCardAnimator.undo(cardStack: self, completion: nil)
+    }
+    
+    public func card(didUndo card: MGSwipeCard, from direction: SwipeDirection) {
+        isUserInteractionEnabled = true
     }
     
     public func card(didCancelSwipe card: MGSwipeCard) {
-        backgroundCardAnimator.animateCancelledSwipe()
+        BackgroundCardAnimator.cancelSwipe(cardStack: self, completion: nil)
     }
 }

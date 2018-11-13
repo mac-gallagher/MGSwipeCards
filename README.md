@@ -144,7 +144,7 @@ The following methods can be accessed from within `MGCardStackView`.
 Performs a swipe programmatically in the given direction. Any delegate methods are called as usual.
 
 ```swift
-func swipe(withDirection direction: SwipeDirection)
+func swipe(_ direction: SwipeDirection)
 ```
 
 ![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe.gif)
@@ -207,38 +207,40 @@ var activeDirection: SwipeDirection?
 
 var contentView: UIView?
 var footerView: UIView?
-var footerIsTransparent //defaults to false
+var overlays: [SwipeDirection: UIView] = [:]
+
+var isFooterTransparent //defaults to false
 var footerHeight: CGFloat //defaults to 100
 
-var animationOptions: CardAnimationOptions // defaults to defaultOptions
+var animationOptions: CardAnimationOptions // defaults to .defaultOptions
 ```
 
 ### Card Appearance
 Each `MGSwipeCard` consists of three UI components: its *content view*, *footer view*, and *overlay view(s)*.
 
-The content view is the card's primary view. You can include your own card template here. The content view is set with
+The content view is the card's primary view. You can include your own card template here. The content view is set by overriding
 
 ```swift 
-func setContentView(_ content: UIView?)
+func contentView() -> UIView?
 ```
 
-The card's footer view is set just below the card's content view. To have the card's content continue past the footer view, set `isFooterTransparent` is to `true`. The footer's height is modified with `footerHeight`. The card's footer is set with 
+The card's footer view is set just below the card's content view. To have the card's content continue past the footer view, set `isFooterTransparent` is to `true`. The footer's height is modified with `footerHeight`. The card's footer is set by overriding
 
 ```swift 
-func setFooterView(_ footer: UIView?)
+func footerView() -> UIView?
 ```
 
-An overlay view is a view whose alpha value reacts to the user's dragging. The overlays are laid out above the card's footer, regardless if the footer is transparent or not. The card's overlays are set with
+An overlay view is a view whose alpha value reacts to the user's dragging. The overlays are laid out above the card's footer, regardless if the footer is transparent or not. The card's overlays are set by overriding
 
 ```swift 
-func setOverlay(forDirection direction: SwipeDirection, overlay: UIView?)
+func overlay(forDirection direction: SwipeDirection) -> UIView?
 ```
 
 ### `MGDraggableSwipeView`
 Each `MGSwipeCard` is a subclass of `MGDraggableSwipeView`. It is here that the swipe recognition settings can be modified. The following properties of `MGDraggableSwipeView ` are available:
 
 ```swift
-var minimumSwipeSpeed: CGFloat //defaults to 1600
+var minimumSwipeSpeed: CGFloat //defaults to 1200
 var minimumSwipeMargin: CGFloat //defaults to 0.5
 var maximumRotationAngle: CGFloat // defaults to CGFloat.pi / 10
 ```
