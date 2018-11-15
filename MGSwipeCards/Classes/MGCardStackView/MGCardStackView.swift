@@ -6,10 +6,14 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
+//MARK: - MGCardStackViewDataSource
+
 public protocol MGCardStackViewDataSource {
     func numberOfCards(in cardStack: MGCardStackView) -> Int
     func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard
 }
+
+//MARK: - MGCardStackViewDelegate
 
 public protocol MGCardStackViewDelegate {
     func didSwipeAllCards(_ cardStack: MGCardStackView)
@@ -27,12 +31,14 @@ public extension MGCardStackViewDelegate {
     func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, tapCorner: UIRectCorner) {}
 }
 
+//MARK: - MGCardStackView
+
 open class MGCardStackView: UIViewHelper {
     /// The maximum number of cards to be displayed on screen.
-    open var numberOfVisibleCards: Int = 2
+    public var numberOfVisibleCards: Int = 2
     
     /// The insets between the edge of the view and its cards.
-    open var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    public var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     
     public var delegate: MGCardStackViewDelegate?
 

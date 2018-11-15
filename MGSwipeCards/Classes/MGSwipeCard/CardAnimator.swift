@@ -9,7 +9,7 @@ import pop
 
 //MARK: - CardAnimator
 
-class CardAnimator: NSObject {
+class CardAnimator {
     
     static func swipe(card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
         CardAnimator.removeAllAnimations(on: card)

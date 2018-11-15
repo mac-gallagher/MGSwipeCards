@@ -9,32 +9,39 @@
 import UIKit
 
 extension UIView {
-    
-    func anchor(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?, paddingTop: CGFloat = 0, paddingLeft: CGFloat = 0, paddingBottom: CGFloat = 0, paddingRight: CGFloat = 0, width: CGFloat = 0, height: CGFloat = 0) {
-        
+    @discardableResult
+    func anchor(top: NSLayoutYAxisAnchor? = nil, left: NSLayoutXAxisAnchor? = nil, bottom: NSLayoutYAxisAnchor? = nil, right: NSLayoutXAxisAnchor? = nil, paddingTop: CGFloat = 0, paddingLeft: CGFloat = 0, paddingBottom: CGFloat = 0, paddingRight: CGFloat = 0, width: CGFloat = 0, height: CGFloat = 0) -> [NSLayoutConstraint] {
         translatesAutoresizingMaskIntoConstraints = false
         
+        var anchors = [NSLayoutConstraint]()
+        
         if let top = top {
-            topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
+            anchors.append(topAnchor.constraint(equalTo: top, constant: paddingTop))
         }
         if let left = left {
-            leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
+            anchors.append(leftAnchor.constraint(equalTo: left, constant: paddingLeft))
         }
         if let bottom = bottom {
-            bottomAnchor.constraint(equalTo: bottom, constant: -paddingBottom).isActive = true
+            anchors.append(bottomAnchor.constraint(equalTo: bottom, constant: -paddingBottom))
         }
         if let right = right {
-            rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
+            anchors.append(rightAnchor.constraint(equalTo: right, constant: -paddingRight))
         }
-        if width != 0 {
-            widthAnchor.constraint(equalToConstant: width).isActive = true
+        if width > 0 {
+            anchors.append(widthAnchor.constraint(equalToConstant: width))
         }
-        if height != 0 {
-            heightAnchor.constraint(equalToConstant: height).isActive = true
+        if height > 0 {
+            anchors.append(heightAnchor.constraint(equalToConstant: height))
         }
+        
+        anchors.forEach({$0.isActive = true})
+        
+        return anchors
     }
     
-    func anchorToSuperview() {
-        anchor(top: superview?.topAnchor, left: superview?.leftAnchor, bottom: superview?.bottomAnchor, right: superview?.rightAnchor)
+    @discardableResult
+    func anchorToSuperview() -> [NSLayoutConstraint] {
+        return anchor(top: superview?.topAnchor, left: superview?.leftAnchor, bottom: superview?.bottomAnchor, right: superview?.rightAnchor)
     }
 }
+

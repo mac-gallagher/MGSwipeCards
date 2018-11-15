@@ -10,7 +10,7 @@ import pop
 /**
  This class is reponsible for animating the background cards in response to a *swipe*, *shift*, *undo*, or a *cancelled swipe*. It is assumed that the card stack is in its desired state at the time of any method calls.
  */
-class BackgroundCardAnimator: NSObject {
+class BackgroundCardAnimator {
     static func swipe(cardStack: MGCardStackView, forced: Bool, completion: ((Bool) -> ())?) {
         for (index, card) in cardStack.visibleCards.enumerated() {
             let delay = forced ? card.animationOptions.overlayFadeAnimationDuration : 0
