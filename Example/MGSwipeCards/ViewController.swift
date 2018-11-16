@@ -174,7 +174,6 @@ class ViewController: UIViewController {
 //MARK: - Data Source
 
 extension ViewController: MGCardStackViewDataSource {
-    
     func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard {
         let card = SampleCard()
         card.model = cardModels[index]
@@ -189,7 +188,6 @@ extension ViewController: MGCardStackViewDataSource {
 //MARK: - Delegate
 
 extension ViewController: MGCardStackViewDelegate {
-    
     func didSwipeAllCards(_ cardStack: MGCardStackView) {
         print("Swiped all cards!")
     }

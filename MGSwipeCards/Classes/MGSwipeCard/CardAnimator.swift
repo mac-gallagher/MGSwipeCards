@@ -7,10 +7,7 @@
 
 import pop
 
-//MARK: - CardAnimator
-
 class CardAnimator {
-    
     static func swipe(card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
         CardAnimator.removeAllAnimations(on: card)
         
@@ -20,27 +17,36 @@ class CardAnimator {
             }
         }
         
-        let overlayDuration = forced ? card.animationOptions.overlayFadeAnimationDuration : 0
+        let overlay = card.overlays[direction]
+        let overlayDuration = forced && !(overlay == nil) ? card.animationOptions.overlayFadeAnimationDuration : 0
         let transform = CardAnimator.swipeTransform(forCard: card, forDirection: direction, forced: forced)
-        let swipeDuration = card.animationOptions.cardSwipeAnimationDuration
         
-        POPAnimator.applyFadeAnimation(to: card.overlays[direction], toValue: 1, duration: overlayDuration, timingFunction: CAMediaTimingFunction(name: .easeOut)) { _, _ in
-            
-            POPAnimator.applyTransformAnimation(to: card, transform: transform, duration: swipeDuration, completionBlock: { _, finished in
-                completion?(finished)
-            })
+        POPAnimator.applyFadeAnimation(to: overlay, toValue: 1, duration: overlayDuration, timingFunction: CAMediaTimingFunction(name: .easeOut), completionBlock: nil)
+        
+        let swipeDuration = card.animationOptions.cardSwipeAnimationDuration
+        POPAnimator.applyTransformAnimation(to: card, transform: transform, delay: overlayDuration, duration: swipeDuration) { _, finished in
+            completion?(finished)
         }
     }
     
     static func reset(card: MGSwipeCard, completion: ((Bool) -> ())?) {
         CardAnimator.removeAllAnimations(on: card)
         
-        POPAnimator.applySpringTransformAnimation(to: card, transform: .identity, springBounciness: card.animationOptions.resetAnimationSpringBounciness, springSpeed: card.animationOptions.resetAnimationSpringSpeed) { _, finished in
-            completion?(finished)
+        for (direction, overlay) in card.overlays {
+            if direction != card.activeDirection {
+                overlay.alpha = 0
+            }
         }
         
-        for (_, overlay) in card.overlays {
-            POPAnimator.applySpringFadeAnimation(to: overlay, toValue: .zero, springBounciness: card.animationOptions.resetAnimationSpringBounciness, springSpeed: card.animationOptions.resetAnimationSpringSpeed, completionBlock: nil)
+        let springBounciness = card.animationOptions.resetAnimationSpringBounciness
+        let springSpeed = card.animationOptions.resetAnimationSpringSpeed
+        
+        if let activeDirection = card.activeDirection {
+            POPAnimator.applySpringFadeAnimation(to: card.overlays[activeDirection], toValue: .zero, springBounciness: springBounciness, springSpeed: springSpeed, completionBlock: nil)
+        }
+        
+        POPAnimator.applySpringTransformAnimation(to: card, transform: .identity, springBounciness: springBounciness, springSpeed: springSpeed) { _, finished in
+            completion?(finished)
         }
     }
     
@@ -53,10 +59,17 @@ class CardAnimator {
             overlay.alpha = swipeDirection == direction ? 1 : 0
         }
         
-        POPAnimator.applyTransformAnimation(to: card, transform: .identity, duration: card.animationOptions.reverseSwipeAnimationDuration) {  _, _ in
-            POPAnimator.applyFadeAnimation(to: card.overlays[direction], toValue: 0, duration: card.animationOptions.overlayFadeAnimationDuration, timingFunction: CAMediaTimingFunction(name: .easeIn), completionBlock: { _, finished in
+        let swipeDuration = card.animationOptions.reverseSwipeAnimationDuration
+        POPAnimator.applyTransformAnimation(to: card, transform: .identity, duration: swipeDuration, completionBlock: nil)
+        
+        guard let overlay = card.overlays[direction] else {
+            completion?(true)
+            return
+        }
+        
+        let fadeDuration = card.animationOptions.overlayFadeAnimationDuration
+        POPAnimator.applyFadeAnimation(to: overlay, toValue: 0, delay: swipeDuration, duration: fadeDuration, timingFunction: CAMediaTimingFunction(name: .easeIn)) { _, finished in
                 completion?(finished)
-            })
         }
     }
     
