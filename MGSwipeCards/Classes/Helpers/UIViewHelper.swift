@@ -11,7 +11,7 @@ open class UIViewHelper: UIView {
         initialize()
     }
     
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         initialize()
     }
@@ -21,5 +21,5 @@ open class UIViewHelper: UIView {
         initialize()
     }
     
-    open func initialize() {}
+    func initialize() {}
 }

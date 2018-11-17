@@ -20,16 +20,11 @@ protocol MGSwipeCardDelegate {
     func card(didCancelSwipe card: MGSwipeCard)
 }
 
+//MARK: - MGSwipeCardDelegate (non-implemented methods)
+
 extension MGSwipeCardDelegate {
-    func card(didTap card: MGSwipeCard) {}
-    func card(didBeginSwipe card: MGSwipeCard) {}
-    func card(didContinueSwipe card: MGSwipeCard) {}
-    func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {}
     func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {}
-    func card(willUndo card: MGSwipeCard, from direction: SwipeDirection) {}
-    func card(didUndo card: MGSwipeCard, from direction: SwipeDirection) {}
     func card(willCancelSwipe card: MGSwipeCard) {}
-    func card(didCancelSwipe card: MGSwipeCard) {}
 }
 
 //MARK: - MGSwipeCard
@@ -38,38 +33,91 @@ extension MGSwipeCardDelegate {
  A wrapper around `MGDraggableSwipeView` which provides UI customization and swipe animations.
  */
 open class MGSwipeCard: DraggableSwipeView {
-    open var animationOptions: CardAnimationOptions { return .defaultOptions }
+    public var animationOptions: CardAnimationOptions = .defaultOptions
     
-    open var isFooterTransparent: Bool { return false }
-    open var footerHeight: CGFloat { return 100 }
+    public var isFooterTransparent: Bool = false {
+        didSet { layoutIfNeeded() }
+    }
     
-    public private(set) var content: UIView?
-    public private(set) var footer: UIView?
-    public private(set) var overlays: [SwipeDirection: UIView] = [:]
+    public var footerHeight: CGFloat = 100 {
+        didSet { layoutIfNeeded() }
+    }
+    
+    public var content: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            setNeedsLayout()
+            if let content = content {
+                addSubview(content)
+            }
+        }
+    }
+
+    public var footer: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            setNeedsLayout()
+            if let footer = footer {
+                addSubview(footer)
+            }
+        }
+    }
+    
+    public var leftOverlay: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            addOverlay(leftOverlay, forDirection: .left)
+        }
+    }
+    
+    public var upOverlay: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            addOverlay(upOverlay, forDirection: .up)
+        }
+    }
+    
+    public var rightOverlay: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            addOverlay(rightOverlay, forDirection: .right)
+        }
+    }
+    
+    public var downOverlay: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            addOverlay(downOverlay, forDirection: .down)
+        }
+    }
     
     var delegate: MGSwipeCardDelegate?
     
+    var overlays: [SwipeDirection: UIView] = [:]
+    
     private var overlayContainer = UIView()
     
-    //MARK: - Getters
+    //MARK: - Initialization
     
-    open func contentView() -> UIView? {
-        return nil
+    override func initialize() {
+        super.initialize()
+        addSubview(overlayContainer)
     }
-    
-    open func footerView() -> UIView? {
-        return nil
-    }
-    
-    open func overlay(forDirection direction: SwipeDirection) -> UIView? {
-        return nil
+
+    private func addOverlay(_ overlay: UIView?, forDirection direction: SwipeDirection) {
+        overlays.removeValue(forKey: direction)
+        if let overlay = overlay {
+            overlayContainer.addSubview(overlay)
+            overlays[direction] = overlay
+            overlay.alpha = 0
+        }
     }
     
     //MARK: - Layout
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        layoutFooterView()
+        footer?.frame = CGRect(x: 0, y: bounds.height - footerHeight, width: bounds.width, height: footerHeight)
         layoutContentView()
         layoutOverlays()
     }
@@ -78,47 +126,27 @@ open class MGSwipeCard: DraggableSwipeView {
         return [content, footer]
     }
     
-    private func layoutFooterView() {
-        footer = footerView()
-        if let footer = footer {
-            addSubview(footer)
-            _ = footer.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, heightConstant: footerHeight)
-        }
-    }
-    
     private func layoutContentView() {
-        content = contentView()
         if let content = content {
-            addSubview(content)
-            if let footer = footer, !isFooterTransparent {
-                _ = content.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
+            if let _ = footer, !isFooterTransparent {
+                content.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height - footerHeight)
             } else {
-                _ = content.anchorToSuperview()
+                content.frame = bounds
             }
             sendSubviewToBack(content)
         }
     }
     
     private func layoutOverlays() {
-        addSubview(overlayContainer)
-        if let footer = footer {
-            _ = overlayContainer.anchor(top: topAnchor, left: leftAnchor, bottom: footer.topAnchor, right: rightAnchor)
+        if let _ = footer {
+            overlayContainer.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height - footerHeight)
         } else {
-            _ = overlayContainer.anchorToSuperview()
+            overlayContainer.frame = bounds
         }
         bringSubviewToFront(overlayContainer)
         
-        for direction in swipeDirections {
-            layoutOverlay(forDirection: direction)
-        }
-    }
-    
-    private func layoutOverlay(forDirection direction: SwipeDirection) {
-        if let overlayView = overlay(forDirection: direction) {
-            overlays[direction] = overlayView
-            overlayView.alpha = 0
-            overlayContainer.addSubview(overlayView)
-            _ = overlayView.anchorToSuperview()
+        for (_, overlay) in overlays {
+            overlay.frame = overlayContainer.bounds
         }
     }
     
@@ -153,16 +181,16 @@ open class MGSwipeCard: DraggableSwipeView {
     
     //MARK: MGDraggableSwipeView Overrides
     
-    open override func didTap(on view: DraggableSwipeView) {
+    override func didTap(on view: DraggableSwipeView) {
         delegate?.card(didTap: self)
     }
     
-    open override func didBeginSwipe(on view: DraggableSwipeView) {
+    override func didBeginSwipe(on view: DraggableSwipeView) {
         delegate?.card(didBeginSwipe: self)
         CardAnimator.removeAllAnimations(on: self)
     }
     
-    open override func didContinueSwipe(on view: DraggableSwipeView) {
+    override func didContinueSwipe(on view: DraggableSwipeView) {
         delegate?.card(didContinueSwipe: self)
         for (direction, overlay) in overlays {
             overlay.alpha = alphaForOverlay(with: direction)
@@ -177,11 +205,11 @@ open class MGSwipeCard: DraggableSwipeView {
         return min((2 * dragPercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
     }
     
-    open override func didSwipe(on view: DraggableSwipeView, with direction: SwipeDirection) {
+    override func didSwipe(on view: DraggableSwipeView, with direction: SwipeDirection) {
         swipeAction(direction: direction, forced: false)
     }
     
-    open override func didCancelSwipe(on view: DraggableSwipeView) {
+    override func didCancelSwipe(on view: DraggableSwipeView) {
         delegate?.card(didCancelSwipe: self)
         CardAnimator.reset(card: self) { _ in
             self.delegate?.card(willCancelSwipe: self)

@@ -43,11 +43,12 @@ extension POPAnimator {
         }
     }
     
-    static func applyFadeAnimation(to view: UIView?, toValue: CGFloat, duration: TimeInterval, timingFunction: CAMediaTimingFunction = CAMediaTimingFunction(name: .linear), completionBlock: ((POPAnimation?, Bool) -> Void)?) {
+    static func applyFadeAnimation(to view: UIView?, toValue: CGFloat, delay: TimeInterval = 0, duration: TimeInterval, timingFunction: CAMediaTimingFunction = CAMediaTimingFunction(name: .linear), completionBlock: ((POPAnimation?, Bool) -> Void)?) {
         if let alphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha) {
             alphaAnimation.timingFunction = timingFunction
             alphaAnimation.duration = duration
             alphaAnimation.toValue = toValue
+            alphaAnimation.beginTime = CACurrentMediaTime() + delay
             alphaAnimation.completionBlock = { animation, finished in
                 completionBlock?(animation, finished)
             }

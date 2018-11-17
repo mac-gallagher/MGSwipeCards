@@ -4,12 +4,12 @@
 ![license](https://img.shields.io/cocoapods/l/MGSwipeCards.svg)
 ![CocoaPods](https://img.shields.io/cocoapods/p/MGSwipeCards.svg)
 
-🔥 A modern swipeable card framework inspired by Tinder and built with Facebook's Pop animation library.
+🔥 A flexible, multi-directional card swiping framework inspired by Tinder and built with Facebook's Pop animation library.
 
 ![Tinder Demo](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe_example.gif)
 
 # Features
-- [x] Maximum customizability - create your own card template and card stack layout!
+- [x] Maximum customizability - create your own card template and card stack layout
 - [x] Accurate swipe recognition based on velocity and card position
 - [x] Programmatic swiping
 - [x] Animated undo and card stack reordering
@@ -68,11 +68,8 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
 
     ```swift
     class SampleCard: MGSwipeCard {
-    
-        var model: SampleCardModel? {
-            didSet {
-                setContentView(UIImageView(model.image))
-            }
+        init(model: SampleCardModel) {
+            self.content = UIImageView(image: model.image)
         }
     }
     
@@ -85,14 +82,13 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
 
     ```swift
     class ViewController: UIViewController {
-    
         let cardStack = MGCardStackView()
         
         var cardModels: [SampleCardModel] = [
             SampleCardModel(image: UIImage(named: "cardImage1")),
             SampleCardModel(image: UIImage(named: "cardImage2")),
             SampleCardModel(image: UIImage(named: "cardImage3"))
-            ]
+        ]
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -105,15 +101,12 @@ MGSwipeCards is available through [CocoaPods](<https://cocoapods.org/>). To inst
     //MARK: - Data Source Methods
 	
         extension ViewController: MGCardStackViewDataSource {
-
 	     func numberOfCards() -> Int {
 	         return cards.count
 	     }
         
 	     func card(forItemAtIndex index: Int) -> MGSwipeCard {
-	         let card = SampleCard()
-	         card.model = models[index]
-	         return card
+	         return SampleCard(model: cardModels[index])
 	     }
     }
     ```
@@ -197,54 +190,49 @@ func cardStack(_ cardStack: MGCardStackView, didSelectCardAt index: Int, tapCorn
 **NOTE:** The `didSwipeCardAt` and `didSwipeAllCards ` methods are called regardless if a card was swiped programmatically or by the user.
 
 ## `MGSwipeCard`
-The `MGSwipeCard` is a UIView with added gesture recognizers to handle swipe recognition and achieve the visual drag effect. It is also responsible for informing its parent card stack of a registered (or cancelled) swipe. To use a `MGSwipeCard `, you first need to subclass it. In the initialization methods, set your card's appearance using the methods outlined in the section below.
+The `MGSwipeCard` is a UIView with added gesture recognizers to handle swipe recognition and achieve the visual drag effect. It is also responsible for informing its parent card stack of a registered (or cancelled) swipe. To use a `MGSwipeCard `, we recommend you create a subclass of it and initialize your card's appearance following the instructions in the section below.
 
 Each `MGSwipeCard` exposes the following properties:
 
 ```swift
 var swipeDirections = SwipeDirection.allDirections
-var activeDirection: SwipeDirection?
 
-var contentView: UIView?
-var footerView: UIView?
-var overlays: [SwipeDirection: UIView] = [:]
+var content: UIView?
+var footer: UIView?
 
-var isFooterTransparent //defaults to false
-var footerHeight: CGFloat //defaults to 100
+var leftOverlay: UIView?
+var upOverlay: UIView?
+var rightOverlay: UIView?
+var downOverlay: UIView?
 
-var animationOptions: CardAnimationOptions // defaults to .defaultOptions
+var isFooterTransparent: Bool = false
+var footerHeight: CGFloat = 100
+
+var animationOptions: CardAnimationOptions = .defaultOptions
 ```
 
 ### Card Appearance
 Each `MGSwipeCard` consists of three UI components: its *content view*, *footer view*, and *overlay view(s)*.
 
-The content view is the card's primary view. You can include your own card template here. The content view is set by overriding
+#### Content
+The content view is the card's primary view. You can include your own card template here. The content view is set assigning the `content` variable.
 
-```swift 
-func contentView() -> UIView?
-```
+#### Footer
+The card's footer view is set just below the card's content view. To have the card's content continue past the footer view, set `isFooterTransparent` is to `true`. The footer's height is modified with `footerHeight`. The card's footer is set by assigning the `footer` variable.
 
-The card's footer view is set just below the card's content view. To have the card's content continue past the footer view, set `isFooterTransparent` is to `true`. The footer's height is modified with `footerHeight`. The card's footer is set by overriding
+#### Overlays
+An overlay view is a view whose alpha value reacts to the user's dragging. The overlays are laid out above the card's footer, regardless if the footer is transparent or not. The card's overlays are set by assigning the `leftOverlay`, `upOverlay`, `rightOverlay`, and `downOverlay` variables.
 
-```swift 
-func footerView() -> UIView?
-```
-
-An overlay view is a view whose alpha value reacts to the user's dragging. The overlays are laid out above the card's footer, regardless if the footer is transparent or not. The card's overlays are set by overriding
-
-```swift 
-func overlay(forDirection direction: SwipeDirection) -> UIView?
-```
 
 ### `MGDraggableSwipeView`
 Each `MGSwipeCard` is a subclass of `MGDraggableSwipeView`. It is here that the swipe recognition settings can be modified. The following properties of `MGDraggableSwipeView ` are available:
 
 ```swift
-var minimumSwipeSpeed: CGFloat //defaults to 1200
-var minimumSwipeMargin: CGFloat //defaults to 0.5
-var maximumRotationAngle: CGFloat // defaults to CGFloat.pi / 10
+var minimumSwipeSpeed: CGFloat = 1100
+var minimumSwipeMargin: CGFloat = 0.5
+var maximumRotationAngle: CGFloat = CGFloat.pi / 10
 ```
-The default options work and should feel natural.
+The default values have been optimized to feel natural to the user.
 
 # Sources
 - [Pop](<https://github.com/facebook/pop>): Facebook's iOS animation framework.
