@@ -12,6 +12,8 @@
 		AD1B34E7219D272800260FBE /* SampleCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34E6219D272800260FBE /* SampleCardModel.swift */; };
 		AD1B34E9219D275C00260FBE /* SampleCardOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34E8219D275C00260FBE /* SampleCardOverlay.swift */; };
 		AD1B34EB219D27BF00260FBE /* SampleCardFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34EA219D27BF00260FBE /* SampleCardFooterView.swift */; };
+		AD1B34ED21A07DCC00260FBE /* ButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34EC21A07DCC00260FBE /* ButtonStackView.swift */; };
+		AD1B34F121A081EF00260FBE /* ViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34F021A081EF00260FBE /* ViewController+UI.swift */; };
 		ADAEDF0220F83A3800172438 /* SampleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAEDF0120F83A3800172438 /* SampleCard.swift */; };
 		ADBB332E20E9D799006A16C4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332520E9D799006A16C4 /* ViewController.swift */; };
 		ADBB332F20E9D799006A16C4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */; };
@@ -28,6 +30,8 @@
 		AD1B34E6219D272800260FBE /* SampleCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardModel.swift; sourceTree = "<group>"; };
 		AD1B34E8219D275C00260FBE /* SampleCardOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardOverlay.swift; sourceTree = "<group>"; };
 		AD1B34EA219D27BF00260FBE /* SampleCardFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardFooterView.swift; sourceTree = "<group>"; };
+		AD1B34EC21A07DCC00260FBE /* ButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStackView.swift; sourceTree = "<group>"; };
+		AD1B34F021A081EF00260FBE /* ViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+UI.swift"; sourceTree = "<group>"; };
 		ADAEDF0120F83A3800172438 /* SampleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCard.swift; sourceTree = "<group>"; };
 		ADBB330420E9D73B006A16C4 /* MGSwipeCards_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MGSwipeCards_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADBB332520E9D799006A16C4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -108,8 +112,10 @@
 			isa = PBXGroup;
 			children = (
 				ADBB332B20E9D799006A16C4 /* AppDelegate.swift */,
+				AD1B34EC21A07DCC00260FBE /* ButtonStackView.swift */,
 				AD1B34E3219D265600260FBE /* SampleCard */,
 				ADBB332520E9D799006A16C4 /* ViewController.swift */,
+				AD1B34F021A081EF00260FBE /* ViewController+UI.swift */,
 				ADBB332720E9D799006A16C4 /* UIView+Anchor.swift */,
 				ADBB333820E9D7FE006A16C4 /* Assets.xcassets */,
 				ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */,
@@ -262,7 +268,9 @@
 				AD1B34EB219D27BF00260FBE /* SampleCardFooterView.swift in Sources */,
 				ADBB333020E9D799006A16C4 /* UIView+Anchor.swift in Sources */,
 				AD1B34E9219D275C00260FBE /* SampleCardOverlay.swift in Sources */,
+				AD1B34ED21A07DCC00260FBE /* ButtonStackView.swift in Sources */,
 				ADBB332E20E9D799006A16C4 /* ViewController.swift in Sources */,
+				AD1B34F121A081EF00260FBE /* ViewController+UI.swift in Sources */,
 				AD1B34E5219D268200260FBE /* SampleCardContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

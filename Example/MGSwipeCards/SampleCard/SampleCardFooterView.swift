@@ -77,4 +77,3 @@ extension NSAttributedString.Key {
         NSAttributedString.Key.shadow: NSAttributedString.Key.shadowAttribute
     ]
 }
-
