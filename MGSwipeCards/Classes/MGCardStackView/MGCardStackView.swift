@@ -82,7 +82,7 @@ open class MGCardStackView: UIViewHelper {
     
     func layoutCard(_ card: MGSwipeCard, at index: Int) {
         card.transform = .identity
-        card.frame =  cardContainer.bounds
+        card.frame = cardContainer.bounds
         card.layer.setAffineTransform(transformForCard(at: index))
         card.isUserInteractionEnabled = index == 0 ? true : false
         card.layoutIfNeeded()

@@ -175,9 +175,7 @@ class ViewController: UIViewController {
 
 extension ViewController: MGCardStackViewDataSource {
     func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard {
-        let card = SampleCard()
-        card.model = cardModels[index]
-        return card
+        return SampleCard(model: cardModels[index])
     }
     
     func numberOfCards(in cardStack: MGCardStackView) -> Int {

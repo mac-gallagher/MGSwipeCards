@@ -8,6 +8,8 @@
 
 import UIKit
 
+//MARK: - SampleCardOverlay
+
 class SampleCardOverlay: UIView {
     private var title: String?
     private var color: UIColor?
@@ -44,6 +46,37 @@ class SampleCardOverlay: UIView {
         label.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingLeft: 8, paddingRight: 3, width: label.intrinsicContentSize.width, height: label.intrinsicContentSize.height)
     }
 }
+
+//MARK: - Sample Overlays
+
+extension SampleCardOverlay {
+    static func left() -> UIView {
+        let leftView = UIView()
+        let leftOverlay = SampleCardOverlay(title: "NOPE", color: .sampleRed, rotationAngle: CGFloat.pi/10)
+        leftView.addSubview(leftOverlay)
+        leftOverlay.anchor(top: leftView.topAnchor, left: nil, bottom: nil, right: leftView.rightAnchor, paddingTop: 30, paddingRight: 14)
+        return leftView
+    }
+    
+    static func up() -> UIView {
+        let upView = UIView()
+        let upOverlay = SampleCardOverlay(title: "LOVE", color: .sampleBlue, rotationAngle: -CGFloat.pi/20)
+        upView.addSubview(upOverlay)
+        upOverlay.anchor(top: nil, left: nil, bottom: upView.bottomAnchor, right: nil, paddingBottom: 20)
+        upOverlay.centerXAnchor.constraint(equalTo: upView.centerXAnchor).isActive = true
+        return upView
+    }
+    
+    static func right() -> UIView {
+        let rightView = UIView()
+        let rightOverlay = SampleCardOverlay(title: "LIKE", color: .sampleGreen, rotationAngle: -CGFloat.pi/10)
+        rightView.addSubview(rightOverlay)
+        rightOverlay.anchor(top: rightView.topAnchor, left: rightView.leftAnchor, bottom: nil, right: nil, paddingTop: 26, paddingLeft: 14)
+        return rightView
+    }
+}
+
+//MARK: - Extensions
 
 extension NSAttributedString.Key {
     static var overlayAttributes: [NSAttributedString.Key: Any] = [
