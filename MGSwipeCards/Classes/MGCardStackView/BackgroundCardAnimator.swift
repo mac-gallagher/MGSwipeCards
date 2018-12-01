@@ -64,7 +64,6 @@ class BackgroundCardAnimator {
             cardStack.visibleCards[i].transform = cardStack.transformForCard(at: i - 1)
         }
         
-        
         //animate background cards to new positions
         for i in 1..<cardStack.visibleCards.count {
             let duration = cardStack.visibleCards[i].animationOptions.reverseSwipeAnimationDuration

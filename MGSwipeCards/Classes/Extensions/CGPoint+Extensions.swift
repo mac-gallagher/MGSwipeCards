@@ -21,3 +21,21 @@ extension CGPoint {
         return (self.x * point.x) + (self.y * point.y)
     }
 }
+
+extension CGPoint {
+    static func + (p1: CGPoint, p2: CGPoint) -> CGPoint {
+        return CGPoint(x: p1.x + p2.x, y: p1.y + p2.y)
+    }
+    
+    static func - (p1: CGPoint, p2: CGPoint) -> CGPoint {
+        return CGPoint(x: p1.x - p2.x, y: p1.y - p2.y)
+    }
+    
+    static func * (c: CGFloat, point: CGPoint) -> CGPoint {
+        return CGPoint(x: c * point.x, y: c * point.y)
+    }
+    
+    static func * (point: CGPoint, c: CGFloat) -> CGPoint {
+        return CGPoint(x: c * point.x, y: c * point.y)
+    }
+}

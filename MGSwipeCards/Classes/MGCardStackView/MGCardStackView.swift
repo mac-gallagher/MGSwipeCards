@@ -35,7 +35,7 @@ public extension MGCardStackViewDelegate {
 
 open class MGCardStackView: UIViewHelper {
     /// The maximum number of cards to be displayed on screen.
-    public var numberOfVisibleCards: Int = 2
+    public var numberOfVisibleCards: Int = 6
     
     /// The insets between the edge of the view and its cards.
     public var cardStackInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -158,4 +158,3 @@ open class MGCardStackView: UIViewHelper {
         return card
     }
 }
-
