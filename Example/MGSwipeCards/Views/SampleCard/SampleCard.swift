@@ -1,5 +1,5 @@
 //
-//  SampleMGSwipeCard.swift
+//  SampleCard.swift
 //  MGSwipeCards_Example
 //
 //  Created by Mac Gallagher on 7/12/18.
@@ -10,11 +10,10 @@ import UIKit
 import MGSwipeCards
 
 class SampleCard: MGSwipeCard {
-    
     init(model: SampleCardModel) {
         super.init()
         initialize()
-        configureModel(model: model)
+        configure(model: model)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -32,7 +31,7 @@ class SampleCard: MGSwipeCard {
         upOverlay = SampleCardOverlay.up()
     }
     
-    private func configureModel(model: SampleCardModel) {
+    private func configure(model: SampleCardModel) {
         content = SampleCardContentView(image: model.image)
         footer = SampleCardFooterView(title: "\(model.name), \(model.age)", subtitle: model.occupation)
     }

@@ -9,36 +9,26 @@
 import UIKit
 
 class SampleCardFooterView: UIView {
-    private var title: String?
-    private var subtitle: String?
     private var label = UILabel()
     private var gradientLayer: CAGradientLayer?
     
     init(title: String?, subtitle: String?) {
         super.init(frame: CGRect.zero)
-        self.title = title
-        self.subtitle = subtitle
-        sharedInit()
+        backgroundColor = .clear
+        layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        layer.cornerRadius = 10
+        clipsToBounds = true
+        initialize(title: title, subtitle: subtitle)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        sharedInit()
+        fatalError("init(coder:) has not been implemented")
     }
     
-    private func sharedInit() {
-        backgroundColor = .clear
-        layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        layer.cornerRadius = 10 //only modify bottom corners
-        clipsToBounds = true
-        initializeLabel()
-    }
-    
-    private func initializeLabel() {
+    private func initialize(title: String?, subtitle: String?) {
         let attributedText = NSMutableAttributedString(string: (title ?? "") + "\n", attributes: NSAttributedString.Key.titleAttributes)
-        
-        if subtitle != nil && subtitle != "" {
-            attributedText.append(NSMutableAttributedString(string: subtitle!, attributes: NSAttributedString.Key.subtitleAttributes))
+        if let subtitle = subtitle, subtitle != "" {
+            attributedText.append(NSMutableAttributedString(string: subtitle, attributes: NSAttributedString.Key.subtitleAttributes))
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 4
             paragraphStyle.lineBreakMode = .byTruncatingTail

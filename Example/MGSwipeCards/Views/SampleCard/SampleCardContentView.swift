@@ -9,7 +9,6 @@
 import UIKit
 
 class SampleCardContentView: UIView {
-    
     private let backgroundView: UIView = {
         let background = UIView()
         background.clipsToBounds = true
@@ -23,7 +22,13 @@ class SampleCardContentView: UIView {
         return iv
     }()
     
-    private var gradientLayer: CAGradientLayer?
+    private let gradientLayer: CAGradientLayer = {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.black.withAlphaComponent(0.01).cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
+        gradient.startPoint = CGPoint(x: 0.5, y: 0)
+        gradient.endPoint = CGPoint(x: 0.5, y: 1)
+        return gradient
+    }()
     
     init(image: UIImage?) {
         super.init(frame: .zero)
@@ -41,29 +46,13 @@ class SampleCardContentView: UIView {
         backgroundView.anchorToSuperview()
         backgroundView.addSubview(imageView)
         imageView.anchorToSuperview()
-        configureShadow()
+        applyShadow(radius: 8, opacity: 0.2, offset: CGSize(width: 0, height: 2))
+        backgroundView.layer.insertSublayer(gradientLayer, above: imageView.layer)
     }
     
-    private func configureShadow() {
-        layer.shadowRadius = 8
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.2
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        configureGradientLayer()
-    }
-    
-    private func configureGradientLayer() {
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
         let heightFactor: CGFloat = 0.35
-        gradientLayer?.removeFromSuperlayer()
-        gradientLayer = CAGradientLayer()
-        gradientLayer?.frame = CGRect(x: 0, y: (1 - heightFactor) * bounds.height, width: bounds.width, height: heightFactor * bounds.height)
-        gradientLayer?.colors = [UIColor.black.withAlphaComponent(0.01).cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
-        gradientLayer?.startPoint = CGPoint(x: 0.5, y: 0)
-        gradientLayer?.endPoint = CGPoint(x: 0.5, y: 1)
-        backgroundView.layer.insertSublayer(gradientLayer!, above: imageView.layer)
+        gradientLayer.frame = CGRect(x: 0, y: (1 - heightFactor) * bounds.height, width: bounds.width, height: heightFactor * bounds.height)
     }
 }
