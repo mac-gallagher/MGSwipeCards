@@ -143,10 +143,8 @@ open class MGSwipeCard: DraggableSwipeView {
         }
         bringSubviewToFront(overlayContainer)
         
-        for (direction, overlay) in overlays {
-            overlay.transform = .identity
+        for (_, overlay) in overlays {
             overlay.frame = overlayContainer.bounds
-            overlay.transform = transformForOverlayBegin(forDirection: direction)
         }
     }
     
@@ -179,23 +177,7 @@ open class MGSwipeCard: DraggableSwipeView {
         }
     }
     
-    open func alphaForOverlayBegin(forDirection direction: SwipeDirection) -> CGFloat {
-        return 0
-    }
-    
-    open func alphaForOverlayEnd(forDirection direction: SwipeDirection) -> CGFloat {
-        return 1
-    }
-    
-    open func transformForOverlayBegin(forDirection direction: SwipeDirection) -> CGAffineTransform {
-        return CGAffineTransform(scaleX: 0.5, y: 0.5)
-    }
-    
-    open func transformForOverlayEnd(forDirection direction: SwipeDirection) -> CGAffineTransform {
-        return CGAffineTransform(scaleX: 1, y: 1)
-    }
-    
-    //MARK: - MGDraggableSwipeView Overrides
+    //MARK: MGDraggableSwipeView Overrides
     
     override func didTap(on view: DraggableSwipeView) {
         delegate?.card(didTap: self)
@@ -209,38 +191,16 @@ open class MGSwipeCard: DraggableSwipeView {
     override func didContinueSwipe(on view: DraggableSwipeView) {
         delegate?.card(didContinueSwipe: self)
         for (direction, overlay) in overlays {
-            updateOverlay(overlay, direction: direction)
+            overlay.alpha = alphaForOverlay(with: direction)
         }
     }
     
-    private func updateOverlay(_ overlay: UIView, direction: SwipeDirection) {
-        let totalSwipePercentage = swipeDirections.reduce(0) { (percentage, direction) in
+    private func alphaForOverlay(with direction: SwipeDirection) -> CGFloat {
+        if direction != activeDirection { return 0 }
+        let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
             return percentage + dragPercentage(on: direction)
         }
-        overlay.alpha = alphaForOverlay(with: direction, totalSwipePercentage: totalSwipePercentage)
-        overlay.transform = transformForOverlay(with: direction, totalSwipePercentage: totalSwipePercentage)
-    }
-
-    private func transformForOverlay(with direction: SwipeDirection, totalSwipePercentage: CGFloat) -> CGAffineTransform {
-        if direction != activeDirection { return .identity }
-        let beginTransform = transformForOverlayBegin(forDirection: direction)
-        let endTransform = transformForOverlayEnd(forDirection: direction)
-        
-        let factor = min((2 * dragPercentage(on: direction) - totalSwipePercentage) / minimumSwipeMargin, 1)
-        
-        let translation = beginTransform.translation() + factor * (endTransform.translation() - beginTransform.translation())
-        let rotationAngle = beginTransform.rotationAngle() + factor * (endTransform.rotationAngle() - beginTransform.rotationAngle())
-        let scaleFactor = beginTransform.scaleFactor() + factor * (endTransform.scaleFactor() - beginTransform.scaleFactor())
-        
-        return CGAffineTransform.identity.translatedBy(x: translation.x, y: translation.y).scaledBy(x: scaleFactor.x, y: scaleFactor.y).rotated(by: rotationAngle)
-    }
-    
-    private func alphaForOverlay(with direction: SwipeDirection, totalSwipePercentage: CGFloat) -> CGFloat {
-        if direction != activeDirection { return 0 }
-        let beginAlpha = alphaForOverlayBegin(forDirection: direction)
-        let endAlpha = alphaForOverlayEnd(forDirection: direction)
-        let factor = (2 * dragPercentage(on: direction) - totalSwipePercentage) / minimumSwipeMargin
-        return beginAlpha + factor * (endAlpha - beginAlpha)
+        return min((2 * dragPercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
     }
     
     override func didSwipe(on view: DraggableSwipeView, with direction: SwipeDirection) {
