@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     private let cardModels = [
         SampleCardModel(name: "Michelle", age: 26, occupation: "Graphic Designer", image: UIImage(named: "michelle")),
         SampleCardModel(name: "Joshua", age: 27, occupation: "Business Services Sales Representative", image: UIImage(named: "joshua")),
+        SampleCardModel(name: "Daiane", age: 23, occupation: "Graduate Student", image: UIImage(named: "daiane")),
         SampleCardModel(name: "Julian", age: 25, occupation: "Model/Photographer", image: UIImage(named: "julian")),
         SampleCardModel(name: "Andrew", age: 26, occupation: nil, image: UIImage(named: "andrew")),
         SampleCardModel(name: "Bailey", age: 25, occupation: "Software Engineer", image: UIImage(named: "bailey")),

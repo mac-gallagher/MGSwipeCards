@@ -1,5 +1,5 @@
 //
-//  MGDraggableSwipeView.swift
+//  DraggableSwipeView.swift
 //  MGSwipeCards
 //
 //  Created by Mac Gallagher on 5/4/18.

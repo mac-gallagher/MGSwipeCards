@@ -1,5 +1,5 @@
 //
-//  CGAffineTransform+Helpers.swift
+//  CGAffineTransform+Extensions.swift
 //  MGSwipeCards
 //
 //  Created by Mac Gallagher on 10/8/18.
@@ -16,6 +16,7 @@ extension CGAffineTransform {
     
     func rotationAngle() -> CGFloat {
         let s = sqrt(c * c + d * d)
+        if s == 0 { return 0 }
         return CGFloat(Double.pi) / 2 - (d > 0 ? acos(-c / s) : -acos(c / s));
     }
     

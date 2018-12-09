@@ -20,9 +20,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
         delegate?.cardStack(self, didSelectCardAt: topCardIndex, tapCorner: topCorner)
     }
     
-    func card(didBeginSwipe card: MGSwipeCard) {
-        BackgroundCardAnimator.removeAllAnimations(cardStack: self)
-    }
+    func card(didBeginSwipe card: MGSwipeCard) {}
     
     func card(didContinueSwipe card: MGSwipeCard) {
         if visibleCards.count <= 1 { return }
@@ -64,6 +62,8 @@ extension MGCardStackView: MGSwipeCardDelegate {
                 insertCard(card, at: visibleCards.count)
             }
         }
+        
+        BackgroundCardAnimator.removeAllAnimations(cardStack: self)
         
         //animate background cards, enable interaction once loaded
         BackgroundCardAnimator.swipe(cardStack: self, forced: forced) { (finished) in
