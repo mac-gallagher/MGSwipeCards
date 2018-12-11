@@ -6,7 +6,7 @@
 
 🔥 A flexible, multi-directional card swiping framework inspired by Tinder and built with Facebook's Pop animation library.
 
-![Tinder Demo](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe_example.gif)
+![Tinder Demo](Images/swipe_example.gif)
 
 # Features
 - [x] Maximum customizability - create your own card template and card stack layout
@@ -140,7 +140,7 @@ Performs a swipe programmatically in the given direction. Any delegate methods a
 func swipe(_ direction: SwipeDirection)
 ```
 
-![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe.gif)
+![Shift](Images/swipe.gif)
 
 #### Undo
 Restores the card stack to its state before the last swipe.
@@ -149,7 +149,7 @@ Restores the card stack to its state before the last swipe.
 func undoLastSwipe()
 ```
 
-![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/undo.gif)
+![Shift](Images/undo.gif)
 
 #### Shift
 Shifts the card stack's cards by the given distance. Any previously swiped cards are skipped over.
@@ -158,7 +158,7 @@ Shifts the card stack's cards by the given distance. Any previously swiped cards
 func shift(withDistance distance: Int = 1, animated: Bool)
 ```
 
-![Shift](https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/shift.gif)
+![Shift](Images/shift.gif)
 
 ### Custom Layouts
 While the default card stack layout works great for a quick implementation, you can achieve your own layout by overriding the following method:
