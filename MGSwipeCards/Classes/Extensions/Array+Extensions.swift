@@ -1,5 +1,5 @@
 //
-//  Array+Shift.swift
+//  Array+Extensions.swift
 //  MGSwipeCards
 //
 //  Created by Mac Gallagher on 11/2/18.

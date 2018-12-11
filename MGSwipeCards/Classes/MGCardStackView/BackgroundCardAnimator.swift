@@ -1,5 +1,5 @@
 //
-//  CardStackAnimator.swift
+//  BackgroundCardAnimator
 //  MGSwipeCards
 //
 //  Created by Mac Gallagher on 11/2/18.
@@ -63,7 +63,6 @@ class BackgroundCardAnimator {
         for i in 1..<cardStack.visibleCards.count {
             cardStack.visibleCards[i].transform = cardStack.transformForCard(at: i - 1)
         }
-        
         
         //animate background cards to new positions
         for i in 1..<cardStack.visibleCards.count {

@@ -158,4 +158,3 @@ open class MGCardStackView: UIViewHelper {
         return card
     }
 }
-

@@ -42,7 +42,7 @@ class CardAnimator {
         let springSpeed = card.animationOptions.resetAnimationSpringSpeed
         
         if let activeDirection = card.activeDirection {
-            POPAnimator.applySpringFadeAnimation(to: card.overlays[activeDirection], toValue: .zero, springBounciness: springBounciness, springSpeed: springSpeed, completionBlock: nil)
+            POPAnimator.applySpringFadeAnimation(to: card.overlays[activeDirection], toValue: 0, springBounciness: springBounciness, springSpeed: springSpeed, completionBlock: nil)
         }
         
         POPAnimator.applySpringTransformAnimation(to: card, transform: .identity, springBounciness: springBounciness, springSpeed: springSpeed) { _, finished in
@@ -69,7 +69,7 @@ class CardAnimator {
         
         let fadeDuration = card.animationOptions.overlayFadeAnimationDuration
         POPAnimator.applyFadeAnimation(to: overlay, toValue: 0, delay: swipeDuration, duration: fadeDuration, timingFunction: CAMediaTimingFunction(name: .easeIn)) { _, finished in
-                completion?(finished)
+            completion?(finished)
         }
     }
     

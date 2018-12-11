@@ -1,5 +1,5 @@
 //
-//  CardOptions.swift
+//  CardAnimationOptions.swift
 //  MGSwipeCards
 //
 //  Created by Mac Gallagher on 11/2/18.

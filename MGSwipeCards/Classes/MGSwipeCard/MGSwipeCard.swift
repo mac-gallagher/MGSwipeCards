@@ -94,7 +94,6 @@ open class MGSwipeCard: DraggableSwipeView {
     var delegate: MGSwipeCardDelegate?
     
     var overlays: [SwipeDirection: UIView] = [:]
-    
     private var overlayContainer = UIView()
     
     //MARK: - Initialization
@@ -127,14 +126,13 @@ open class MGSwipeCard: DraggableSwipeView {
     }
     
     private func layoutContentView() {
-        if let content = content {
-            if let _ = footer, !isFooterTransparent {
-                content.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height - footerHeight)
-            } else {
-                content.frame = bounds
-            }
-            sendSubviewToBack(content)
+        guard let content = content else { return }
+        if let _ = footer, !isFooterTransparent {
+            content.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height - footerHeight)
+        } else {
+            content.frame = bounds
         }
+        sendSubviewToBack(content)
     }
     
     private func layoutOverlays() {
