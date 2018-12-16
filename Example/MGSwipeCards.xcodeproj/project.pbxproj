@@ -8,38 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		61F3FA4ABE2F71849B7796BD /* Pods_MGSwipeCards_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD00FB837C1D5D4BC52105CA /* Pods_MGSwipeCards_Example.framework */; };
-		AD1B34E5219D268200260FBE /* SampleCardContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34E4219D268200260FBE /* SampleCardContentView.swift */; };
-		AD1B34E7219D272800260FBE /* SampleCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34E6219D272800260FBE /* SampleCardModel.swift */; };
-		AD1B34E9219D275C00260FBE /* SampleCardOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34E8219D275C00260FBE /* SampleCardOverlay.swift */; };
-		AD1B34EB219D27BF00260FBE /* SampleCardFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34EA219D27BF00260FBE /* SampleCardFooterView.swift */; };
-		AD1B34ED21A07DCC00260FBE /* ButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34EC21A07DCC00260FBE /* ButtonStackView.swift */; };
-		AD97B06E21B4529C009C448A /* TinderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD97B06D21B4529C009C448A /* TinderButton.swift */; };
-		ADAEDF0220F83A3800172438 /* SampleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAEDF0120F83A3800172438 /* SampleCard.swift */; };
-		ADBB332E20E9D799006A16C4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332520E9D799006A16C4 /* ViewController.swift */; };
-		ADBB332F20E9D799006A16C4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */; };
-		ADBB333020E9D799006A16C4 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332720E9D799006A16C4 /* UIView+Extensions.swift */; };
-		ADBB333420E9D799006A16C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332B20E9D799006A16C4 /* AppDelegate.swift */; };
-		ADBB333920E9D7FE006A16C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADBB333820E9D7FE006A16C4 /* Assets.xcassets */; };
 		ADBB333E20E9DB78006A16C4 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = ADBB333B20E9DB78006A16C4 /* LICENSE */; };
 		ADBB333F20E9DB78006A16C4 /* MGSwipeCards.podspec in Resources */ = {isa = PBXBuildFile; fileRef = ADBB333C20E9DB78006A16C4 /* MGSwipeCards.podspec */; };
 		ADBB334020E9DB78006A16C4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = ADBB333D20E9DB78006A16C4 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AD1B34E4219D268200260FBE /* SampleCardContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardContentView.swift; sourceTree = "<group>"; };
-		AD1B34E6219D272800260FBE /* SampleCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardModel.swift; sourceTree = "<group>"; };
-		AD1B34E8219D275C00260FBE /* SampleCardOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardOverlay.swift; sourceTree = "<group>"; };
-		AD1B34EA219D27BF00260FBE /* SampleCardFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardFooterView.swift; sourceTree = "<group>"; };
-		AD1B34EC21A07DCC00260FBE /* ButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStackView.swift; sourceTree = "<group>"; };
-		AD97B06D21B4529C009C448A /* TinderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinderButton.swift; sourceTree = "<group>"; };
-		ADAEDF0120F83A3800172438 /* SampleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCard.swift; sourceTree = "<group>"; };
 		ADBB330420E9D73B006A16C4 /* MGSwipeCards_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MGSwipeCards_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		ADBB332520E9D799006A16C4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		ADBB332720E9D799006A16C4 /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
-		ADBB332B20E9D799006A16C4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		ADBB332D20E9D799006A16C4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		ADBB333820E9D7FE006A16C4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ADBB333B20E9DB78006A16C4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		ADBB333C20E9DB78006A16C4 /* MGSwipeCards.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MGSwipeCards.podspec; path = ../MGSwipeCards.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ADBB333D20E9DB78006A16C4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -77,49 +52,10 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		AD1B34E3219D265600260FBE /* SampleCard */ = {
-			isa = PBXGroup;
-			children = (
-				ADAEDF0120F83A3800172438 /* SampleCard.swift */,
-				AD1B34E4219D268200260FBE /* SampleCardContentView.swift */,
-				AD1B34E6219D272800260FBE /* SampleCardModel.swift */,
-				AD1B34E8219D275C00260FBE /* SampleCardOverlay.swift */,
-				AD1B34EA219D27BF00260FBE /* SampleCardFooterView.swift */,
-			);
-			path = SampleCard;
-			sourceTree = "<group>";
-		};
-		AD97B06A21B44F73009C448A /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				AD1B34EC21A07DCC00260FBE /* ButtonStackView.swift */,
-				AD1B34E3219D265600260FBE /* SampleCard */,
-				AD97B06D21B4529C009C448A /* TinderButton.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		AD97B06B21B44F7D009C448A /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				ADBB332720E9D799006A16C4 /* UIView+Extensions.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		AD97B06F21B45512009C448A /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				ADBB332520E9D799006A16C4 /* ViewController.swift */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
 		ADBB32FB20E9D73B006A16C4 = {
 			isa = PBXGroup;
 			children = (
 				ADBB333A20E9DB68006A16C4 /* Podspec Metadata */,
-				ADBB332420E9D799006A16C4 /* Example for MGSwipeCards */,
 				ADBB330520E9D73B006A16C4 /* Products */,
 				A3E3C537B0C9707CDFF47058 /* Pods */,
 				609FDD062A99FCB841E604AF /* Frameworks */,
@@ -132,29 +68,6 @@
 				ADBB330420E9D73B006A16C4 /* MGSwipeCards_Example.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		ADBB332420E9D799006A16C4 /* Example for MGSwipeCards */ = {
-			isa = PBXGroup;
-			children = (
-				ADBB332B20E9D799006A16C4 /* AppDelegate.swift */,
-				AD97B06F21B45512009C448A /* Controllers */,
-				AD97B06B21B44F7D009C448A /* Extensions */,
-				AD97B06A21B44F73009C448A /* Views */,
-				ADBB333820E9D7FE006A16C4 /* Assets.xcassets */,
-				ADBB333720E9D7D3006A16C4 /* Supporting Files */,
-			);
-			name = "Example for MGSwipeCards";
-			path = MGSwipeCards;
-			sourceTree = "<group>";
-		};
-		ADBB333720E9D7D3006A16C4 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */,
-				ADBB332D20E9D799006A16C4 /* Info.plist */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		ADBB333A20E9DB68006A16C4 /* Podspec Metadata */ = {
@@ -231,8 +144,6 @@
 				ADBB333E20E9DB78006A16C4 /* LICENSE in Resources */,
 				ADBB333F20E9DB78006A16C4 /* MGSwipeCards.podspec in Resources */,
 				ADBB334020E9DB78006A16C4 /* README.md in Resources */,
-				ADBB333920E9D7FE006A16C4 /* Assets.xcassets in Resources */,
-				ADBB332F20E9D799006A16C4 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,16 +197,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ADBB333420E9D799006A16C4 /* AppDelegate.swift in Sources */,
-				AD97B06E21B4529C009C448A /* TinderButton.swift in Sources */,
-				AD1B34E7219D272800260FBE /* SampleCardModel.swift in Sources */,
-				ADAEDF0220F83A3800172438 /* SampleCard.swift in Sources */,
-				AD1B34EB219D27BF00260FBE /* SampleCardFooterView.swift in Sources */,
-				ADBB333020E9D799006A16C4 /* UIView+Extensions.swift in Sources */,
-				AD1B34E9219D275C00260FBE /* SampleCardOverlay.swift in Sources */,
-				AD1B34ED21A07DCC00260FBE /* ButtonStackView.swift in Sources */,
-				ADBB332E20E9D799006A16C4 /* ViewController.swift in Sources */,
-				AD1B34E5219D268200260FBE /* SampleCardContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
