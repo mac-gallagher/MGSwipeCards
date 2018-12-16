@@ -1,6 +1,0 @@
-framework module Pods_MGSwipeCards_Example {
-  umbrella header "Pods-MGSwipeCards_Example-umbrella.h"
-
-  export *
-  module * { export * }
-}
