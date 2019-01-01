@@ -104,18 +104,18 @@ open class MGCardStackView: UIViewHelper {
     
     //MARK: - Main Methods
     
-    public func swipe(_ direction: SwipeDirection) {
+    public func swipe(_ direction: SwipeDirection, animated: Bool) {
         guard let topCard = topCard else { return }
         if !isUserInteractionEnabled { return }
-        topCard.swipe(direction: direction)
+        topCard.swipe(direction: direction, animated: animated)
     }
     
-    public func undoLastSwipe() {
+    public func undoLastSwipe(animated: Bool) {
         guard let lastSwipe = currentState.previousSwipe else { return }
         if !isUserInteractionEnabled { return }
         delegate?.cardStack(self, didUndoCardAt: lastSwipe.index, from: lastSwipe.direction)
         loadState(currentState.previousState!)
-        topCard?.undoSwipe(from: lastSwipe.direction)
+        topCard?.undoSwipe(from: lastSwipe.direction, animated: animated)
     }
     
     public func shift(withDistance distance: Int = 1, animated: Bool) {

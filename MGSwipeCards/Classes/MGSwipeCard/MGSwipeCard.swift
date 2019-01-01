@@ -36,27 +36,29 @@ open class MGSwipeCard: DraggableSwipeView {
     public var animationOptions: CardAnimationOptions = .defaultOptions
     
     public var isFooterTransparent: Bool = false {
-        didSet { layoutIfNeeded() }
+        didSet {
+            setNeedsLayout()
+        }
     }
     
     public var footerHeight: CGFloat = 100 {
-        didSet { layoutIfNeeded() }
+        didSet {
+            setNeedsLayout()
+        }
     }
     
     public var content: UIView? {
         didSet {
             oldValue?.removeFromSuperview()
-            setNeedsLayout()
             if let content = content {
                 addSubview(content)
             }
         }
     }
-
+    
     public var footer: UIView? {
         didSet {
             oldValue?.removeFromSuperview()
-            setNeedsLayout()
             if let footer = footer {
                 addSubview(footer)
             }
@@ -102,7 +104,7 @@ open class MGSwipeCard: DraggableSwipeView {
         super.initialize()
         addSubview(overlayContainer)
     }
-
+    
     private func addOverlay(_ overlay: UIView?, forDirection direction: SwipeDirection) {
         overlays.removeValue(forKey: direction)
         if let overlay = overlay {
@@ -150,31 +152,48 @@ open class MGSwipeCard: DraggableSwipeView {
     
     //MARK: - Main Methods
     
-    public func swipe(direction: SwipeDirection) {
-        swipeAction(direction: direction, forced: true)
+    public func swipe(direction: SwipeDirection, animated: Bool) {
+        swipeAction(direction: direction, animated: animated, forced: true)
     }
     
-    private func swipeAction(direction: SwipeDirection, forced: Bool) {
+    private func swipeAction(direction: SwipeDirection, animated: Bool, forced: Bool) {
         isUserInteractionEnabled = false
         delegate?.card(willSwipe: self, with: direction, forced: forced)
-        CardAnimator.swipe(card: self, direction: direction, forced: forced) { (finished) in
-            if finished {
-                self.isUserInteractionEnabled = true
-                self.removeFromSuperview()
-                self.delegate?.card(didSwipe: self, with: direction, forced: forced)
+        if animated {
+            CardAnimator.swipe(card: self, direction: direction, forced: forced) { (finished) in
+                if finished {
+                    self.finishSwipe(direction: direction, forced: forced)
+                }
             }
+        } else {
+            finishSwipe(direction: direction, forced: forced)
         }
     }
     
-    public func undoSwipe(from direction: SwipeDirection) {
+    private func finishSwipe(direction: SwipeDirection, forced: Bool) {
+        isUserInteractionEnabled = false
+        removeFromSuperview()
+        delegate?.card(didSwipe: self, with: direction, forced: forced)
+    }
+    
+    public func undoSwipe(from direction: SwipeDirection, animated: Bool) {
         isUserInteractionEnabled = false
         delegate?.card(willUndo: self, from: direction)
-        CardAnimator.undo(card: self, from: direction) { (finished) in
-            if finished {
-                self.isUserInteractionEnabled = true
-                self.delegate?.card(didUndo: self, from: direction)
+        
+        if animated {
+            CardAnimator.undo(card: self, from: direction) { (finished) in
+                if finished {
+                    self.finishUndo(direction: direction)
+                }
             }
+        } else {
+            finishUndo(direction: direction)
         }
+    }
+    
+    private func finishUndo(direction: SwipeDirection) {
+        isUserInteractionEnabled = true
+        delegate?.card(didUndo: self, from: direction)
     }
     
     //MARK: MGDraggableSwipeView Overrides
@@ -204,7 +223,7 @@ open class MGSwipeCard: DraggableSwipeView {
     }
     
     override func didSwipe(on view: DraggableSwipeView, with direction: SwipeDirection) {
-        swipeAction(direction: direction, forced: false)
+        swipeAction(direction: direction, animated: true, forced: false)
     }
     
     override func didCancelSwipe(on view: DraggableSwipeView) {

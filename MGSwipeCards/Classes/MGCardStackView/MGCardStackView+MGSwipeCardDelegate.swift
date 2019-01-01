@@ -37,7 +37,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
         }
     }
     
-    func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {
+    func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, animated: Bool, forced: Bool) {
         delegate?.cardStack(self, didSwipeCardAt: topCardIndex, with: direction)
         isUserInteractionEnabled = false
         
