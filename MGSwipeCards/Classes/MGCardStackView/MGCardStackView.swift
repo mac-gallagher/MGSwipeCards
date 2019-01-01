@@ -33,7 +33,7 @@ public extension MGCardStackViewDelegate {
 
 //MARK: - MGCardStackView
 
-open class MGCardStackView: UIViewHelper {
+open class MGCardStackView: UIViewable {
     /// The maximum number of cards to be displayed on screen.
     public var numberOfVisibleCards: Int = 2
     

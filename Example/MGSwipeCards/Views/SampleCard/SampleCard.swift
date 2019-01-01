@@ -11,7 +11,7 @@ import MGSwipeCards
 
 class SampleCard: MGSwipeCard {
     init(model: SampleCardModel) {
-        super.init()
+        super.init(frame: .zero)
         initialize()
         configure(model: model)
     }

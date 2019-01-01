@@ -111,7 +111,7 @@ class CardAnimator {
                 return 2 * card.maximumRotationAngle
             }
         }
-        let touchPoint = card.touchPoint ?? .zero
+        let touchPoint = card.touchLocation ?? .zero
         if (direction == .left && touchPoint.y < card.bounds.height / 2) || (direction == .right && touchPoint.y >= card.bounds.height / 2) {
             return -2 * card.maximumRotationAngle
         }

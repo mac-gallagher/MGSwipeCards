@@ -34,7 +34,7 @@
 		53B8F220D45B725C52F18748B99C10CB /* PopAnimator+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25D5C44578A4E68E2A5D74F5C295934 /* PopAnimator+Extensions.swift */; };
 		5D48F4C9DD53DABA7F9395C95E6893A2 /* POPAnimationExtras.h in Headers */ = {isa = PBXBuildFile; fileRef = B015DBB480587BF823FFA220CB254619 /* POPAnimationExtras.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5F07410E548C9F7D025A7AAF2A1B340A /* UnitBezier.h in Headers */ = {isa = PBXBuildFile; fileRef = 61EE6A90A5BA10D56A4C95955349F96C /* UnitBezier.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		6A4CCCFC75ECCAAE70B5F285D26E8CBE /* DraggableSwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 874A4BFA1F9DA554039A897D797E4254 /* DraggableSwipeView.swift */; };
+		6A4CCCFC75ECCAAE70B5F285D26E8CBE /* SwipeableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 874A4BFA1F9DA554039A897D797E4254 /* SwipeableView.swift */; };
 		6A7D0A82C1D116EAA58BD3FB323254F7 /* POPAnimatorPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5ECA61A5D98C7F698F1BC211EA212928 /* POPAnimatorPrivate.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		6AFE35348FD3B6375183857BBF06BCE6 /* POPDecayAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = B7814854BA8FF62B8E0C9BC94777B1AE /* POPDecayAnimation.mm */; };
 		6B5C0F971AB5A4C4AE8E64BFED961419 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A796091C637C6A9495036F7DC8532E35 /* Foundation.framework */; };
@@ -85,7 +85,7 @@
 		DCCA379ED1D6239FFF23D6F3E989FF09 /* TransformationMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = B89F1F0EB4E6B6CBECB903EB5B9AF892 /* TransformationMatrix.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		E3620FDC9FBE598E62816E2973A87194 /* pop-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F306173A3BF554BE8E4819198227A8 /* pop-dummy.m */; };
 		E4D495495B29C34CBF39F233BDB2C8F6 /* POPBasicAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 48CFECFD0518528B0AC17162E2F94544 /* POPBasicAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E715BAE0D99FB181423C2EA7C05ACC49 /* UIViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BEB03AA8B56882BB2176BA9FB6D1D7 /* UIViewHelper.swift */; };
+		E715BAE0D99FB181423C2EA7C05ACC49 /* UIViewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BEB03AA8B56882BB2176BA9FB6D1D7 /* UIViewable.swift */; };
 		F3B07C4F57F1CC8294524A5687A1F232 /* POPAnimatablePropertyTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 90A0933242726A85FCEE6BF815B4ED2E /* POPAnimatablePropertyTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F44DC001D7BC229DCDCB5499A94F7C60 /* CardAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C39726ED07D0539962A156218995492 /* CardAnimator.swift */; };
 		F7C17054B6E53A8BE80CBCF84BF1AED4 /* pop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD14915C2613E9ECDE36B0B27CDCA103 /* pop.framework */; };
@@ -188,7 +188,7 @@
 		81A711A4C7BD9A6914C2818ECE93AE38 /* PopBounceButton-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PopBounceButton-dummy.m"; sourceTree = "<group>"; };
 		82A4E8B7F431B9B03BC466FEA0389E8A /* POPCustomAnimation.mm */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.objcpp; name = POPCustomAnimation.mm; path = pop/POPCustomAnimation.mm; sourceTree = "<group>"; };
 		86240E1127207F4B449FBD31308038A5 /* CGAffineTransform+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGAffineTransform+Extensions.swift"; sourceTree = "<group>"; };
-		874A4BFA1F9DA554039A897D797E4254 /* DraggableSwipeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DraggableSwipeView.swift; sourceTree = "<group>"; };
+		874A4BFA1F9DA554039A897D797E4254 /* SwipeableView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwipeableView.swift; sourceTree = "<group>"; };
 		8B4BA4DA0B8ED7DF3B2C6813E95FF563 /* PopBounceButton-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PopBounceButton-umbrella.h"; sourceTree = "<group>"; };
 		90A0933242726A85FCEE6BF815B4ED2E /* POPAnimatablePropertyTypes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = POPAnimatablePropertyTypes.h; path = pop/POPAnimatablePropertyTypes.h; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -206,7 +206,7 @@
 		AF8C55693FFCA8BB10ABFBB432C05879 /* pop.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = pop.modulemap; sourceTree = "<group>"; };
 		B015DBB480587BF823FFA220CB254619 /* POPAnimationExtras.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = POPAnimationExtras.h; path = pop/POPAnimationExtras.h; sourceTree = "<group>"; };
 		B0AB91A38CE29E47218BC71B7749A401 /* MGSwipeCards.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = MGSwipeCards.modulemap; sourceTree = "<group>"; };
-		B2BEB03AA8B56882BB2176BA9FB6D1D7 /* UIViewHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIViewHelper.swift; sourceTree = "<group>"; };
+		B2BEB03AA8B56882BB2176BA9FB6D1D7 /* UIViewable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIViewable.swift; sourceTree = "<group>"; };
 		B3F048F77344286EC4DDD907B63728DE /* PopBounceButton.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PopBounceButton.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B50800A0A2761AE2174D762A07FF052F /* MGSwipeCards-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MGSwipeCards-prefix.pch"; sourceTree = "<group>"; };
 		B7814854BA8FF62B8E0C9BC94777B1AE /* POPDecayAnimation.mm */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.objcpp; name = POPDecayAnimation.mm; path = pop/POPDecayAnimation.mm; sourceTree = "<group>"; };
@@ -295,7 +295,7 @@
 			children = (
 				C7955C3F5D56EF1B3BBC0D8E55C908F7 /* CardAnimationOptions.swift */,
 				3C39726ED07D0539962A156218995492 /* CardAnimator.swift */,
-				874A4BFA1F9DA554039A897D797E4254 /* DraggableSwipeView.swift */,
+				874A4BFA1F9DA554039A897D797E4254 /* SwipeableView.swift */,
 				A0BEAB140DEE2B27D23745025A256233 /* MGSwipeCard.swift */,
 				513DDB6A61C401C20597571561A45B8A /* SwipeDirection.swift */,
 			);
@@ -364,7 +364,7 @@
 		810CE64334E4E31525F3E42CB77F6652 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				B2BEB03AA8B56882BB2176BA9FB6D1D7 /* UIViewHelper.swift */,
+				B2BEB03AA8B56882BB2176BA9FB6D1D7 /* UIViewable.swift */,
 			);
 			name = Helpers;
 			path = MGSwipeCards/Classes/Helpers;
@@ -727,14 +727,14 @@
 				498F108AA0C87F4F4BAEBE9C8B9B7682 /* CardStackState.swift in Sources */,
 				2C325C2E281E4E6B3E31315553DB81BF /* CGAffineTransform+Extensions.swift in Sources */,
 				971D602D5E28CF38911293B537F985B0 /* CGPoint+Extensions.swift in Sources */,
-				6A4CCCFC75ECCAAE70B5F285D26E8CBE /* DraggableSwipeView.swift in Sources */,
+				6A4CCCFC75ECCAAE70B5F285D26E8CBE /* SwipeableView.swift in Sources */,
 				9B0EA768EFC036B1928A76C1D6E74B9D /* MGCardStackView+MGSwipeCardDelegate.swift in Sources */,
 				81C2F61518A1D20A2D7B0138F23D93E2 /* MGCardStackView.swift in Sources */,
 				BDB885397A08C54C1D499C05C61CE151 /* MGSwipeCard.swift in Sources */,
 				99DCAA8871FBDD2F203B46E53B58A453 /* MGSwipeCards-dummy.m in Sources */,
 				53B8F220D45B725C52F18748B99C10CB /* PopAnimator+Extensions.swift in Sources */,
 				BC8BEC8D025C3B98951A682246125E17 /* SwipeDirection.swift in Sources */,
-				E715BAE0D99FB181423C2EA7C05ACC49 /* UIViewHelper.swift in Sources */,
+				E715BAE0D99FB181423C2EA7C05ACC49 /* UIViewable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
