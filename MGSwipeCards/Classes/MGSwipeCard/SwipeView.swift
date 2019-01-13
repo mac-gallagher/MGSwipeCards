@@ -6,14 +6,6 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-protocol SwipeViewDelegate {
-    func didTap(on view: SwipeView)
-    func didBeginSwipe(on view: SwipeView)
-    func didContinueSwipe(on view: SwipeView)
-    func didSwipe(on view: SwipeView, with direction: SwipeDirection)
-    func didCancelSwipe(on view: SwipeView)
-}
-
 open class SwipeView: UIViewable {
     /// The swipe directions to be recognized by the view
     public var swipeDirections: [SwipeDirection] = SwipeDirection.allDirections
@@ -55,21 +47,19 @@ open class SwipeView: UIViewable {
         }).activeDirection
     }
     
-    var swipeViewDelegate: SwipeViewDelegate?
-    
     override func initialize() {
         addGestureRecognizer(panRecognizer)
         addGestureRecognizer(tapRecognizer)
     }
     
     /// The speed of the user's drag projected onto the specified direction.
-    func dragSpeed(on direction: SwipeDirection) -> CGFloat {
+    public func dragSpeed(on direction: SwipeDirection) -> CGFloat {
         let velocity = panRecognizer.velocity(in: superview)
         return abs(direction.point.dotProduct(with: velocity))
     }
     
     /// The percentage of the card's bounds that the drag attains in the specified direction.
-    func dragPercentage(on direction: SwipeDirection) -> CGFloat {
+    public func dragPercentage(on direction: SwipeDirection) -> CGFloat {
         let translation = panRecognizer.translation(in: superview)
         let normalizedTranslation = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
         let percentage = normalizedTranslation.dotProduct(with: direction.point)
@@ -81,7 +71,7 @@ open class SwipeView: UIViewable {
     
     @objc private func handleTap(_ recognizer: UITapGestureRecognizer) {
         touchPoint = recognizer.location(in: self)
-        swipeViewDelegate?.didTap(on: self)
+        didTap(recognizer: recognizer)
     }
     
     @objc private func handlePan(_ recognizer: UIPanGestureRecognizer) {
@@ -97,24 +87,27 @@ open class SwipeView: UIViewable {
         }
     }
     
-    private func beginSwiping(recognizer: UIPanGestureRecognizer) {
+    func didTap(recognizer: UITapGestureRecognizer) {}
+    
+    func beginSwiping(recognizer: UIPanGestureRecognizer) {
         touchPoint = recognizer.location(in: self)
-        swipeViewDelegate?.didBeginSwipe(on: self)
     }
     
-    private func continueSwiping(recognizer: UIPanGestureRecognizer) {
-        swipeViewDelegate?.didContinueSwipe(on: self)
-    }
+    func continueSwiping(recognizer: UIPanGestureRecognizer) {}
     
-    private func endSwiping(recognizer: UIPanGestureRecognizer) {
+    func endSwiping(recognizer: UIPanGestureRecognizer) {
         if let direction = activeDirection {
             if dragSpeed(on: direction) >= minimumSwipeSpeed || dragPercentage(on: direction) >= minimumSwipeMargin {
-                swipeViewDelegate?.didSwipe(on: self, with: direction)
+                didSwipe(recognizer: recognizer, with: direction)
             } else {
-                swipeViewDelegate?.didCancelSwipe(on: self)
+                didCancelSwipe(recognizer: recognizer)
             }
         } else {
-            swipeViewDelegate?.didCancelSwipe(on: self)
+            didCancelSwipe(recognizer: recognizer)
         }
     }
+    
+    func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {}
+    
+    func didCancelSwipe(recognizer: UIPanGestureRecognizer) {}
 }

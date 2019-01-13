@@ -48,23 +48,15 @@ class SwipeViewSpec: QuickSpec {
                 it("should have a pan gesture recognizer") {
                     expect(swipeView.panGestureRecognizer).toNot(beNil())
                 }
-                
-                it("should not have a delegate") {
-                    expect(swipeView.swipeViewDelegate).to(beNil())
-                }
             }
         }
         
         describe("tap gesture") {
-            var swipeView: SwipeView!
-            var mockSwipeViewDelegate: MockSwipeViewDelegate!
+            var swipeView: MockSwipeView!
             var testTapGestureRecognizer: TestableTapGestureRecognizer!
             
             beforeEach {
-                mockSwipeViewDelegate = MockSwipeViewDelegate()
-                swipeView = self.setupSwipeView(configure: { swipeView in
-                    swipeView.swipeViewDelegate = mockSwipeViewDelegate
-                })
+                swipeView = self.setupSwipeView()
                 testTapGestureRecognizer = swipeView.tapGestureRecognizer as? TestableTapGestureRecognizer
             }
             
@@ -79,22 +71,18 @@ class SwipeViewSpec: QuickSpec {
                     expect(swipeView.touchLocation).to(equal(touchPoint))
                 }
                 
-                it("should call the didTap delegate method") {
-                    expect(mockSwipeViewDelegate.didTapCalled).to(beTrue())
+                it("should call the didTap method") {
+                    expect(swipeView.didTapCalled).to(beTrue())
                 }
             }
         }
         
         describe("pan gesture") {
-            var swipeView: SwipeView!
+            var swipeView: MockSwipeView!
             var testPanGestureRecognizer: TestablePanGestureRecognizer!
-            var mockSwipeViewDelegate: MockSwipeViewDelegate!
             
             beforeEach {
-                mockSwipeViewDelegate = MockSwipeViewDelegate()
-                swipeView = self.setupSwipeView(configure: { swipeView in
-                    swipeView.swipeViewDelegate = mockSwipeViewDelegate
-                })
+                swipeView = self.setupSwipeView()
                 testPanGestureRecognizer = swipeView.panGestureRecognizer as? TestablePanGestureRecognizer
             }
             
@@ -109,8 +97,8 @@ class SwipeViewSpec: QuickSpec {
                     expect(swipeView.touchLocation).to(equal(touchPoint))
                 }
                 
-                it("it should call the didBeginSwipe delegate method") {
-                    expect(mockSwipeViewDelegate.didBeginSwipeCalled).to(beTrue())
+                it("it should call the beginSwiping method") {
+                    expect(swipeView.beginSwipingCalled).to(beTrue())
                 }
             }
             
@@ -119,8 +107,8 @@ class SwipeViewSpec: QuickSpec {
                     testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: .changed)
                 }
                 
-                it("it should call the didContinueSwipe delegate method") {
-                    expect(mockSwipeViewDelegate.didContinueSwipeCalled).to(beTrue())
+                it("it should call the didContinueSwiping method") {
+                    expect(swipeView.didContinueSwipingCalled).to(beTrue())
                 }
             }
         }
@@ -129,14 +117,11 @@ class SwipeViewSpec: QuickSpec {
             let minimumSwipeMargin: CGFloat = 0.3
             let minimumSwipeSpeed: CGFloat = 500
             let swipeDirections = SwipeDirection.allDirections
-            var swipeView: SwipeView!
+            var swipeView: MockSwipeView!
             var testPanGestureRecognizer: TestablePanGestureRecognizer!
-            var mockSwipeViewDelegate: MockSwipeViewDelegate!
             
             beforeEach {
-                mockSwipeViewDelegate = MockSwipeViewDelegate()
                 swipeView = self.setupSwipeView(configure: { swipeView in
-                    swipeView.swipeViewDelegate = mockSwipeViewDelegate
                     swipeView.minimumSwipeMargin = minimumSwipeMargin
                     swipeView.minimumSwipeSpeed = minimumSwipeSpeed
                     swipeView.swipeDirections = swipeDirections
@@ -155,11 +140,11 @@ class SwipeViewSpec: QuickSpec {
                     }
                     
                     it("should not call the didSwipe delegate method") {
-                        expect(mockSwipeViewDelegate.didSwipeCalled).to(beFalse())
+                        expect(swipeView.didSwipeCalled).to(beFalse())
                     }
                     
                     it("should call the didCancelSwipe delegate method") {
-                        expect(mockSwipeViewDelegate.didCancelSwipeCalled).to(beTrue())
+                        expect(swipeView.didCancelSwipeCalled).to(beTrue())
                     }
                 }
                 
@@ -173,12 +158,12 @@ class SwipeViewSpec: QuickSpec {
                     }
                     
                     it("should call the didSwipe delegate method with the correct direction") {
-                        expect(mockSwipeViewDelegate.didSwipeCalled).to(beTrue())
-                        expect(mockSwipeViewDelegate.swipeDirection).to(equal(direction))
+                        expect(swipeView.didSwipeCalled).to(beTrue())
+                        expect(swipeView.swipeDirection).to(equal(direction))
                     }
                     
                     it("should not call the didCancelSwipe delegate method") {
-                        expect(mockSwipeViewDelegate.didCancelSwipeCalled).to(beFalse())
+                        expect(swipeView.didCancelSwipeCalled).to(beFalse())
                     }
                 }
                 
@@ -189,11 +174,11 @@ class SwipeViewSpec: QuickSpec {
                     }
                     
                     it("should not call the didSwipe delegate method") {
-                        expect(mockSwipeViewDelegate.didSwipeCalled).to(beFalse())
+                        expect(swipeView.didSwipeCalled).to(beFalse())
                     }
                     
                     it("should call the didCancelSwipe delegate method") {
-                        expect(mockSwipeViewDelegate.didCancelSwipeCalled).to(beTrue())
+                        expect(swipeView.didCancelSwipeCalled).to(beTrue())
                     }
                 }
                 
@@ -204,12 +189,12 @@ class SwipeViewSpec: QuickSpec {
                     }
                     
                     it("should call the didSwipe delegate method with the correct direction") {
-                        expect(mockSwipeViewDelegate.didSwipeCalled).to(beTrue())
-                        expect(mockSwipeViewDelegate.swipeDirection).to(equal(direction))
+                        expect(swipeView.didSwipeCalled).to(beTrue())
+                        expect(swipeView.swipeDirection).to(equal(direction))
                     }
                     
                     it("should not call the didCancelSwipe delegate method") {
-                        expect(mockSwipeViewDelegate.didCancelSwipeCalled).to(beFalse())
+                        expect(swipeView.didCancelSwipeCalled).to(beFalse())
                     }
                 }
             }
@@ -218,39 +203,44 @@ class SwipeViewSpec: QuickSpec {
 }
 
 extension SwipeViewSpec {
-    func setupSwipeView(configure: (SwipeView) -> Void = { _ in } ) -> SwipeView {
-        let swipeView = SwipeView()
+    func setupSwipeView(configure: (MockSwipeView) -> Void = { _ in } ) -> MockSwipeView {
+        let swipeView = MockSwipeView()
         configure(swipeView)
         return swipeView
     }
 }
 
 extension SwipeViewSpec {
-    class MockSwipeViewDelegate: SwipeViewDelegate {
+    class MockSwipeView: SwipeView {
         var didTapCalled: Bool = false
-        func didTap(on view: SwipeView) {
+        override func didTap(recognizer: UITapGestureRecognizer) {
+            super.didTap(recognizer: recognizer)
             didTapCalled = true
         }
         
-        var didBeginSwipeCalled: Bool = false
-        func didBeginSwipe(on view: SwipeView) {
-            didBeginSwipeCalled = true
+        var beginSwipingCalled: Bool = false
+        override func beginSwiping(recognizer: UIPanGestureRecognizer) {
+            super.beginSwiping(recognizer: recognizer)
+            beginSwipingCalled = true
         }
         
-        var didContinueSwipeCalled: Bool = false
-        func didContinueSwipe(on view: SwipeView) {
-            didContinueSwipeCalled = true
+        var didContinueSwipingCalled: Bool = false
+        override func continueSwiping(recognizer: UIPanGestureRecognizer) {
+            super.continueSwiping(recognizer: recognizer)
+            didContinueSwipingCalled = true
         }
         
         var didSwipeCalled: Bool = false
         var swipeDirection: SwipeDirection?
-        func didSwipe(on view: SwipeView, with direction: SwipeDirection) {
+        override func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {
+            super.didSwipe(recognizer: recognizer, with: direction)
             didSwipeCalled = true
             swipeDirection = direction
         }
         
         var didCancelSwipeCalled: Bool = false
-        func didCancelSwipe(on view: SwipeView) {
+        override func didCancelSwipe(recognizer: UIPanGestureRecognizer) {
+            super.didCancelSwipe(recognizer: recognizer)
             didCancelSwipeCalled = true
         }
     }

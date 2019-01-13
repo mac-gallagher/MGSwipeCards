@@ -7,7 +7,11 @@
 
 import pop
 
-class CardAnimator {
+protocol CardAnimatable {
+    
+}
+
+class CardAnimator: CardAnimatable {
     static func swipe(card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
         CardAnimator.removeAllAnimations(on: card)
         

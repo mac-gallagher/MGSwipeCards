@@ -103,24 +103,18 @@ open class MGSwipeCard: SwipeView {
     
     private var rotationDirectionY: CGFloat = 1
     
-    //MARK: - Initialization
-    
     override func initialize() {
         super.initialize()
         addSubview(overlayContainer)
-        swipeViewDelegate = self
     }
     
     private func addOverlay(_ overlay: UIView?, forDirection direction: SwipeDirection) {
+        guard let overlay = overlay else { return }
         overlays.removeValue(forKey: direction)
-        if let overlay = overlay {
-            overlayContainer.addSubview(overlay)
-            overlays[direction] = overlay
-            overlay.alpha = 0
-        }
+        overlayContainer.addSubview(overlay)
+        overlays[direction] = overlay
+        overlay.alpha = 0
     }
-    
-    //MARK: - Layout
     
     open override func layoutSubviews() {
         super.layoutSubviews()
@@ -128,10 +122,6 @@ open class MGSwipeCard: SwipeView {
         layoutContentView()
         layoutOverlays()
     }
-    
-//    open override func rasterizedSubviews() -> [UIView?] {
-//        return [content, footer]
-//    }
     
     private func layoutContentView() {
         guard let content = content else { return }
@@ -153,6 +143,58 @@ open class MGSwipeCard: SwipeView {
         
         for (_, overlay) in overlays {
             overlay.frame = overlayContainer.bounds
+        }
+    }
+    
+    //MARK: - Overrides
+    
+    override func didTap(recognizer: UITapGestureRecognizer) {
+        super.didTap(recognizer: recognizer)
+        delegate?.card(didTap: self)
+    }
+    
+    override func beginSwiping(recognizer: UIPanGestureRecognizer) {
+        super.beginSwiping(recognizer: recognizer)
+        delegate?.card(didBeginSwipe: self)
+        if let touchPoint = touchLocation {
+            rotationDirectionY = (touchPoint.y < bounds.height / 2) ? 1 : -1
+        }
+        CardAnimator.removeAllAnimations(on: self)
+    }
+    
+    override func continueSwiping(recognizer: UIPanGestureRecognizer) {
+        super.continueSwiping(recognizer: recognizer)
+        delegate?.card(didContinueSwipe: self)
+        let translation = panGestureRecognizer.translation(in: self)
+        var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
+        let superviewTranslation = panGestureRecognizer.translation(in: superview)
+        let rotationStrength = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
+        let rotationAngle = max(-CGFloat.pi/2, min(rotationDirectionY * abs(maximumRotationAngle) * rotationStrength, CGFloat.pi/2))
+        transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngle))
+        layer.setAffineTransform(transform)
+        for (direction, overlay) in overlays {
+            overlay.alpha = alphaForOverlay(with: direction)
+        }
+    }
+    
+    private func alphaForOverlay(with direction: SwipeDirection) -> CGFloat {
+        if direction != activeDirection { return 0 }
+        let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
+            return percentage + dragPercentage(on: direction)
+        }
+        return min((2 * dragPercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
+    }
+    
+    override func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {
+        super.didSwipe(recognizer: recognizer, with: direction)
+        swipeAction(direction: direction, animated: true, forced: false)
+    }
+    
+    override func didCancelSwipe(recognizer: UIPanGestureRecognizer) {
+        super.didCancelSwipe(recognizer: recognizer)
+        delegate?.card(didCancelSwipe: self)
+        CardAnimator.reset(card: self) { _ in
+            self.delegate?.card(willCancelSwipe: self)
         }
     }
     
@@ -200,52 +242,5 @@ open class MGSwipeCard: SwipeView {
     private func finishUndo(direction: SwipeDirection) {
         isUserInteractionEnabled = true
         delegate?.card(didUndo: self, from: direction)
-    }
-}
-
-extension MGSwipeCard: SwipeViewDelegate {
-    func didTap(on view: SwipeView) {
-        delegate?.card(didTap: self)
-    }
-    
-    func didBeginSwipe(on view: SwipeView) {
-        delegate?.card(didBeginSwipe: self)
-        if let touchPoint = touchLocation {
-            rotationDirectionY = (touchPoint.y < bounds.height / 2) ? 1 : -1
-        }
-        CardAnimator.removeAllAnimations(on: self)
-    }
-    
-    func didContinueSwipe(on view: SwipeView) {
-        delegate?.card(didContinueSwipe: self)
-        let translation = panGestureRecognizer.translation(in: self)
-        var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
-        let superviewTranslation = panGestureRecognizer.translation(in: superview)
-        let rotationStrength = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
-        let rotationAngle = max(-CGFloat.pi/2, min(rotationDirectionY * abs(maximumRotationAngle) * rotationStrength, CGFloat.pi/2))
-        transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngle))
-        layer.setAffineTransform(transform)
-        for (direction, overlay) in overlays {
-            overlay.alpha = alphaForOverlay(with: direction)
-        }
-    }
-    
-    private func alphaForOverlay(with direction: SwipeDirection) -> CGFloat {
-        if direction != activeDirection { return 0 }
-        let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
-            return percentage + dragPercentage(on: direction)
-        }
-        return min((2 * dragPercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
-    }
-    
-    func didSwipe(on view: SwipeView, with direction: SwipeDirection) {
-        swipeAction(direction: direction, animated: true, forced: false)
-    }
-    
-    func didCancelSwipe(on view: SwipeView) {
-        delegate?.card(didCancelSwipe: self)
-        CardAnimator.reset(card: self) { _ in
-            self.delegate?.card(willCancelSwipe: self)
-        }
     }
 }

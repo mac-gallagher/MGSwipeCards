@@ -643,9 +643,9 @@
 		6D0BB025B72DAC1A6443DE42DF072C3A /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				6A22B632F5745DED710CC04B93B693C0 /* UIViewable.swift */,
 				ADA85D8121EAC3A000178121 /* TestablePanGestureRecognizer.swift */,
 				ADA85D8321EAE8B100178121 /* TestableTapGestureRecognizer.swift */,
+				6A22B632F5745DED710CC04B93B693C0 /* UIViewable.swift */,
 			);
 			name = Helpers;
 			path = MGSwipeCards/Classes/Helpers;
