@@ -21,7 +21,7 @@ class TestablePanGestureRecognizer: UIPanGestureRecognizer {
             return testState ?? super.state
         }
         set {
-            super.state = state
+            super.state = newValue
         }
     }
     
