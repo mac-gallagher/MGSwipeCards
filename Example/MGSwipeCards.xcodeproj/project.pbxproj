@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D1C04672F533CE9EF506BC5 /* Pods_MGSwipeCards_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F034A38384AF7D0F10780FD /* Pods_MGSwipeCards_Tests.framework */; };
 		61F3FA4ABE2F71849B7796BD /* Pods_MGSwipeCards_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD00FB837C1D5D4BC52105CA /* Pods_MGSwipeCards_Example.framework */; };
 		AD1B34E5219D268200260FBE /* SampleCardContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34E4219D268200260FBE /* SampleCardContentView.swift */; };
 		AD1B34E7219D272800260FBE /* SampleCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34E6219D272800260FBE /* SampleCardModel.swift */; };
@@ -14,6 +15,7 @@
 		AD1B34EB219D27BF00260FBE /* SampleCardFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34EA219D27BF00260FBE /* SampleCardFooterView.swift */; };
 		AD1B34ED21A07DCC00260FBE /* ButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B34EC21A07DCC00260FBE /* ButtonStackView.swift */; };
 		AD97B06E21B4529C009C448A /* TinderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD97B06D21B4529C009C448A /* TinderButton.swift */; };
+		ADA85D8021EAA9D400178121 /* SwipeViewSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA85D7721EAA97800178121 /* SwipeViewSpec.swift */; };
 		ADAEDF0220F83A3800172438 /* SampleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAEDF0120F83A3800172438 /* SampleCard.swift */; };
 		ADBB332E20E9D799006A16C4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBB332520E9D799006A16C4 /* ViewController.swift */; };
 		ADBB332F20E9D799006A16C4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */; };
@@ -25,13 +27,28 @@
 		ADBB334020E9DB78006A16C4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = ADBB333D20E9DB78006A16C4 /* README.md */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		ADA85D7A21EAA97800178121 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ADBB32FC20E9D73B006A16C4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ADBB330320E9D73B006A16C4;
+			remoteInfo = MGSwipeCards_Example;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		5F034A38384AF7D0F10780FD /* Pods_MGSwipeCards_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MGSwipeCards_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7279C08BFB533F3CC4237DD1 /* Pods-MGSwipeCards_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGSwipeCards_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MGSwipeCards_Tests/Pods-MGSwipeCards_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		AD1B34E4219D268200260FBE /* SampleCardContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardContentView.swift; sourceTree = "<group>"; };
 		AD1B34E6219D272800260FBE /* SampleCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardModel.swift; sourceTree = "<group>"; };
 		AD1B34E8219D275C00260FBE /* SampleCardOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardOverlay.swift; sourceTree = "<group>"; };
 		AD1B34EA219D27BF00260FBE /* SampleCardFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCardFooterView.swift; sourceTree = "<group>"; };
 		AD1B34EC21A07DCC00260FBE /* ButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStackView.swift; sourceTree = "<group>"; };
 		AD97B06D21B4529C009C448A /* TinderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinderButton.swift; sourceTree = "<group>"; };
+		ADA85D7521EAA97800178121 /* MGSwipeCards_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MGSwipeCards_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADA85D7721EAA97800178121 /* SwipeViewSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeViewSpec.swift; sourceTree = "<group>"; };
+		ADA85D7921EAA97800178121 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ADAEDF0120F83A3800172438 /* SampleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCard.swift; sourceTree = "<group>"; };
 		ADBB330420E9D73B006A16C4 /* MGSwipeCards_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MGSwipeCards_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADBB332520E9D799006A16C4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -45,10 +62,19 @@
 		ADBB333D20E9DB78006A16C4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		CAB467A67ACC85F4D1AB7ED9 /* Pods-MGSwipeCards_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGSwipeCards_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MGSwipeCards_Example/Pods-MGSwipeCards_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		D99357C68CC26763419BB0B8 /* Pods-MGSwipeCards_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGSwipeCards_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-MGSwipeCards_Example/Pods-MGSwipeCards_Example.release.xcconfig"; sourceTree = "<group>"; };
+		F5570AEB2E57465C86936C24 /* Pods-MGSwipeCards_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGSwipeCards_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MGSwipeCards_Tests/Pods-MGSwipeCards_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		FD00FB837C1D5D4BC52105CA /* Pods_MGSwipeCards_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MGSwipeCards_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		ADA85D7221EAA97800178121 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D1C04672F533CE9EF506BC5 /* Pods_MGSwipeCards_Tests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ADBB330120E9D73B006A16C4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -64,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				FD00FB837C1D5D4BC52105CA /* Pods_MGSwipeCards_Example.framework */,
+				5F034A38384AF7D0F10780FD /* Pods_MGSwipeCards_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -73,6 +100,8 @@
 			children = (
 				CAB467A67ACC85F4D1AB7ED9 /* Pods-MGSwipeCards_Example.debug.xcconfig */,
 				D99357C68CC26763419BB0B8 /* Pods-MGSwipeCards_Example.release.xcconfig */,
+				F5570AEB2E57465C86936C24 /* Pods-MGSwipeCards_Tests.debug.xcconfig */,
+				7279C08BFB533F3CC4237DD1 /* Pods-MGSwipeCards_Tests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -115,11 +144,29 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		ADA85D7621EAA97800178121 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				ADA85D7721EAA97800178121 /* SwipeViewSpec.swift */,
+				ADA85D7F21EAA98800178121 /* Supporting Files */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		ADA85D7F21EAA98800178121 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				ADA85D7921EAA97800178121 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		ADBB32FB20E9D73B006A16C4 = {
 			isa = PBXGroup;
 			children = (
 				ADBB333A20E9DB68006A16C4 /* Podspec Metadata */,
 				ADBB332420E9D799006A16C4 /* Example for MGSwipeCards */,
+				ADA85D7621EAA97800178121 /* Tests */,
 				ADBB330520E9D73B006A16C4 /* Products */,
 				A3E3C537B0C9707CDFF47058 /* Pods */,
 				609FDD062A99FCB841E604AF /* Frameworks */,
@@ -130,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				ADBB330420E9D73B006A16C4 /* MGSwipeCards_Example.app */,
+				ADA85D7521EAA97800178121 /* MGSwipeCards_Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,7 +189,6 @@
 				AD97B06F21B45512009C448A /* Controllers */,
 				AD97B06B21B44F7D009C448A /* Extensions */,
 				AD97B06A21B44F73009C448A /* Views */,
-				ADBB333820E9D7FE006A16C4 /* Assets.xcassets */,
 				ADBB333720E9D7D3006A16C4 /* Supporting Files */,
 			);
 			name = "Example for MGSwipeCards";
@@ -151,6 +198,7 @@
 		ADBB333720E9D7D3006A16C4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				ADBB333820E9D7FE006A16C4 /* Assets.xcassets */,
 				ADBB332620E9D799006A16C4 /* LaunchScreen.storyboard */,
 				ADBB332D20E9D799006A16C4 /* Info.plist */,
 			);
@@ -170,6 +218,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		ADA85D7421EAA97800178121 /* MGSwipeCards_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ADA85D7E21EAA97800178121 /* Build configuration list for PBXNativeTarget "MGSwipeCards_Tests" */;
+			buildPhases = (
+				6CB99416A8F9C1921AF8C114 /* [CP] Check Pods Manifest.lock */,
+				ADA85D7121EAA97800178121 /* Sources */,
+				ADA85D7221EAA97800178121 /* Frameworks */,
+				ADA85D7321EAA97800178121 /* Resources */,
+				D630A9866EEC22BC92E6E702 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ADA85D7B21EAA97800178121 /* PBXTargetDependency */,
+			);
+			name = MGSwipeCards_Tests;
+			productName = MGSwipeCards_Tests;
+			productReference = ADA85D7521EAA97800178121 /* MGSwipeCards_Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		ADBB330320E9D73B006A16C4 /* MGSwipeCards_Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = ADBB331620E9D73C006A16C4 /* Build configuration list for PBXNativeTarget "MGSwipeCards_Example" */;
@@ -195,10 +263,14 @@
 		ADBB32FC20E9D73B006A16C4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0940;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Mac Gallagher";
 				TargetAttributes = {
+					ADA85D7421EAA97800178121 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = ADBB330320E9D73B006A16C4;
+					};
 					ADBB330320E9D73B006A16C4 = {
 						CreatedOnToolsVersion = 9.4.1;
 						LastSwiftMigration = 1000;
@@ -219,11 +291,19 @@
 			projectRoot = "";
 			targets = (
 				ADBB330320E9D73B006A16C4 /* MGSwipeCards_Example */,
+				ADA85D7421EAA97800178121 /* MGSwipeCards_Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		ADA85D7321EAA97800178121 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ADBB330220E9D73B006A16C4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -257,6 +337,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		6CB99416A8F9C1921AF8C114 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MGSwipeCards_Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		CC9D29A8C069DF52A243F40E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -279,9 +377,41 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MGSwipeCards_Example/Pods-MGSwipeCards_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D630A9866EEC22BC92E6E702 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MGSwipeCards_Tests/Pods-MGSwipeCards_Tests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/MGSwipeCards/MGSwipeCards.framework",
+				"${BUILT_PRODUCTS_DIR}/pop/pop.framework",
+				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
+				"${BUILT_PRODUCTS_DIR}/Quick/Quick.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MGSwipeCards.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/pop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MGSwipeCards_Tests/Pods-MGSwipeCards_Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		ADA85D7121EAA97800178121 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ADA85D8021EAA9D400178121 /* SwipeViewSpec.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ADBB330020E9D73B006A16C4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -301,7 +431,62 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		ADA85D7B21EAA97800178121 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ADBB330320E9D73B006A16C4 /* MGSwipeCards_Example */;
+			targetProxy = ADA85D7A21EAA97800178121 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		ADA85D7C21EAA97800178121 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5570AEB2E57465C86936C24 /* Pods-MGSwipeCards_Tests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DYZ8Y2U8DB;
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.macgallagher.MGSwipeCards-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MGSwipeCards_Example.app/MGSwipeCards_Example";
+			};
+			name = Debug;
+		};
+		ADA85D7D21EAA97800178121 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7279C08BFB533F3CC4237DD1 /* Pods-MGSwipeCards_Tests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DYZ8Y2U8DB;
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.macgallagher.MGSwipeCards-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MGSwipeCards_Example.app/MGSwipeCards_Example";
+			};
+			name = Release;
+		};
 		ADBB331420E9D73C006A16C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -459,6 +644,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		ADA85D7E21EAA97800178121 /* Build configuration list for PBXNativeTarget "MGSwipeCards_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ADA85D7C21EAA97800178121 /* Debug */,
+				ADA85D7D21EAA97800178121 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		ADBB32FF20E9D73B006A16C4 /* Build configuration list for PBXProject "MGSwipeCards" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

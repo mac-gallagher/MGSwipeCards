@@ -1,6 +1,18 @@
 use_frameworks!
 
+platform :ios, '9.0'
+
+workspace 'MGSwipeCards'
+
 target 'MGSwipeCards_Example' do
     pod 'MGSwipeCards', :path => '../'
     pod 'PopBounceButton'
+end
+
+target 'MGSwipeCards_Tests' do
+    pod 'MGSwipeCards', :path => '../'
+    pod 'Quick'
+    pod 'Nimble'
+    
+    inherit! :search_paths
 end

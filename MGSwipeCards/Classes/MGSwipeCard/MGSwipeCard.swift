@@ -32,7 +32,7 @@ extension MGSwipeCardDelegate {
 /**
  A wrapper around `MGDraggableSwipeView` which provides UI customization and swipe animations.
  */
-open class MGSwipeCard: SwipeableView {
+open class MGSwipeCard: SwipeView {
     public var animationOptions: CardAnimationOptions = .defaultOptions
     
     /// The maximum rotation angle of the card. Measured in radians. Defined as a value in the range [0, `CGFloat.pi`/2]. Defaults to `CGFloat.pi`/10.
@@ -201,21 +201,33 @@ open class MGSwipeCard: SwipeableView {
     
     //MARK: MGDraggableSwipeView Overrides
     
-    override func didTap(on view: SwipeableView) {
-        delegate?.card(didTap: self)
-    }
+    private var rotationDirectionY: CGFloat = 1
     
-    override func didBeginSwipe(on view: SwipeableView) {
-        delegate?.card(didBeginSwipe: self)
-        CardAnimator.removeAllAnimations(on: self)
-    }
+//    override func didTap(on view: SwipeView) {
+//        delegate?.card(didTap: self)
+//    }
     
-    override func didContinueSwipe(on view: SwipeableView) {
-        delegate?.card(didContinueSwipe: self)
-        for (direction, overlay) in overlays {
-            overlay.alpha = alphaForOverlay(with: direction)
-        }
-    }
+//    override func didBeginSwipe(on view: SwipeView) {
+//        delegate?.card(didBeginSwipe: self)
+//        if let touchPoint = touchLocation {
+//            rotationDirectionY = (touchPoint.y < bounds.height / 2) ? 1 : -1
+//        }
+//        CardAnimator.removeAllAnimations(on: self)
+//    }
+    
+//    override func didContinueSwipe(on view: SwipeView) {
+//        delegate?.card(didContinueSwipe: self)
+////        let translation = recognizer.translation(in: self)
+////        var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
+////        let superviewTranslation = recognizer.translation(in: superview)
+////        let rotationStrength = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
+////        let rotationAngle = max(-CGFloat.pi/2, min(rotationDirectionY * abs(maximumRotationAngle) * rotationStrength, CGFloat.pi/2))
+////        transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngle))
+////        layer.setAffineTransform(transform)
+//        for (direction, overlay) in overlays {
+//            overlay.alpha = alphaForOverlay(with: direction)
+//        }
+//    }
     
     private func alphaForOverlay(with direction: SwipeDirection) -> CGFloat {
         if direction != activeDirection { return 0 }
@@ -225,14 +237,14 @@ open class MGSwipeCard: SwipeableView {
         return min((2 * dragPercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
     }
     
-    override func didSwipe(on view: SwipeableView, with direction: SwipeDirection) {
-        swipeAction(direction: direction, animated: true, forced: false)
-    }
-    
-    override func didCancelSwipe(on view: SwipeableView) {
-        delegate?.card(didCancelSwipe: self)
-        CardAnimator.reset(card: self) { _ in
-            self.delegate?.card(willCancelSwipe: self)
-        }
-    }
+//    override func didSwipe(on view: SwipeView, with direction: SwipeDirection) {
+//        swipeAction(direction: direction, animated: true, forced: false)
+//    }
+//
+//    override func didCancelSwipe(on view: SwipeView) {
+//        delegate?.card(didCancelSwipe: self)
+//        CardAnimator.reset(card: self) { _ in
+//            self.delegate?.card(willCancelSwipe: self)
+//        }
+//    }
 }
