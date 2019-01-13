@@ -26,17 +26,17 @@ open class SwipeView: UIViewable {
     
     /// The pan gesture recognizer attached to the view.
     public var panGestureRecognizer: UIPanGestureRecognizer {
-        return panRecognizer
+        return panRecognizer as UIPanGestureRecognizer
     }
     
-    private lazy var panRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+    private lazy var panRecognizer: TestablePanGestureRecognizer = TestablePanGestureRecognizer(target: self, action: #selector(handlePan))
     
     /// The tap gesture recognizer attached to the view.
     public var tapGestureRecognizer: UITapGestureRecognizer {
-        return tapRecognizer
+        return tapRecognizer as UITapGestureRecognizer
     }
     
-    private lazy var tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+    private lazy var tapRecognizer: TestableTapGestureRecognizer = TestableTapGestureRecognizer(target: self, action: #selector(handleTap))
     
     /// The location of the most recent `touchDown` event relative to the view's bounds.
     public var touchLocation: CGPoint? {
@@ -80,6 +80,7 @@ open class SwipeView: UIViewable {
     }
     
     @objc private func handleTap(_ recognizer: UITapGestureRecognizer) {
+        touchPoint = recognizer.location(in: self)
         swipeViewDelegate?.didTap(on: self)
     }
     
