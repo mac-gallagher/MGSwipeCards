@@ -33,7 +33,7 @@ public extension MGCardStackViewDelegate {
 
 //MARK: - MGCardStackView
 
-open class MGCardStackView: UIViewable {
+open class MGCardStackView: UIView {
     /// The maximum number of cards to be displayed on screen.
     public var numberOfVisibleCards: Int = 2
     
@@ -62,7 +62,17 @@ open class MGCardStackView: UIViewable {
     
     //MARK: - Initialization
     
-    override open func initialize() {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        initialize()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        initialize()
+    }
+    
+    private func initialize() {
         addSubview(cardContainer)
     }
     
@@ -115,7 +125,7 @@ open class MGCardStackView: UIViewable {
         if !isUserInteractionEnabled { return }
         delegate?.cardStack(self, didUndoCardAt: lastSwipe.index, from: lastSwipe.direction)
         loadState(currentState.previousState!)
-        topCard?.undoSwipe(from: lastSwipe.direction, animated: animated)
+        topCard?.reverseSwipe(from: lastSwipe.direction, animated: animated)
     }
     
     public func shift(withDistance distance: Int = 1, animated: Bool) {

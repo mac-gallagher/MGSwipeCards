@@ -8,7 +8,7 @@
 //MARK: - MGSwipeCardDelegate
 
 extension MGCardStackView: MGSwipeCardDelegate {
-    func card(didTap card: MGSwipeCard) {
+    public func card(didTap card: MGSwipeCard) {
         delegate?.cardStack(self, didSelectCardAt: topCardIndex)
         let location = card.tapGestureRecognizer.location(in: card.superview)
         let topCorner: UIRectCorner
@@ -20,9 +20,9 @@ extension MGCardStackView: MGSwipeCardDelegate {
         delegate?.cardStack(self, didSelectCardAt: topCardIndex, tapCorner: topCorner)
     }
     
-    func card(didBeginSwipe card: MGSwipeCard) {}
+    public func card(didBeginSwipe card: MGSwipeCard) {}
     
-    func card(didContinueSwipe card: MGSwipeCard) {
+    public func card(didContinueSwipe card: MGSwipeCard) {
         if visibleCards.count <= 1 { return }
         
         let panTranslation = card.panGestureRecognizer.translation(in: superview)
@@ -37,7 +37,7 @@ extension MGCardStackView: MGSwipeCardDelegate {
         }
     }
     
-    func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, animated: Bool, forced: Bool) {
+    public func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, animated: Bool, forced: Bool) {
         delegate?.cardStack(self, didSwipeCardAt: topCardIndex, with: direction)
         isUserInteractionEnabled = false
         
@@ -74,16 +74,16 @@ extension MGCardStackView: MGSwipeCardDelegate {
         }
     }
     
-    func card(willUndo card: MGSwipeCard, from direction: SwipeDirection) {
+    public func card(willUndo card: MGSwipeCard, from direction: SwipeDirection) {
         isUserInteractionEnabled = false
         BackgroundCardAnimator.undo(cardStack: self, completion: nil)
     }
     
-    func card(didUndo card: MGSwipeCard, from direction: SwipeDirection) {
+    public func card(didUndo card: MGSwipeCard, from direction: SwipeDirection) {
         isUserInteractionEnabled = true
     }
     
-    func card(didCancelSwipe card: MGSwipeCard) {
+    public func card(didCancelSwipe card: MGSwipeCard) {
         BackgroundCardAnimator.cancelSwipe(cardStack: self, completion: nil)
     }
 }

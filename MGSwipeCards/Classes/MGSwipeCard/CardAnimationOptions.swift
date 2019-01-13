@@ -5,8 +5,11 @@
 //  Created by Mac Gallagher on 11/2/18.
 //
 
-public class CardAnimationOptions: NSObject {
+public class CardAnimationOptions {
     public static var defaultOptions = CardAnimationOptions()
+    
+    /// The maximum rotation angle of the card. Measured in radians. Defined as a value in the range [0, `CGFloat.pi`/2]. Defaults to `CGFloat.pi`/10.
+    public var maximumRotationAngle: CGFloat = CGFloat.pi / 10
     
     /// The duration of the animated swipe translation. Measured in seconds. Defaults to 0.6.
     public var cardSwipeAnimationDuration: TimeInterval = 0.6

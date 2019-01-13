@@ -8,12 +8,21 @@
 import pop
 
 protocol CardAnimatable {
-    
+    func swipe(direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?)
+    func reverseSwipe(from direction: SwipeDirection, completion: ((Bool) -> ())?)
+    func reset(completion: ((Bool) -> ())?)
+    func removeAllAnimations()
 }
 
 class CardAnimator: CardAnimatable {
-    static func swipe(card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
-        CardAnimator.removeAllAnimations(on: card)
+    private let card: MGSwipeCard
+    
+    init(card: MGSwipeCard) {
+        self.card = card
+    }
+    
+    func swipe(direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
+        removeAllAnimations()
         
         for (swipeDirection, overlay) in card.overlays {
             if swipeDirection != direction {
@@ -33,8 +42,8 @@ class CardAnimator: CardAnimatable {
         }
     }
     
-    static func reset(card: MGSwipeCard, completion: ((Bool) -> ())?) {
-        CardAnimator.removeAllAnimations(on: card)
+    func reset(completion: ((Bool) -> ())?) {
+        removeAllAnimations()
         
         for (direction, overlay) in card.overlays {
             if direction != card.activeDirection {
@@ -54,8 +63,8 @@ class CardAnimator: CardAnimatable {
         }
     }
     
-    static func undo(card: MGSwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?) {
-        removeAllAnimations(on: card)
+    func reverseSwipe(from direction: SwipeDirection, completion: ((Bool) -> ())?) {
+        removeAllAnimations()
         
         //recreate swipe
         card.transform = CardAnimator.swipeTransform(forCard: card, forDirection: direction, forced: true)
@@ -77,7 +86,7 @@ class CardAnimator: CardAnimatable {
         }
     }
     
-    static func removeAllAnimations(on card: MGSwipeCard) {
+    func removeAllAnimations() {
         card.pop_removeAllAnimations()
         card.layer.pop_removeAllAnimations()
         
@@ -110,15 +119,15 @@ class CardAnimator: CardAnimatable {
         if direction == .up || direction == .down { return 0 }
         if forced {
             if direction == .left {
-                return -2 * card.maximumRotationAngle
+                return -2 * card.animationOptions.maximumRotationAngle
             } else {
-                return 2 * card.maximumRotationAngle
+                return 2 * card.animationOptions.maximumRotationAngle
             }
         }
         let touchPoint = card.touchLocation ?? .zero
         if (direction == .left && touchPoint.y < card.bounds.height / 2) || (direction == .right && touchPoint.y >= card.bounds.height / 2) {
-            return -2 * card.maximumRotationAngle
+            return -2 * card.animationOptions.maximumRotationAngle
         }
-        return 2 * card.maximumRotationAngle
+        return 2 * card.animationOptions.maximumRotationAngle
     }
 }

@@ -74,9 +74,10 @@ class BackgroundCardAnimator {
         }
     }
     
+    
     static func removeAllAnimations(cardStack: MGCardStackView) {
-        for i in 1..<cardStack.visibleCards.count {
-            CardAnimator.removeAllAnimations(on: cardStack.visibleCards[i])
-        }
+//        for i in 1..<cardStack.visibleCards.count {
+//            cardStack.visibleCards[i].animator.removeAllAnimations(on: cardStack.visibleCards[i])
+//        }
     }
 }

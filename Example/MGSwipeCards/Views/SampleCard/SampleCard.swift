@@ -26,9 +26,9 @@ class SampleCard: MGSwipeCard {
         isFooterTransparent = true
         footerHeight = 80
     
-        leftOverlay = SampleCardOverlay.left()
-        rightOverlay = SampleCardOverlay.right()
-        upOverlay = SampleCardOverlay.up()
+        setOverlay(SampleCardOverlay.left(), forDirection: .left)
+        setOverlay(SampleCardOverlay.right(), forDirection: .right)
+        setOverlay(SampleCardOverlay.up(), forDirection: .up)
     }
     
     private func configure(model: SampleCardModel) {

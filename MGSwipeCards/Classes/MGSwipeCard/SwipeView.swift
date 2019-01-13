@@ -6,7 +6,7 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-open class SwipeView: UIViewable {
+open class SwipeView: UIView {
     /// The swipe directions to be recognized by the view
     public var swipeDirections: [SwipeDirection] = SwipeDirection.allDirections
     
@@ -36,7 +36,7 @@ open class SwipeView: UIViewable {
     }
     
     private var touchPoint: CGPoint?
-
+    
     public var activeDirection: SwipeDirection? {
         return swipeDirections.reduce((highestPercentage: 0, activeDirection: nil), { (lastResult, direction) -> (CGFloat, SwipeDirection?) in
             let swipePercent = dragPercentage(on: direction)
@@ -47,7 +47,17 @@ open class SwipeView: UIViewable {
         }).activeDirection
     }
     
-    override func initialize() {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        initialize()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        initialize()
+    }
+    
+    private func initialize() {
         addGestureRecognizer(panRecognizer)
         addGestureRecognizer(tapRecognizer)
     }
@@ -87,27 +97,25 @@ open class SwipeView: UIViewable {
         }
     }
     
-    func didTap(recognizer: UITapGestureRecognizer) {}
+    open func didTap(recognizer: UITapGestureRecognizer) {}
     
-    func beginSwiping(recognizer: UIPanGestureRecognizer) {
+    open func beginSwiping(recognizer: UIPanGestureRecognizer) {
         touchPoint = recognizer.location(in: self)
     }
     
-    func continueSwiping(recognizer: UIPanGestureRecognizer) {}
+    open func continueSwiping(recognizer: UIPanGestureRecognizer) {}
     
-    func endSwiping(recognizer: UIPanGestureRecognizer) {
+    open func endSwiping(recognizer: UIPanGestureRecognizer) {
         if let direction = activeDirection {
             if dragSpeed(on: direction) >= minimumSwipeSpeed || dragPercentage(on: direction) >= minimumSwipeMargin {
                 didSwipe(recognizer: recognizer, with: direction)
-            } else {
-                didCancelSwipe(recognizer: recognizer)
+                return
             }
-        } else {
-            didCancelSwipe(recognizer: recognizer)
         }
+        didCancelSwipe(recognizer: recognizer)
     }
     
-    func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {}
+    open func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {}
     
-    func didCancelSwipe(recognizer: UIPanGestureRecognizer) {}
+    open func didCancelSwipe(recognizer: UIPanGestureRecognizer) {}
 }

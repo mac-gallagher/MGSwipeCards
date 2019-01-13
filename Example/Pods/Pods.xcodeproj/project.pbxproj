@@ -35,7 +35,6 @@
 		1B1A26FD4363A19DEFED48BF5E5341BE /* NMBExceptionCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A9FA1565A85FBA9ED126C077915EDDE /* NMBExceptionCapture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CFDB94DFF57F98BA7A40829DDB3CFC0 /* CwlPreconditionTesting.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF854E21CFC1A9269DF1F3C96C6CD05 /* CwlPreconditionTesting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1D230EC73A17C8494F279447636B6D51 /* Nimble.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE6C3A83CAB2E0701A8DE5DE0C6FF0D /* Nimble.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1E9ECE5404CA7FEAC0FC8F6A86105F66 /* UIViewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A22B632F5745DED710CC04B93B693C0 /* UIViewable.swift */; };
 		1F5C53F2B0F0BB02D1ACCE61A8AF41BA /* MGSwipeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BCB664AE4E96ED6571DB823298322B /* MGSwipeCard.swift */; };
 		200C2A4B1449068026723DFCDBCF8C01 /* ExampleMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DCB3492978B2059F760DA304B15BF4 /* ExampleMetadata.swift */; };
 		21E31D074763E0BE755199377ADDB09A /* pop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12275F3C9EA534AAA9AEE0CF6019AF64 /* pop.framework */; };
@@ -354,7 +353,6 @@
 		68E5DF86A1E1445F46A198785624E211 /* BeLessThanOrEqual.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BeLessThanOrEqual.swift; path = Sources/Nimble/Matchers/BeLessThanOrEqual.swift; sourceTree = "<group>"; };
 		6915B5BFB74B94A5B09399C1C6EA93A7 /* Nimble-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Nimble-dummy.m"; sourceTree = "<group>"; };
 		69C18151FE1728CC2A70075B16461634 /* POPSpringSolver.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = POPSpringSolver.h; path = pop/POPSpringSolver.h; sourceTree = "<group>"; };
-		6A22B632F5745DED710CC04B93B693C0 /* UIViewable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIViewable.swift; sourceTree = "<group>"; };
 		6A3DB3DD7D6588FEF1C9559DFF20BBBD /* POPGeometry.mm */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.objcpp; name = POPGeometry.mm; path = pop/POPGeometry.mm; sourceTree = "<group>"; };
 		6A80CB51F1BFB5F3E2A896F55D06F7FF /* POPAnimationExtras.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = POPAnimationExtras.h; path = pop/POPAnimationExtras.h; sourceTree = "<group>"; };
 		6B1F2F5096E8584E23DB279E4FAB959A /* QuickConfiguration.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = QuickConfiguration.m; path = Sources/QuickObjectiveC/Configuration/QuickConfiguration.m; sourceTree = "<group>"; };
@@ -645,7 +643,6 @@
 			children = (
 				ADA85D8121EAC3A000178121 /* TestablePanGestureRecognizer.swift */,
 				ADA85D8321EAE8B100178121 /* TestableTapGestureRecognizer.swift */,
-				6A22B632F5745DED710CC04B93B693C0 /* UIViewable.swift */,
 			);
 			name = Helpers;
 			path = MGSwipeCards/Classes/Helpers;
@@ -1292,7 +1289,6 @@
 				38DA82C67C8C675A88BF76E8B7376CBE /* PopAnimator+Extensions.swift in Sources */,
 				E5AB30FA7A4500A21C64C8C980B6F482 /* SwipeDirection.swift in Sources */,
 				B0C52CE94E89AA6C56675C332E239367 /* SwipeView.swift in Sources */,
-				1E9ECE5404CA7FEAC0FC8F6A86105F66 /* UIViewable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

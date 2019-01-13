@@ -1,5 +1,5 @@
 //
-//  MGSwipeCards_Tests.swift
+//  SwipeViewSpec.swift
 //  MGSwipeCards_Tests
 //
 //  Created by Mac Gallagher on 1/12/19.
@@ -14,7 +14,7 @@ import Nimble
 class SwipeViewSpec: QuickSpec {
     override func spec() {
         describe("initialization") {
-            describe("when initializing a new swipe view") {
+            context("when initializing a new swipe view") {
                 var swipeView: SwipeView!
                 
                 beforeEach {
@@ -60,7 +60,7 @@ class SwipeViewSpec: QuickSpec {
                 testTapGestureRecognizer = swipeView.tapGestureRecognizer as? TestableTapGestureRecognizer
             }
             
-            describe("when a tap gesture is recognized") {
+            context("when a tap gesture is recognized") {
                 let touchPoint = CGPoint(x: 50, y: 50)
                 
                 beforeEach {
@@ -86,7 +86,7 @@ class SwipeViewSpec: QuickSpec {
                 testPanGestureRecognizer = swipeView.panGestureRecognizer as? TestablePanGestureRecognizer
             }
             
-            describe("when pan gesture begin is recognized") {
+            context("when pan gesture begin is recognized") {
                 let touchPoint = CGPoint(x: 50, y: 50)
                 
                 beforeEach {
@@ -102,7 +102,7 @@ class SwipeViewSpec: QuickSpec {
                 }
             }
             
-            describe("when pan gesture change is recognized") {
+            context("when pan gesture change is recognized") {
                 beforeEach {
                     testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: .changed)
                 }
@@ -130,7 +130,21 @@ class SwipeViewSpec: QuickSpec {
             }
             
             for direction in swipeDirections {
-                describe("when a pan gesture ended with a translation less than the minimum swipe margin") {
+                context("when a pan gesture ended with no active direction") {
+                    beforeEach {
+                        testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: .ended)
+                    }
+                    
+                    it("should not call the didSwipe delegate method") {
+                        expect(swipeView.didSwipeCalled).to(beFalse())
+                    }
+                    
+                    it("should call the didCancelSwipe delegate method") {
+                        expect(swipeView.didCancelSwipeCalled).to(beTrue())
+                    }
+                }
+                
+                context("when a pan gesture ended with a translation less than the minimum swipe margin") {
                     let translationX: CGFloat = minimumSwipeMargin * (UIScreen.main.bounds.width / 2) - 1
                     let translationY: CGFloat = minimumSwipeMargin * (UIScreen.main.bounds.height / 2) - 1
                     
@@ -148,7 +162,7 @@ class SwipeViewSpec: QuickSpec {
                     }
                 }
                 
-                describe("when a pan gesture ended with a translation greater than or equal to the minimum swipe margin") {
+                context("when a pan gesture ended with a translation greater than or equal to the minimum swipe margin") {
                     let translationX: CGFloat = minimumSwipeMargin * (UIScreen.main.bounds.width / 2)
                     let translationY: CGFloat = minimumSwipeMargin * (UIScreen.main.bounds.height / 2)
                     
@@ -167,7 +181,7 @@ class SwipeViewSpec: QuickSpec {
                     }
                 }
                 
-                describe("when a pan gesture ended with a speed less than the minimum swipe speed") {
+                context("when a pan gesture ended with a speed less than the minimum swipe speed") {
                     beforeEach {
                         let velocity: CGPoint = CGPoint(x: direction.point.x * (minimumSwipeSpeed - 1), y: direction.point.x * (minimumSwipeSpeed - 1))
                         testPanGestureRecognizer.performPan(withLocation: nil, translation: direction.point, velocity: velocity, state: .ended)
@@ -182,7 +196,7 @@ class SwipeViewSpec: QuickSpec {
                     }
                 }
                 
-                describe("when a pan gesture ended with a speed greater than or equal to the minimum swipe speed") {
+                context("when a pan gesture ended with a speed greater than or equal to the minimum swipe speed") {
                     beforeEach {
                         let velocity: CGPoint = CGPoint(x: direction.point.x * minimumSwipeSpeed, y: direction.point.y * minimumSwipeSpeed)
                         testPanGestureRecognizer.performPan(withLocation: nil, translation: direction.point, velocity: velocity, state: .ended)
@@ -202,46 +216,12 @@ class SwipeViewSpec: QuickSpec {
     }
 }
 
+//MARK: - Setup
+
 extension SwipeViewSpec {
     func setupSwipeView(configure: (MockSwipeView) -> Void = { _ in } ) -> MockSwipeView {
         let swipeView = MockSwipeView()
         configure(swipeView)
         return swipeView
-    }
-}
-
-extension SwipeViewSpec {
-    class MockSwipeView: SwipeView {
-        var didTapCalled: Bool = false
-        override func didTap(recognizer: UITapGestureRecognizer) {
-            super.didTap(recognizer: recognizer)
-            didTapCalled = true
-        }
-        
-        var beginSwipingCalled: Bool = false
-        override func beginSwiping(recognizer: UIPanGestureRecognizer) {
-            super.beginSwiping(recognizer: recognizer)
-            beginSwipingCalled = true
-        }
-        
-        var didContinueSwipingCalled: Bool = false
-        override func continueSwiping(recognizer: UIPanGestureRecognizer) {
-            super.continueSwiping(recognizer: recognizer)
-            didContinueSwipingCalled = true
-        }
-        
-        var didSwipeCalled: Bool = false
-        var swipeDirection: SwipeDirection?
-        override func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {
-            super.didSwipe(recognizer: recognizer, with: direction)
-            didSwipeCalled = true
-            swipeDirection = direction
-        }
-        
-        var didCancelSwipeCalled: Bool = false
-        override func didCancelSwipe(recognizer: UIPanGestureRecognizer) {
-            super.didCancelSwipe(recognizer: recognizer)
-            didCancelSwipeCalled = true
-        }
     }
 }
