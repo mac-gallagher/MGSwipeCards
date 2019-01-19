@@ -52,11 +52,4 @@ class TestablePanGestureRecognizer: UIPanGestureRecognizer {
             testTarget?.performSelector(onMainThread: action, with: self, waitUntilDone: true)
         }
     }
-    
-    override func reset() {
-        testLocation = nil
-        testState = nil
-        testVelocity = nil
-        testTranslation = nil
-    }
 }

@@ -140,8 +140,6 @@
 		AA19111AEBD6CEB244FC81BE9C15FBE8 /* BeginWith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E93DD211BEE66C2E9D76049DC7768A /* BeginWith.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		AAB5290754D9060D86FB2C89DD7ADCC3 /* NMBExpectation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F77E0BB74A05222B53DD784C26021A /* NMBExpectation.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		AD9237A26CBAD9142BAF2EA15C9198D8 /* CardAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F93A770504D3956F45BC73E186F7DA /* CardAnimator.swift */; };
-		ADA85D8221EAC3A000178121 /* TestablePanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA85D8121EAC3A000178121 /* TestablePanGestureRecognizer.swift */; };
-		ADA85D8421EAE8B100178121 /* TestableTapGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA85D8321EAE8B100178121 /* TestableTapGestureRecognizer.swift */; };
 		AF3691ABC1385EF83DA7FE9EF2F94F40 /* Equal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 837B382AB2877B1088AD09CB0BFAAFE9 /* Equal.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		AF9039E831F79079BA4FA390EDCE177E /* TransformationMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CDAE72AB83AD9FF1A1CEBF379D0D4D6 /* TransformationMatrix.cpp */; };
 		B0626BE066760E1E9DA7735266F8CA46 /* QCKDSL.h in Headers */ = {isa = PBXBuildFile; fileRef = 180B878A953A8FB8F6051D2BB9EC7D09 /* QCKDSL.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -419,8 +417,6 @@
 		A9F93A770504D3956F45BC73E186F7DA /* CardAnimator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CardAnimator.swift; sourceTree = "<group>"; };
 		AC80342B280EDF52DA2264703D80212E /* POPAction.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = POPAction.h; path = pop/POPAction.h; sourceTree = "<group>"; };
 		AD0277AAF244264BECC961F42FE221CA /* NimbleXCTestHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NimbleXCTestHandler.swift; path = Sources/Nimble/Adapters/NimbleXCTestHandler.swift; sourceTree = "<group>"; };
-		ADA85D8121EAC3A000178121 /* TestablePanGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestablePanGestureRecognizer.swift; sourceTree = "<group>"; };
-		ADA85D8321EAE8B100178121 /* TestableTapGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableTapGestureRecognizer.swift; sourceTree = "<group>"; };
 		AEE6C3A83CAB2E0701A8DE5DE0C6FF0D /* Nimble.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Nimble.h; path = Sources/Nimble/Nimble.h; sourceTree = "<group>"; };
 		AEF7782797EFB7A5FF50FAE6EB76EC9D /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		AF308B9F1ED90701752D72361AFC5BF9 /* MGSwipeCards-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MGSwipeCards-umbrella.h"; sourceTree = "<group>"; };
@@ -638,16 +634,6 @@
 			name = Pod;
 			sourceTree = "<group>";
 		};
-		6D0BB025B72DAC1A6443DE42DF072C3A /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				ADA85D8121EAC3A000178121 /* TestablePanGestureRecognizer.swift */,
-				ADA85D8321EAE8B100178121 /* TestableTapGestureRecognizer.swift */,
-			);
-			name = Helpers;
-			path = MGSwipeCards/Classes/Helpers;
-			sourceTree = "<group>";
-		};
 		6F88E52C8E9CE8D04B7563882045299A /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -740,7 +726,6 @@
 			isa = PBXGroup;
 			children = (
 				D14870D949892600FA4548D8DD21B30E /* Extensions */,
-				6D0BB025B72DAC1A6443DE42DF072C3A /* Helpers */,
 				DC3607FB1E0B60FB75F981BE8CA1B699 /* MGCardStackView */,
 				D81E5DD947FAC56EE70467F898F3572B /* MGSwipeCard */,
 				43B4D3D7E692BDEF2093895A16BE745C /* Pod */,
@@ -1274,14 +1259,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				07B1F8C232FA37857EC2BBA3C23AD263 /* Array+Extensions.swift in Sources */,
-				ADA85D8421EAE8B100178121 /* TestableTapGestureRecognizer.swift in Sources */,
 				9398B4D4DA0B3DB832CA0D4F75F9A833 /* BackgroundCardAnimator.swift in Sources */,
 				0989F29A3A6D360557974673CEB8B8BE /* CardAnimationOptions.swift in Sources */,
 				AD9237A26CBAD9142BAF2EA15C9198D8 /* CardAnimator.swift in Sources */,
 				C3E9309DA58975EE39A737292BFA8FEA /* CardStackState.swift in Sources */,
 				8FD3A905A9625E9365B62460496ED75B /* CGAffineTransform+Extensions.swift in Sources */,
 				BCF93B3A6324ED29EF888AD26D8FB8DC /* CGPoint+Extensions.swift in Sources */,
-				ADA85D8221EAC3A000178121 /* TestablePanGestureRecognizer.swift in Sources */,
 				DF6F400CB5A9C651AC67642F644448BD /* MGCardStackView+MGSwipeCardDelegate.swift in Sources */,
 				8AFA5971DF194E08C7D86AA5F6E696D7 /* MGCardStackView.swift in Sources */,
 				1F5C53F2B0F0BB02D1ACCE61A8AF41BA /* MGSwipeCard.swift in Sources */,

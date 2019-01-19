@@ -29,8 +29,4 @@ class TestableTapGestureRecognizer: UITapGestureRecognizer {
             testTarget?.performSelector(onMainThread: action, with: self, waitUntilDone: true)
         }
     }
-    
-    override func reset() {
-        testLocation = nil
-    }
 }

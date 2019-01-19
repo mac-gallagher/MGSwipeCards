@@ -6,9 +6,21 @@
 //  Copyright © 2019 Mac Gallagher. All rights reserved.
 //
 
-import MGSwipeCards
+@testable import MGSwipeCards
 
-class MockSwipeView: SwipeView {
+class TestableSwipeView: SwipeView {
+    override var panGestureRecognizer: UIPanGestureRecognizer {
+        return panRecognizer
+    }
+    
+    private lazy var panRecognizer = TestablePanGestureRecognizer(target: self, action: #selector(handlePan))
+    
+    override var tapGestureRecognizer: UITapGestureRecognizer {
+        return tapRecognizer
+    }
+    
+    private lazy var tapRecognizer = TestableTapGestureRecognizer(target: self, action: #selector(handleTap))
+    
     var didTapCalled: Bool = false
     override func didTap(recognizer: UITapGestureRecognizer) {
         super.didTap(recognizer: recognizer)

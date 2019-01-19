@@ -15,15 +15,6 @@ public protocol MGSwipeCardDelegate {
     func card(didReverseSwipe card: MGSwipeCard, from direction: SwipeDirection)
 }
 
-public extension MGSwipeCardDelegate {
-    func card(didTap card: MGSwipeCard) {}
-    func card(didBeginSwipe card: MGSwipeCard) {}
-    func card(didContinueSwipe card: MGSwipeCard) {}
-    func card(didCancelSwipe card: MGSwipeCard) {}
-    func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {}
-    func card(didReverseSwipe card: MGSwipeCard, from direction: SwipeDirection) {}
-}
-
 /**
  A wrapper around `SwipeView` which provides UI customization and animations.
  */
@@ -148,10 +139,6 @@ open class MGSwipeCard: SwipeView {
         }
     }
     
-    func toggleUserInteraction(_ isEnabled: Bool) {
-        isUserInteractionEnabled = isEnabled
-    }
-    
     //MARK: - Overrides
     
     override open func didTap(recognizer: UITapGestureRecognizer) {
@@ -168,26 +155,34 @@ open class MGSwipeCard: SwipeView {
     override open func continueSwiping(recognizer: UIPanGestureRecognizer) {
         super.continueSwiping(recognizer: recognizer)
         delegate?.card(didContinueSwipe: self)
-        let translation = panGestureRecognizer.translation(in: self)
-        var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
-        let superviewTranslation = panGestureRecognizer.translation(in: superview)
-        let rotationStrength = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
-        let rotationAngle = max(-CGFloat.pi/2, min(rotationDirectionY * abs(animationOptions.maximumRotationAngle) * rotationStrength, CGFloat.pi/2))
-        transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngle))
-        layer.setAffineTransform(transform)
+        
+        layer.setAffineTransform(transformForCard())
+        
         for (direction, overlay) in overlays {
-            overlay.alpha = alphaForOverlay(with: direction)
+            overlay.alpha = overlayPercentage(forDirection: direction)
         }
     }
     
-    //testable func transformForCard
+    func transformForCard() -> CGAffineTransform {
+        let translation = panGestureRecognizer.translation(in: self)
+        var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
+        transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngleForCard()))
+        return transform
+    }
     
-    private func alphaForOverlay(with direction: SwipeDirection) -> CGFloat {
+    func rotationAngleForCard() -> CGFloat {
+        let superviewTranslation = panGestureRecognizer.translation(in: superview)
+        let rotationStrength = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
+        let maximumRotation = min(rotationDirectionY * abs(animationOptions.maximumRotationAngle) * rotationStrength, CGFloat.pi/2)
+        return max(-CGFloat.pi/2, maximumRotation)
+    }
+    
+    func overlayPercentage(forDirection direction: SwipeDirection) -> CGFloat {
         if direction != activeDirection { return 0 }
         let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
             return percentage + dragPercentage(on: direction)
         }
-        return min((2 * dragPercentage(on: direction) - totalPercentage)/minimumSwipeMargin, 1)
+        return min((2 * dragPercentage(on: direction) - totalPercentage) / minimumSwipeMargin, 1)
     }
     
     override open func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {
@@ -208,7 +203,7 @@ open class MGSwipeCard: SwipeView {
     }
     
     private func swipeAction(direction: SwipeDirection, animated: Bool, forced: Bool) {
-        toggleUserInteraction(false)
+        isUserInteractionEnabled = false
         if animated {
             animator.swipe(direction: direction, forced: forced) { finished in
                 if finished {
@@ -221,7 +216,7 @@ open class MGSwipeCard: SwipeView {
     }
     
     public func reverseSwipe(from direction: SwipeDirection, animated: Bool) {
-        toggleUserInteraction(false)
+        isUserInteractionEnabled = false
         if animated {
             animator.reverseSwipe(from: direction) { finished in
                 if finished {
@@ -234,7 +229,7 @@ open class MGSwipeCard: SwipeView {
     }
     
     private func finishReverseSwipe(direction: SwipeDirection) {
-        toggleUserInteraction(true)
+        isUserInteractionEnabled = true
         delegate?.card(didReverseSwipe: self, from: direction)
     }
 }

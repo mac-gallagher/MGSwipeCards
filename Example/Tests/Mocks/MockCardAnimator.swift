@@ -20,7 +20,7 @@ class MockCardAnimator: CardAnimatable {
         swipeAnimationCalled = true
         swipeAnimationDirection = direction
         swipeAnimationForced = forced
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             completion?(true)
         }
     }
@@ -31,7 +31,7 @@ class MockCardAnimator: CardAnimatable {
     func reverseSwipe(from direction: SwipeDirection, completion: ((Bool) -> ())?) {
         reverseSwipeCalled = true
         reverseSwipeFromDirection = direction
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             completion?(true)
         }
     }
@@ -39,7 +39,7 @@ class MockCardAnimator: CardAnimatable {
     var resetAnimationCalled: Bool = false
     func reset(completion: ((Bool) -> ())?) {
         resetAnimationCalled = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             completion?(true)
         }
     }

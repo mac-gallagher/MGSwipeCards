@@ -7,7 +7,7 @@
 //
 
 open class SwipeView: UIView {
-    /// The swipe directions to be recognized by the view
+    /// The swipe directions to be recognized by the view as a possible active direction
     public var swipeDirections: [SwipeDirection] = SwipeDirection.allDirections
     
     /// The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1100.
@@ -18,17 +18,17 @@ open class SwipeView: UIView {
     
     /// The pan gesture recognizer attached to the view.
     public var panGestureRecognizer: UIPanGestureRecognizer {
-        return panRecognizer as UIPanGestureRecognizer
+        return panRecognizer
     }
     
-    private lazy var panRecognizer: TestablePanGestureRecognizer = TestablePanGestureRecognizer(target: self, action: #selector(handlePan))
+    private lazy var panRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
     
     /// The tap gesture recognizer attached to the view.
     public var tapGestureRecognizer: UITapGestureRecognizer {
-        return tapRecognizer as UITapGestureRecognizer
+        return tapRecognizer
     }
     
-    private lazy var tapRecognizer: TestableTapGestureRecognizer = TestableTapGestureRecognizer(target: self, action: #selector(handleTap))
+    private lazy var tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
     
     /// The location of the most recent `touchDown` event relative to the view's bounds.
     public var touchLocation: CGPoint? {
@@ -64,27 +64,24 @@ open class SwipeView: UIView {
     
     /// The speed of the user's drag projected onto the specified direction.
     public func dragSpeed(on direction: SwipeDirection) -> CGFloat {
-        let velocity = panRecognizer.velocity(in: superview)
+        let velocity = panGestureRecognizer.velocity(in: superview)
         return abs(direction.point.dotProduct(with: velocity))
     }
     
-    /// The percentage of the card's bounds that the drag attains in the specified direction.
+    /// The percentage of the screen's bounds that the drag attains in the specified direction.
     public func dragPercentage(on direction: SwipeDirection) -> CGFloat {
-        let translation = panRecognizer.translation(in: superview)
+        let translation = panGestureRecognizer.translation(in: superview)
         let normalizedTranslation = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
         let percentage = normalizedTranslation.dotProduct(with: direction.point)
-        if percentage < 0 {
-            return 0
-        }
-        return percentage
+        return percentage < 0 ? 0 : percentage
     }
     
-    @objc private func handleTap(_ recognizer: UITapGestureRecognizer) {
+    @objc func handleTap(_ recognizer: UITapGestureRecognizer) {
         touchPoint = recognizer.location(in: self)
         didTap(recognizer: recognizer)
     }
     
-    @objc private func handlePan(_ recognizer: UIPanGestureRecognizer) {
+    @objc func handlePan(_ recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
             beginSwiping(recognizer: recognizer)
