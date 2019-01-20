@@ -6,7 +6,7 @@
 //
 
 public class CardAnimationOptions {
-    public static var defaultOptions = CardAnimationOptions()
+    public static let defaultOptions = CardAnimationOptions()
     
     /// The maximum rotation angle of the card. Measured in radians. Defined as a value in the range [0, `CGFloat.pi`/2]. Defaults to `CGFloat.pi`/10.
     public var maximumRotationAngle: CGFloat = CGFloat.pi / 10

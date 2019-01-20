@@ -13,7 +13,8 @@ open class SwipeView: UIView {
     /// The minimum required speed on the intended direction to trigger a swipe. Expressed in points per second. Defaults to 1100.
     public var minimumSwipeSpeed: CGFloat = 1100
     
-    /// The minimum required drag distance on the intended direction to trigger a swipe. Measured from the initial touch point. Defined as a value in the range [0, 2], where 2 represents the entire length/width of the card. Defaults to 0.5.
+    /// The minimum required drag distance on the intended direction to trigger a swipe. Measured from the initial touch point.
+    /// Defined as a value in the range [0, 2], where 2 represents the entire length/width of the card. Defaults to 0.5.
     public var minimumSwipeMargin: CGFloat = 0.5
     
     /// The pan gesture recognizer attached to the view.
@@ -30,13 +31,14 @@ open class SwipeView: UIView {
     
     private lazy var tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
     
-    /// The location of the most recent `touchDown` event relative to the view's bounds.
+    /// The location of the most recent `touchDown` event. Measured relative to the view's bounds.
     public var touchLocation: CGPoint? {
         return touchPoint
     }
     
     private var touchPoint: CGPoint?
     
+    /// The member of `swipeDirections` with the highest drag percentage.
     public var activeDirection: SwipeDirection? {
         return swipeDirections.reduce((highestPercentage: 0, activeDirection: nil), { (lastResult, direction) -> (CGFloat, SwipeDirection?) in
             let swipePercent = dragPercentage(on: direction)

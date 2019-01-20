@@ -9,9 +9,7 @@
 public enum SwipeDirection: Int {
     case left, right, up, down
     
-    public static var allDirections: [SwipeDirection] {
-        return [.left, .right, .up, .down]
-    }
+    public static let allDirections: [SwipeDirection] = [.left, .right, .up, .down]
     
     public var point: CGPoint {
         switch self {
