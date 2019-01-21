@@ -156,25 +156,24 @@ open class MGSwipeCard: SwipeView {
         super.continueSwiping(recognizer: recognizer)
         delegate?.card(didContinueSwipe: self)
         
-        layer.setAffineTransform(transformForCard())
+        layer.setAffineTransform(dragTransform(recognizer: recognizer))
         
         for (direction, overlay) in overlays {
             overlay.alpha = overlayPercentage(forDirection: direction)
         }
     }
     
-    func transformForCard() -> CGAffineTransform {
-        let translation = panGestureRecognizer.translation(in: self)
-        var transform = CGAffineTransform(translationX: translation.x, y: translation.y)
-        transform = transform.concatenating(CGAffineTransform(rotationAngle: rotationAngleForCard()))
-        return transform
+    func dragTransform(recognizer: UIPanGestureRecognizer) -> CGAffineTransform {
+        let dragTranslation = recognizer.translation(in: self)
+        let translation = CGAffineTransform(translationX: dragTranslation.x, y: dragTranslation.y)
+        let rotation = CGAffineTransform(rotationAngle: dragRotationAngle(recognizer: recognizer))
+        return translation.concatenating(rotation)
     }
     
-    func rotationAngleForCard() -> CGFloat {
-        let superviewTranslation = panGestureRecognizer.translation(in: superview)
-        let rotationStrength = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
-        let maximumRotation = min(rotationDirectionY * abs(animationOptions.maximumRotationAngle) * rotationStrength, CGFloat.pi/2)
-        return max(-CGFloat.pi/2, maximumRotation)
+    func dragRotationAngle(recognizer: UIPanGestureRecognizer) -> CGFloat {
+        let superviewTranslation: CGPoint = recognizer.translation(in: superview)
+        let rotationStrength: CGFloat = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
+        return rotationDirectionY * rotationStrength * abs(animationOptions.maximumRotationAngle) 
     }
     
     func overlayPercentage(forDirection direction: SwipeDirection) -> CGFloat {

@@ -40,11 +40,11 @@ class TestableSwipeView: SwipeView {
     }
     
     var didSwipeCalled: Bool = false
-    var swipeDirection: SwipeDirection?
+    var didSwipeDirection: SwipeDirection?
     override func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {
         super.didSwipe(recognizer: recognizer, with: direction)
         didSwipeCalled = true
-        swipeDirection = direction
+        didSwipeDirection = direction
     }
     
     var didCancelSwipeCalled: Bool = false

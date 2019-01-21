@@ -63,25 +63,16 @@ class SwipeViewSpec: QuickSpec {
                     testPanGestureRecognizer = swipeView.panGestureRecognizer as? TestablePanGestureRecognizer
                 }
                 
-                context("when the pan velocity is negative") {
-                    beforeEach {
-                        let velocity = SwipeDirection.left.point
-                        testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: velocity, state: nil)
-                    }
-                    
-                    it("should return a positive drag speed") {
-                        expect(swipeView.dragSpeed(on: .left)).to(beGreaterThan(0))
-                    }
-                }
-                
-                context("when the pan velocity is positive") {
-                    beforeEach {
-                        let velocity = SwipeDirection.right.point
-                        testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: velocity, state: nil)
-                    }
-                    
-                    it("should return a positive drag speed") {
-                        expect(swipeView.dragSpeed(on: .right)).to(beGreaterThan(0))
+                for direction in SwipeDirection.allDirections {
+                    context("when swiping with a nonzero velocity in the specified direction") {
+                        beforeEach {
+                            let velocity = direction.point
+                            testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: velocity, state: nil)
+                        }
+                        
+                        it("should return a positive drag speed") {
+                            expect(swipeView.dragSpeed(on: direction)).to(beGreaterThan(0))
+                        }
                     }
                 }
             }
@@ -181,7 +172,7 @@ class SwipeViewSpec: QuickSpec {
                             testPanGestureRecognizer.performPan(withLocation: nil, translation: translation, velocity: nil, state: nil)
                         }
                         
-                        it("should return the direction with the highest drag percentage") {
+                        it("should set the direction with the highest drag percentage as the active direction") {
                             expect(swipeView.activeDirection).to(equal(direction1))
                         }
                     }
@@ -217,6 +208,7 @@ class SwipeViewSpec: QuickSpec {
             }
             
             describe("pan gesture") {
+                let unsupportedStates: [UIPanGestureRecognizer.State] = [.cancelled, .failed, .possible, .recognized]
                 var swipeView: TestableSwipeView!
                 var testPanGestureRecognizer: TestablePanGestureRecognizer!
                 
@@ -241,13 +233,33 @@ class SwipeViewSpec: QuickSpec {
                     }
                 }
                 
-                context("when pan gesture change is recognized") {
+                context("when a pan gesture change is recognized") {
                     beforeEach {
                         testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: .changed)
                     }
                     
                     it("it should call the didContinueSwiping method") {
                         expect(swipeView.didContinueSwipingCalled).to(beTrue())
+                    }
+                }
+                
+                for state in unsupportedStates {
+                    context("when a unsupported pan gesture state is recognized") {
+                        beforeEach {
+                            testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: state)
+                        }
+                        
+                        it("it should not call the didBeginSwipe method") {
+                            expect(swipeView.didContinueSwipingCalled).to(beFalse())
+                        }
+                        
+                        it("it should not call the didContinueSwiping method") {
+                            expect(swipeView.didContinueSwipingCalled).to(beFalse())
+                        }
+                        
+                        it("it should not call the didEndSwiping method") {
+                            expect(swipeView.didContinueSwipingCalled).to(beFalse())
+                        }
                     }
                 }
             }
@@ -266,17 +278,17 @@ class SwipeViewSpec: QuickSpec {
                     testPanGestureRecognizer = swipeView.panGestureRecognizer as? TestablePanGestureRecognizer
                 }
                 
-                for direction in SwipeDirection.allDirections {
-                    context("when a pan gesture ended with no active direction") {
-                        beforeEach {
-                            testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: .ended)
-                        }
-                        
-                        it("should call the didCancelSwipe delegate method") {
-                            expect(swipeView.didCancelSwipeCalled).to(beTrue())
-                        }
+                context("when a pan gesture ended with no active direction") {
+                    beforeEach {
+                        testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: .ended)
                     }
                     
+                    it("should call the didCancelSwipe delegate method") {
+                        expect(swipeView.didCancelSwipeCalled).to(beTrue())
+                    }
+                }
+                
+                for direction in SwipeDirection.allDirections {
                     context("when a pan gesture ended with a translation less than the minimum swipe margin") {
                         let translationX: CGFloat = minimumSwipeMargin * (UIScreen.main.bounds.width / 2) - 1
                         let translationY: CGFloat = minimumSwipeMargin * (UIScreen.main.bounds.height / 2) - 1
@@ -302,7 +314,7 @@ class SwipeViewSpec: QuickSpec {
                         
                         it("should call the didSwipe delegate method with the correct direction") {
                             expect(swipeView.didSwipeCalled).to(beTrue())
-                            expect(swipeView.swipeDirection).to(equal(direction))
+                            expect(swipeView.didSwipeDirection).to(equal(direction))
                         }
                     }
                     
@@ -325,7 +337,7 @@ class SwipeViewSpec: QuickSpec {
                         
                         it("should call the didSwipe delegate method with the correct direction") {
                             expect(swipeView.didSwipeCalled).to(beTrue())
-                            expect(swipeView.swipeDirection).to(equal(direction))
+                            expect(swipeView.didSwipeDirection).to(equal(direction))
                         }
                     }
                 }

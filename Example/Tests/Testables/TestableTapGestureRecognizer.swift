@@ -11,14 +11,13 @@ class TestableTapGestureRecognizer: UITapGestureRecognizer {
     var testTarget: AnyObject?
     var testAction: Selector?
     
-    var testLocation: CGPoint?
-    
     override init(target: Any?, action: Selector?) {
         testTarget = target as AnyObject
         testAction = action
         super.init(target: target, action: action)
     }
     
+    var testLocation: CGPoint?
     override func location(in view: UIView?) -> CGPoint {
         return testLocation ?? super.location(in: view)
     }

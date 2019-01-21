@@ -6,6 +6,7 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
+///The base class for MGSwipeCard.
 open class SwipeView: UIView {
     /// The swipe directions to be recognized by the view as a possible active direction
     public var swipeDirections: [SwipeDirection] = SwipeDirection.allDirections

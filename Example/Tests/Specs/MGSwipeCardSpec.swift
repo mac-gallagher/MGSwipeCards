@@ -250,6 +250,162 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
+            describe("drag rotation") { //DONE
+                for direction in [SwipeDirection.up, SwipeDirection.down] {
+                    context("when the card is dragged vertically") {
+                        var swipeCard: TestableSwipeCard!
+                        var testPanGestureRecognizer: TestablePanGestureRecognizer!
+                        
+                        beforeEach {
+                            swipeCard = self.setupSwipeCard(configure: { card in
+                                card.testRotationDirection = 0
+                            })
+                            
+                            testPanGestureRecognizer = swipeCard.panGestureRecognizer as? TestablePanGestureRecognizer
+                            let translation: CGPoint = CGPoint(x: 0, y: direction.point.y * UIScreen.main.bounds.height)
+                            testPanGestureRecognizer.performPan(withLocation: nil, translation: translation, velocity: nil, state: nil)
+                        }
+                        
+                        it("should have rotation angle equal to zero") {
+                            let actualRotationAngle = swipeCard.dragRotationAngle(recognizer: testPanGestureRecognizer)
+                            expect(actualRotationAngle).to(equal(0))
+                        }
+                    }
+                }
+                
+                for direction in [SwipeDirection.left, SwipeDirection.right] {
+                    for rotationDirection in [CGFloat(-1), CGFloat(1)] {
+                        context("when the card is dragged horizontally") {
+                            let maximumRotationAngle: CGFloat = CGFloat.pi / 4
+                            var testPanGestureRecognizer: TestablePanGestureRecognizer!
+                            var swipeCard: TestableSwipeCard!
+                            
+                            beforeEach {
+                                swipeCard = self.setupSwipeCard(configure: { card in
+                                    card.testRotationDirection = rotationDirection
+                                    
+                                    let options = CardAnimationOptions()
+                                    options.maximumRotationAngle = maximumRotationAngle
+                                    card.animationOptions = options
+                                })
+                                
+                                testPanGestureRecognizer = swipeCard.panGestureRecognizer as? TestablePanGestureRecognizer
+                            }
+                            
+                            context("less than the screen's width") {
+                                beforeEach {
+                                    let translation: CGPoint = CGPoint(x: direction.point.x * (UIScreen.main.bounds.width - 1), y: 0)
+                                    testPanGestureRecognizer.performPan(withLocation: nil, translation: translation, velocity: nil, state: nil)
+                                }
+                                
+                                it("should return a rotation angle less than the maximum rotation angle") {
+                                    let actualRotationAngle = swipeCard.dragRotationAngle(recognizer: testPanGestureRecognizer)
+                                    expect(abs(actualRotationAngle)).to(beLessThan(maximumRotationAngle))
+                                }
+                            }
+                            
+                            context("at least the length of the screen's width") {
+                                beforeEach {
+                                    let translation: CGPoint = CGPoint(x: direction.point.x * UIScreen.main.bounds.width, y: 0)
+                                    testPanGestureRecognizer.performPan(withLocation: nil, translation: translation, velocity: nil, state: nil)
+                                }
+                                
+                                it("should return a rotation angle equal to the maximum rotation angle") {
+                                    let actualRotationAngle = swipeCard.dragRotationAngle(recognizer: testPanGestureRecognizer)
+                                    expect(abs(actualRotationAngle)).to(equal(maximumRotationAngle))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
+            describe("drag transform") { //DONE
+                let rotationAngle: CGFloat = CGFloat.pi / 4
+                let translation: CGPoint = CGPoint(x: 100, y: 100)
+                var testPanGestureRecognizer: TestablePanGestureRecognizer!
+                var swipeCard: TestableSwipeCard!
+                
+                beforeEach {
+                    swipeCard = self.setupSwipeCard(configure: { card in
+                        card.testDragRotation = rotationAngle
+                    })
+                    testPanGestureRecognizer = swipeCard.panGestureRecognizer as? TestablePanGestureRecognizer
+                    testPanGestureRecognizer.performPan(withLocation: nil, translation: translation, velocity: nil, state: nil)
+                }
+                
+                context("when the card is dragged") {
+                    it("should return the transform with the proper rotation and translation") {
+                        let expectedTransform = CGAffineTransform(translationX: translation.x, y: translation.y)
+                            .concatenating(CGAffineTransform(rotationAngle: rotationAngle))
+                        expect(swipeCard.dragTransform(recognizer: testPanGestureRecognizer)).to(equal(expectedTransform))
+                    }
+                }
+            }
+            
+            describe("overlay percentage") { //DONE
+                var swipeCard: TestableSwipeCard!
+                
+                beforeEach {
+                    swipeCard = self.setupSwipeCard()
+                }
+                
+                for direction in SwipeDirection.allDirections {
+                    context("when the card is dragged in exactly one direction") {
+                        beforeEach {
+                            swipeCard.testDragPercentage[direction] = 0.1
+                        }
+                        
+                        it("should return a nonzero overlay percentage in the dragged direction and 0% for all other directions") {
+                            for swipeDirection in SwipeDirection.allDirections {
+                                if swipeDirection == direction {
+                                    expect(swipeCard.overlayPercentage(forDirection: swipeDirection)).toNot(equal(0))
+                                } else {
+                                    expect(swipeCard.overlayPercentage(forDirection: swipeDirection)).to(equal(0))
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                context("when the card is dragged in more than one direction") {
+                    let neighboringPairs: [(SwipeDirection, SwipeDirection)]
+                        = [(.up, .right),
+                           (.right, .down),
+                           (.down, .left),
+                           (.left, .up)]
+                    
+                    for (direction1, direction2) in neighboringPairs {
+                        context("and the drag percentage of two directions is equal") {
+                            beforeEach {
+                                swipeCard.testDragPercentage[direction1] = 0.1
+                                swipeCard.testDragPercentage[direction2] = 0.1
+                            }
+                            
+                            it("should return an overlay percentage of 0% for both directions") {
+                                expect(swipeCard.overlayPercentage(forDirection: direction1)).to(equal(0))
+                                expect(swipeCard.overlayPercentage(forDirection: direction2)).to(equal(0))
+                            }
+                        }
+                        
+                        context("and the drag percentage of the two directions is not equal") {
+                            beforeEach {
+                                swipeCard.testDragPercentage[direction1] = 0.2
+                                swipeCard.testDragPercentage[direction2] = 0.1
+                            }
+                            
+                            it("should return an overlay percentage of 0% for one direction and a nonzero overlay percentage for the other") {
+                                let direction1Percentage = swipeCard.overlayPercentage(forDirection: direction1)
+                                let direction2Percentage = swipeCard.overlayPercentage(forDirection: direction2)
+                                expect(direction1Percentage).toNot(equal(0))
+                                expect(direction2Percentage).to(equal(0))
+                            }
+                        }
+                    }
+                }
+            }
+            
             describe("tap gesture") { //DONE
                 context("when the parent view's didTap method is called") {
                     var mockSwipeCardDelegate: MockSwipeCardDelegate!
@@ -304,7 +460,7 @@ class MGSwipeCardSpec: QuickSpec {
                     
                     context("and the touch point is in the first quadrant of the card's bounds") {
                         beforeEach {
-                            swipeCard.touchPoint = CGPoint(x: cardCenterX + 1, y: cardCenterY + 1)
+                            swipeCard.testTouchLocation = CGPoint(x: cardCenterX + 1, y: cardCenterY + 1)
                         }
                         
                         it("should have rotation direction equal to -1") {
@@ -314,7 +470,7 @@ class MGSwipeCardSpec: QuickSpec {
                     
                     context("and the touch point is in the second quadrant of the card's bounds") {
                         beforeEach {
-                            swipeCard.touchPoint = CGPoint(x: cardCenterX - 1, y: cardCenterY + 1)
+                            swipeCard.testTouchLocation = CGPoint(x: cardCenterX - 1, y: cardCenterY + 1)
                         }
                         
                         it("should have rotation direction equal to -1") {
@@ -324,7 +480,7 @@ class MGSwipeCardSpec: QuickSpec {
                     
                     context("and the touch point is in the third quadrant of the card's bounds") {
                         beforeEach {
-                            swipeCard.touchPoint = CGPoint(x: cardCenterX - 1, y: cardCenterY - 1)
+                            swipeCard.testTouchLocation = CGPoint(x: cardCenterX - 1, y: cardCenterY - 1)
                         }
                         
                         it("should have rotation direction equal to 1") {
@@ -334,7 +490,7 @@ class MGSwipeCardSpec: QuickSpec {
                     
                     context("and the touch point is in the fourth quadrant of the card's bounds") {
                         beforeEach {
-                            swipeCard.touchPoint = CGPoint(x: cardCenterX + 1, y: cardCenterY - 1)
+                            swipeCard.testTouchLocation = CGPoint(x: cardCenterX + 1, y: cardCenterY - 1)
                         }
                         
                         it("should have rotation direction equal to 1") {
@@ -344,18 +500,34 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            //TODO: - Finish translation, rotation, and overlay alpha
-            describe("physical swipe change") {
+            describe("physical swipe change") { //DONE
                 context("when the parent view's continueSwiping method is called") {
+                    let leftOverlayPercentage: CGFloat = 0.5
+                    let testTransform: CGAffineTransform = {
+                        let rotation = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
+                        let translation = CGAffineTransform(translationX: 100, y: 100)
+                        return rotation.concatenating(translation)
+                    }()
                     var mockSwipeCardDelegate: MockSwipeCardDelegate!
-                    var swipeCard: MGSwipeCard!
+                    var swipeCard: TestableSwipeCard!
                     
                     beforeEach {
                         mockSwipeCardDelegate = MockSwipeCardDelegate()
                         swipeCard = self.setupSwipeCard(configure: { card in
                             card.delegate = mockSwipeCardDelegate
+                            card.setOverlay(UIView(), forDirection: .left)
+                            card.testOverlayPercentage[.left] = leftOverlayPercentage
+                            card.testDragTransform = testTransform
                         })
                         swipeCard.continueSwiping(recognizer: UIPanGestureRecognizer())
+                    }
+                    
+                    it("should apply the proper overlay alpha values") {
+                        expect(swipeCard.leftOverlay?.alpha).to(equal(leftOverlayPercentage))
+                    }
+                    
+                    it("should apply the proper transformation to the card") {
+                        expect(swipeCard.transform).to(equal(testTransform))
                     }
                     
                     it("should call the didContinueSwipe delegate method") {
@@ -421,72 +593,6 @@ class MGSwipeCardSpec: QuickSpec {
                         }
                     }
                 }
-            }
-            
-            describe("overlay percentage") { //FINISH
-                var swipeCard: TestableSwipeCard!
-                
-                beforeEach {
-                    swipeCard = self.setupSwipeCard()
-                }
-                
-                for direction in SwipeDirection.allDirections {
-                    context("when the card is dragged in exactly one direction") {
-                        beforeEach {
-                            swipeCard.dragPercentage[direction] = 0.1
-                        }
-                        
-                        it("should return a nonzero overlay percentage in the dragged direction and 0% for all other directions") {
-                            for swipeDirection in SwipeDirection.allDirections {
-                                if swipeDirection == direction {
-                                    expect(swipeCard.overlayPercentage(forDirection: swipeDirection)).toNot(equal(0))
-                                } else {
-                                    expect(swipeCard.overlayPercentage(forDirection: swipeDirection)).to(equal(0))
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                context("when the card is dragged in more than one direction") {
-                    let neighboringPairs: [(SwipeDirection, SwipeDirection)]
-                        = [(.up, .right),
-                           (.right, .down),
-                           (.down, .left),
-                           (.left, .up)]
-                    
-                    for (direction1, direction2) in neighboringPairs {
-                        context("and the drag percentage of two directions is equal") {
-                            beforeEach {
-                                swipeCard.dragPercentage[direction1] = 0.1
-                                swipeCard.dragPercentage[direction2] = 0.1
-                            }
-                            
-                            it("should return an overlay percentage of 0% for both directions") {
-                                expect(swipeCard.overlayPercentage(forDirection: direction1)).to(equal(0))
-                                expect(swipeCard.overlayPercentage(forDirection: direction2)).to(equal(0))
-                            }
-                        }
-                        
-                        context("and the drag percentage of the two directions is not equal") {
-                            beforeEach {
-                                swipeCard.dragPercentage[direction1] = 0.2
-                                swipeCard.dragPercentage[direction2] = 0.1
-                            }
-                            
-                            it("should return an overlay percentage of 0% for one direction and a nonzero overlay percentage for the other") {
-                                let direction1Percentage = swipeCard.overlayPercentage(forDirection: direction1)
-                                let direction2Percentage = swipeCard.overlayPercentage(forDirection: direction2)
-                                expect(direction1Percentage).toNot(equal(0))
-                                expect(direction2Percentage).to(equal(0))
-                            }
-                        }
-                    }
-                }
-            }
-            
-            describe("rotation angle") {
-                //pi / 2
             }
             
             describe("programmatic swipe") { //DONE
@@ -632,27 +738,15 @@ class MGSwipeCardSpec: QuickSpec {
 //MARK: - Setup
 
 extension MGSwipeCardSpec {
-    func setupSwipeCard(configure: (TestableSwipeCard) -> Void = { _ in } ) -> TestableSwipeCard {
-        let parentView = UIView()
-        let swipeCard = TestableSwipeCard()
-        parentView.addSubview(swipeCard)
-        
-        swipeCard.translatesAutoresizingMaskIntoConstraints = false
-        swipeCard.widthAnchor.constraint(equalToConstant: swipeCardWidth).isActive = true
-        swipeCard.heightAnchor.constraint(equalToConstant: swipeCardHeight).isActive = true
-        
-        configure(swipeCard)
-        
-        swipeCard.setNeedsLayout()
-        swipeCard.layoutIfNeeded()
-        
-        return swipeCard
-    }
-    
-    func setupSwipeCard(withAnimator animator: CardAnimatable,
+    func setupSwipeCard(withAnimator animator: CardAnimatable? = nil,
                         configure: (TestableSwipeCard) -> Void = { _ in } ) -> TestableSwipeCard {
         let parentView = UIView()
-        let swipeCard = TestableSwipeCard(animator: animator)
+        let swipeCard: TestableSwipeCard
+        if let animator = animator {
+            swipeCard = TestableSwipeCard(animator: animator)
+        } else {
+            swipeCard = TestableSwipeCard()
+        }
         parentView.addSubview(swipeCard)
         
         swipeCard.translatesAutoresizingMaskIntoConstraints = false

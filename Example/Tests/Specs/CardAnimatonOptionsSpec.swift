@@ -46,5 +46,31 @@ class CardAnimatonOptionsSpec: QuickSpec {
                 }
             }
         }
+        
+        describe("describe maximum rotation angle") {
+            context("when setting the maximum rotation angle to something less than -CGFloat.pi/2") {
+                var animationOptions: CardAnimationOptions!
+                
+                beforeEach {
+                    animationOptions = CardAnimationOptions()
+                    animationOptions.maximumRotationAngle = -CGFloat.pi
+                }
+                it("should return -CGFloat.pi / 2") {
+                    expect(animationOptions.maximumRotationAngle).to(equal(-CGFloat.pi / 2))
+                }
+            }
+            
+            context("when setting the maximum rotation angle to something greater than CGFloat.pi/2") {
+                var animationOptions: CardAnimationOptions!
+                
+                beforeEach {
+                    animationOptions = CardAnimationOptions()
+                    animationOptions.maximumRotationAngle = CGFloat.pi
+                }
+                it("should return CGFloat.pi / 2") {
+                    expect(animationOptions.maximumRotationAngle).to(equal(CGFloat.pi / 2))
+                }
+            }
+        }
     }
 }
