@@ -17,7 +17,7 @@ class MGSwipeCardSpec: QuickSpec {
     
     override func spec() {
         describe("MGSwipeCard") {
-            describe("initialization") { //DONE
+            describe("initialization") {
                 context("when initializing a card") {
                     var swipeCard: MGSwipeCard!
                     
@@ -74,7 +74,7 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            describe("content + footer layout") { //DONE
+            describe("content + footer layout") {
                 context("when adding a footer to a card") {
                     let footerHeight: CGFloat = 80
                     var swipeCard: MGSwipeCard!
@@ -152,7 +152,7 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            describe("overlay layout") { //DONE
+            describe("overlay layout") {
                 for direction in SwipeDirection.allDirections {
                     context("when adding an overlay") {
                         let overlay = UIView()
@@ -250,7 +250,7 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            describe("drag rotation") { //DONE
+            describe("drag rotation") {
                 for direction in [SwipeDirection.up, SwipeDirection.down] {
                     context("when the card is dragged vertically") {
                         var swipeCard: TestableSwipeCard!
@@ -321,7 +321,7 @@ class MGSwipeCardSpec: QuickSpec {
             }
             
             
-            describe("drag transform") { //DONE
+            describe("drag transform") {
                 let rotationAngle: CGFloat = CGFloat.pi / 4
                 let translation: CGPoint = CGPoint(x: 100, y: 100)
                 var testPanGestureRecognizer: TestablePanGestureRecognizer!
@@ -344,16 +344,13 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            describe("overlay percentage") { //DONE
-                var swipeCard: TestableSwipeCard!
-                
-                beforeEach {
-                    swipeCard = self.setupSwipeCard()
-                }
-                
+            describe("overlay percentage") {
                 for direction in SwipeDirection.allDirections {
                     context("when the card is dragged in exactly one direction") {
+                        var swipeCard: TestableSwipeCard!
+                        
                         beforeEach {
+                            swipeCard = self.setupSwipeCard()
                             swipeCard.testDragPercentage[direction] = 0.1
                         }
                         
@@ -367,6 +364,40 @@ class MGSwipeCardSpec: QuickSpec {
                             }
                         }
                     }
+                    
+                    context("when the card is dragged in the indicated direction below its minimum swipe margin") {
+                        let minimumSwipeMargin: CGFloat = 0.7
+                        var swipeCard: TestableSwipeCard!
+                        
+                        beforeEach {
+                            swipeCard = self.setupSwipeCard(configure: { card in
+                                card.minimumSwipeMargin = minimumSwipeMargin
+                            })
+                            swipeCard.testDragPercentage[direction] = minimumSwipeMargin - 0.1
+                        }
+                        
+                        it("should have an overlay percentage less than 1 in the indicated direction") {
+                            let expectedPercentage = swipeCard.overlayPercentage(forDirection: direction)
+                            expect(expectedPercentage).to(beLessThan(1))
+                        }
+                    }
+                    
+                    context("when the card is dragged in the indicated direction at least its minimum swipe margin") {
+                        let minimumSwipeMargin: CGFloat = 0.7
+                        var swipeCard: TestableSwipeCard!
+                        
+                        beforeEach {
+                            swipeCard = self.setupSwipeCard(configure: { card in
+                                card.minimumSwipeMargin = minimumSwipeMargin
+                            })
+                            swipeCard.testDragPercentage[direction] = minimumSwipeMargin
+                        }
+                        
+                        it("should have an overlay percentage equal to 1 in the indicated direction") {
+                            let expectedPercentage = swipeCard.overlayPercentage(forDirection: direction)
+                            expect(expectedPercentage).to(equal(1))
+                        }
+                    }
                 }
                 
                 context("when the card is dragged in more than one direction") {
@@ -375,9 +406,14 @@ class MGSwipeCardSpec: QuickSpec {
                            (.right, .down),
                            (.down, .left),
                            (.left, .up)]
+                    var swipeCard: TestableSwipeCard!
+                    
+                    beforeEach {
+                        swipeCard = self.setupSwipeCard()
+                    }
                     
                     for (direction1, direction2) in neighboringPairs {
-                        context("and the drag percentage of two directions is equal") {
+                        context("and the drag percentage of the two directions is equal") {
                             beforeEach {
                                 swipeCard.testDragPercentage[direction1] = 0.1
                                 swipeCard.testDragPercentage[direction2] = 0.1
@@ -406,7 +442,7 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            describe("tap gesture") { //DONE
+            describe("tap gesture") {
                 context("when the parent view's didTap method is called") {
                     var mockSwipeCardDelegate: MockSwipeCardDelegate!
                     var swipeCard: MGSwipeCard!
@@ -425,7 +461,7 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            describe("physical swipe begin") { //DONE
+            describe("physical swipe begin") {
                 context("when parent view's beginSwiping method is called") {
                     var animator: MockCardAnimator!
                     var mockSwipeCardDelegate: MockSwipeCardDelegate!
@@ -449,9 +485,9 @@ class MGSwipeCardSpec: QuickSpec {
                     }
                 }
                 
-                context("when the swipe begins") {
-                    let cardCenterX: CGFloat = self.swipeCardWidth / 2
-                    let cardCenterY: CGFloat = self.swipeCardHeight / 2
+                context("when the physical swipe begins") {
+                    let cardCenterX: CGFloat = swipeCardWidth / 2
+                    let cardCenterY: CGFloat = swipeCardHeight / 2
                     var swipeCard: TestableSwipeCard!
                     
                     beforeEach {
@@ -501,42 +537,45 @@ class MGSwipeCardSpec: QuickSpec {
             }
             
             describe("physical swipe change") { //DONE
-                context("when the parent view's continueSwiping method is called") {
-                    let leftOverlayPercentage: CGFloat = 0.5
-                    let testTransform: CGAffineTransform = {
-                        let rotation = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
-                        let translation = CGAffineTransform(translationX: 100, y: 100)
-                        return rotation.concatenating(translation)
-                    }()
-                    var mockSwipeCardDelegate: MockSwipeCardDelegate!
-                    var swipeCard: TestableSwipeCard!
-                    
-                    beforeEach {
-                        mockSwipeCardDelegate = MockSwipeCardDelegate()
-                        swipeCard = self.setupSwipeCard(configure: { card in
-                            card.delegate = mockSwipeCardDelegate
-                            card.setOverlay(UIView(), forDirection: .left)
-                            card.testOverlayPercentage[.left] = leftOverlayPercentage
-                            card.testDragTransform = testTransform
-                        })
-                        swipeCard.continueSwiping(recognizer: UIPanGestureRecognizer())
-                    }
-                    
-                    it("should apply the proper overlay alpha values") {
-                        expect(swipeCard.leftOverlay?.alpha).to(equal(leftOverlayPercentage))
-                    }
-                    
-                    it("should apply the proper transformation to the card") {
-                        expect(swipeCard.transform).to(equal(testTransform))
-                    }
-                    
-                    it("should call the didContinueSwipe delegate method") {
-                        expect(mockSwipeCardDelegate.didContinueSwipeCalled).to(beTrue())
+                for direction in SwipeDirection.allDirections {
+                    context("when the parent view's continueSwiping method is called") {
+                        let testOverlayPercentage: CGFloat = 0.5
+                        let testTransform: CGAffineTransform = {
+                            let rotation = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
+                            let translation = CGAffineTransform(translationX: 100, y: 100)
+                            return rotation.concatenating(translation)
+                        }()
+                        let overlay: UIView = UIView()
+                        var mockSwipeCardDelegate: MockSwipeCardDelegate!
+                        var swipeCard: TestableSwipeCard!
+                        
+                        beforeEach {
+                            mockSwipeCardDelegate = MockSwipeCardDelegate()
+                            swipeCard = self.setupSwipeCard(configure: { card in
+                                card.delegate = mockSwipeCardDelegate
+                                card.setOverlay(overlay, forDirection: direction)
+                                card.testOverlayPercentage[direction] = testOverlayPercentage
+                                card.testDragTransform = testTransform
+                            })
+                            swipeCard.continueSwiping(recognizer: UIPanGestureRecognizer())
+                        }
+                        
+                        it("should apply the proper overlay alpha values") {
+                            expect(overlay.alpha).to(equal(testOverlayPercentage))
+                        }
+                        
+                        it("should apply the proper transformation to the card") {
+                            expect(swipeCard.transform).to(equal(testTransform))
+                        }
+                        
+                        it("should call the didContinueSwipe delegate method") {
+                            expect(mockSwipeCardDelegate.didContinueSwipeCalled).to(beTrue())
+                        }
                     }
                 }
             }
             
-            describe("physical swipe end") { //DONE
+            describe("physical swipe end") {
                 context("when the parent view's didCancelSwipe method is called") {
                     var animator: MockCardAnimator!
                     var mockSwipeCardDelegate: MockSwipeCardDelegate!
@@ -562,7 +601,7 @@ class MGSwipeCardSpec: QuickSpec {
                 
                 for direction in SwipeDirection.allDirections {
                     context("when the parent view's didSwipe method is called") {
-                        var animator = MockCardAnimator()
+                        var animator: MockCardAnimator!
                         var mockSwipeCardDelegate: MockSwipeCardDelegate!
                         var swipeCard: MGSwipeCard!
                         
@@ -586,7 +625,7 @@ class MGSwipeCardSpec: QuickSpec {
                         }
                         
                         it("should call the didSwipe delegate method with the correct parameters once the animation has completed") {
-                            let timeout: TimeInterval = swipeCard.animationOptions.cardSwipeAnimationDuration + 10
+                            let timeout: TimeInterval = swipeCard.animationOptions.cardSwipeAnimationDuration + 20
                             expect(mockSwipeCardDelegate.didSwipeCalled).toEventually(beTrue(), timeout: timeout)
                             expect(mockSwipeCardDelegate.didSwipeForced).toEventually(beFalse(), timeout: timeout)
                             expect(mockSwipeCardDelegate.didSwipeDirection).toEventually(equal(direction), timeout: timeout)
@@ -595,7 +634,7 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            describe("programmatic swipe") { //DONE
+            describe("programmatic swipe") {
                 for direction in SwipeDirection.allDirections {
                     context("when the swipe method is called") {
                         var swipeCard: MGSwipeCard!
@@ -665,7 +704,7 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            describe("reverse swipe") { //DONE
+            describe("reverse swipe") {
                 for direction in SwipeDirection.allDirections {
                     context("when the reverse swipe method is called with no animation") {
                         var animator: MockCardAnimator!
@@ -719,13 +758,13 @@ class MGSwipeCardSpec: QuickSpec {
                         }
                         
                         it("should call the didSwipe delegate method with the correct parameters once the animation has completed") {
-                            let timeout: TimeInterval = swipeCard.animationOptions.reverseSwipeAnimationDuration + 10
+                            let timeout: TimeInterval = swipeCard.animationOptions.reverseSwipeAnimationDuration + 20
                             expect(mockSwipeCardDelegate.didReverseSwipeCalled).toEventually(beTrue(), timeout: timeout)
                             expect(mockSwipeCardDelegate.didReverseSwipeDirection).toEventually(equal(direction), timeout: timeout)
                         }
                         
                         it("should enable user interaction on the card once the animation has completed") {
-                            let timeout: TimeInterval = swipeCard.animationOptions.reverseSwipeAnimationDuration + 10
+                            let timeout: TimeInterval = swipeCard.animationOptions.reverseSwipeAnimationDuration + 20
                             expect(swipeCard.isUserInteractionEnabled).toEventually(beTrue(), timeout: timeout)
                         }
                     }
