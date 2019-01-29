@@ -1,5 +1,5 @@
 //
-//  MockSwipeView.swift
+//  TestableSwipeView.swift
 //  MGSwipeCards_Tests
 //
 //  Created by Mac Gallagher on 1/18/19.

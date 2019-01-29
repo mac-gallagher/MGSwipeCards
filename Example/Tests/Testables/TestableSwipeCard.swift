@@ -21,6 +21,11 @@ class TestableSwipeCard: MGSwipeCard {
     
     private lazy var tapRecognizer = TestableTapGestureRecognizer(target: self, action: #selector(handleTap))
     
+    var testActiveDirection: SwipeDirection?
+    override var activeDirection: SwipeDirection? {
+        return testActiveDirection ?? super.activeDirection
+    }
+    
     var testTouchLocation: CGPoint?
     override var touchLocation: CGPoint? {
         return testTouchLocation ?? super.touchLocation
@@ -29,6 +34,11 @@ class TestableSwipeCard: MGSwipeCard {
     var testRotationDirection: CGFloat?
     override var rotationDirectionY: CGFloat {
         return testRotationDirection ?? super.rotationDirectionY
+    }
+    
+    var testDragSpeed: CGFloat?
+    override func dragSpeed(on direction: SwipeDirection) -> CGFloat {
+        return testDragSpeed ?? super.dragSpeed(on: direction)
     }
     
     var testDragPercentage = [SwipeDirection: CGFloat]()

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D31C40D89D5EBDA20148C668F8CA895F"
+               BlueprintIdentifier = "B2CD83F8074C51DE9E1C1FFCECB11C94"
                BuildableName = "MGSwipeCards.framework"
                BlueprintName = "MGSwipeCards"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D31C40D89D5EBDA20148C668F8CA895F"
+            BlueprintIdentifier = "B2CD83F8074C51DE9E1C1FFCECB11C94"
             BuildableName = "MGSwipeCards.framework"
             BlueprintName = "MGSwipeCards"
             ReferencedContainer = "container:Pods.xcodeproj">
@@ -63,7 +63,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D31C40D89D5EBDA20148C668F8CA895F"
+            BlueprintIdentifier = "B2CD83F8074C51DE9E1C1FFCECB11C94"
             BuildableName = "MGSwipeCards.framework"
             BlueprintName = "MGSwipeCards"
             ReferencedContainer = "container:Pods.xcodeproj">

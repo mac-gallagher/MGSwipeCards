@@ -113,13 +113,13 @@ extension ViewController: MGCardStackViewDataSource, MGCardStackViewDelegate, Bu
     func didTapButton(button: TinderButton) {
         switch button.tag {
         case 1:
-            cardStack.undoLastSwipe(animated: false)
+            cardStack.undoLastSwipe(animated: true)
         case 2:
-            cardStack.swipe(.left, animated: false)
+            cardStack.swipe(.left, animated: true)
         case 3:
-            cardStack.swipe(.up, animated: false)
+            cardStack.swipe(.up, animated: true)
         case 4:
-            cardStack.swipe(.right, animated: false)
+            cardStack.swipe(.right, animated: true)
         default:
             break
         }

@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "MGSwipeCards"
   s.version      = "2.2.6"
-  s.platform     = :ios, "9.0"
+  s.platform     = :ios, "10.0"
   s.summary      = "A modern swipeable card framework inspired by Tinder"
 
   s.description  = <<-DESC

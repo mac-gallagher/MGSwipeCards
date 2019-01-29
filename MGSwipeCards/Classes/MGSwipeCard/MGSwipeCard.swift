@@ -79,7 +79,7 @@ open class MGSwipeCard: SwipeView {
     var overlayContainer = UIView()
     var overlays: [SwipeDirection: UIView] = [:]
     
-    private lazy var animator: CardAnimatable = CardAnimator(card: self)
+    private var animator: CardAnimatable = CardAnimator.shared
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -149,7 +149,7 @@ open class MGSwipeCard: SwipeView {
     override open func beginSwiping(recognizer: UIPanGestureRecognizer) {
         super.beginSwiping(recognizer: recognizer)
         delegate?.card(didBeginSwipe: self)
-        animator.removeAllAnimations()
+        animator.removeAllAnimations(on: self)
     }
     
     override open func continueSwiping(recognizer: UIPanGestureRecognizer) {
@@ -164,9 +164,9 @@ open class MGSwipeCard: SwipeView {
     }
     
     func dragTransform(recognizer: UIPanGestureRecognizer) -> CGAffineTransform {
-        let dragTranslation = recognizer.translation(in: self)
-        let translation = CGAffineTransform(translationX: dragTranslation.x, y: dragTranslation.y)
-        let rotation = CGAffineTransform(rotationAngle: dragRotationAngle(recognizer: recognizer))
+        let dragTranslation: CGPoint = recognizer.translation(in: self)
+        let translation: CGAffineTransform = CGAffineTransform(translationX: dragTranslation.x, y: dragTranslation.y)
+        let rotation: CGAffineTransform = CGAffineTransform(rotationAngle: dragRotationAngle(recognizer: recognizer))
         return translation.concatenating(rotation)
     }
     
@@ -178,7 +178,7 @@ open class MGSwipeCard: SwipeView {
     
     func overlayPercentage(forDirection direction: SwipeDirection) -> CGFloat {
         if direction != activeDirection { return 0 }
-        let totalPercentage = swipeDirections.reduce(0) { (percentage, direction) in
+        let totalPercentage: CGFloat = swipeDirections.reduce(0) { (percentage, direction) in
             return percentage + dragPercentage(on: direction)
         }
         return min((2 * dragPercentage(on: direction) - totalPercentage) / minimumSwipeMargin, 1)
@@ -190,7 +190,7 @@ open class MGSwipeCard: SwipeView {
     }
     
     override open func didCancelSwipe(recognizer: UIPanGestureRecognizer) {
-        animator.reset() { _ in
+        animator.animateReset(self) { _ in
             self.delegate?.card(didCancelSwipe: self)
         }
     }
@@ -204,12 +204,13 @@ open class MGSwipeCard: SwipeView {
     private func swipeAction(direction: SwipeDirection, animated: Bool, forced: Bool) {
         isUserInteractionEnabled = false
         if animated {
-            animator.swipe(direction: direction, forced: forced) { finished in
+            animator.animateSwipe(self, direction: direction, forced: forced) { finished in
                 if finished {
                     self.delegate?.card(didSwipe: self, with: direction, forced: forced)
                 }
             }
         } else {
+            animator.swipe(self, direction: direction)
             delegate?.card(didSwipe: self, with: direction, forced: forced)
         }
     }
@@ -217,12 +218,13 @@ open class MGSwipeCard: SwipeView {
     public func reverseSwipe(from direction: SwipeDirection, animated: Bool) {
         isUserInteractionEnabled = false
         if animated {
-            animator.reverseSwipe(from: direction) { finished in
+            animator.animateReverseSwipe(self, from: direction) { finished in
                 if finished {
                     self.finishReverseSwipe(direction: direction)
                 }
             }
         } else {
+            animator.reverseSwipe(self)
             finishReverseSwipe(direction: direction)
         }
     }

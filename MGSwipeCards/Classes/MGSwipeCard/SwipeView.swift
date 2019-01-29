@@ -6,7 +6,7 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-///The base class for MGSwipeCard.
+/// The base class for MGSwipeCard.
 open class SwipeView: UIView {
     /// The swipe directions to be recognized by the view as a possible active direction
     public var swipeDirections: [SwipeDirection] = SwipeDirection.allDirections
@@ -42,7 +42,7 @@ open class SwipeView: UIView {
     /// The member of `swipeDirections` with the highest drag percentage.
     public var activeDirection: SwipeDirection? {
         return swipeDirections.reduce((highestPercentage: 0, activeDirection: nil), { (lastResult, direction) -> (CGFloat, SwipeDirection?) in
-            let swipePercent = dragPercentage(on: direction)
+            let swipePercent: CGFloat = dragPercentage(on: direction)
             if swipePercent > lastResult.highestPercentage {
                 return (swipePercent, direction)
             }
@@ -67,15 +67,15 @@ open class SwipeView: UIView {
     
     /// The speed of the user's drag projected onto the specified direction.
     public func dragSpeed(on direction: SwipeDirection) -> CGFloat {
-        let velocity = panGestureRecognizer.velocity(in: superview)
+        let velocity: CGPoint = panGestureRecognizer.velocity(in: superview)
         return abs(direction.point.dotProduct(with: velocity))
     }
     
     /// The percentage of the screen's bounds that the drag attains in the specified direction.
     public func dragPercentage(on direction: SwipeDirection) -> CGFloat {
-        let translation = panGestureRecognizer.translation(in: superview)
-        let normalizedTranslation = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
-        let percentage = normalizedTranslation.dotProduct(with: direction.point)
+        let translation: CGPoint = panGestureRecognizer.translation(in: superview)
+        let normalizedTranslation: CGPoint = translation.normalizedDistance(forSize: UIScreen.main.bounds.size)
+        let percentage: CGFloat = normalizedTranslation.dotProduct(with: direction.point)
         return percentage < 0 ? 0 : percentage
     }
     
@@ -97,12 +97,14 @@ open class SwipeView: UIView {
         }
     }
     
+    /// The default implementation does nothing
     open func didTap(recognizer: UITapGestureRecognizer) {}
     
     open func beginSwiping(recognizer: UIPanGestureRecognizer) {
         touchPoint = recognizer.location(in: self)
     }
     
+    /// The default implementation does nothing
     open func continueSwiping(recognizer: UIPanGestureRecognizer) {}
     
     open func endSwiping(recognizer: UIPanGestureRecognizer) {
@@ -115,7 +117,9 @@ open class SwipeView: UIView {
         didCancelSwipe(recognizer: recognizer)
     }
     
+    /// The default implementation does nothing
     open func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {}
     
+    /// The default implementation does nothing
     open func didCancelSwipe(recognizer: UIPanGestureRecognizer) {}
 }

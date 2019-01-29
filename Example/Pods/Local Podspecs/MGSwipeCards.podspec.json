@@ -2,7 +2,7 @@
   "name": "MGSwipeCards",
   "version": "2.2.6",
   "platforms": {
-    "ios": "9.0"
+    "ios": "10.0"
   },
   "summary": "A modern swipeable card framework inspired by Tinder",
   "description": "A modern swipeable card framework inspired by Tinder and built with Facebook's Pop animation library.",

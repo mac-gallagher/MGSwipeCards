@@ -283,10 +283,7 @@ class MGSwipeCardSpec: QuickSpec {
                             beforeEach {
                                 swipeCard = self.setupSwipeCard(configure: { card in
                                     card.testRotationDirection = rotationDirection
-                                    
-                                    let options = CardAnimationOptions()
-                                    options.maximumRotationAngle = maximumRotationAngle
-                                    card.animationOptions = options
+                                    card.animationOptions.maximumRotationAngle = maximumRotationAngle
                                 })
                                 
                                 testPanGestureRecognizer = swipeCard.panGestureRecognizer as? TestablePanGestureRecognizer
@@ -350,8 +347,9 @@ class MGSwipeCardSpec: QuickSpec {
                         var swipeCard: TestableSwipeCard!
                         
                         beforeEach {
-                            swipeCard = self.setupSwipeCard()
-                            swipeCard.testDragPercentage[direction] = 0.1
+                            swipeCard = self.setupSwipeCard(configure: { card in
+                                card.testDragPercentage[direction] = 0.1
+                            })
                         }
                         
                         it("should return a nonzero overlay percentage in the dragged direction and 0% for all other directions") {
@@ -372,8 +370,8 @@ class MGSwipeCardSpec: QuickSpec {
                         beforeEach {
                             swipeCard = self.setupSwipeCard(configure: { card in
                                 card.minimumSwipeMargin = minimumSwipeMargin
+                                card.testDragPercentage[direction] = minimumSwipeMargin - 0.1
                             })
-                            swipeCard.testDragPercentage[direction] = minimumSwipeMargin - 0.1
                         }
                         
                         it("should have an overlay percentage less than 1 in the indicated direction") {
@@ -389,8 +387,8 @@ class MGSwipeCardSpec: QuickSpec {
                         beforeEach {
                             swipeCard = self.setupSwipeCard(configure: { card in
                                 card.minimumSwipeMargin = minimumSwipeMargin
+                                card.testDragPercentage[direction] = minimumSwipeMargin
                             })
-                            swipeCard.testDragPercentage[direction] = minimumSwipeMargin
                         }
                         
                         it("should have an overlay percentage equal to 1 in the indicated direction") {
@@ -406,17 +404,16 @@ class MGSwipeCardSpec: QuickSpec {
                            (.right, .down),
                            (.down, .left),
                            (.left, .up)]
-                    var swipeCard: TestableSwipeCard!
-                    
-                    beforeEach {
-                        swipeCard = self.setupSwipeCard()
-                    }
                     
                     for (direction1, direction2) in neighboringPairs {
                         context("and the drag percentage of the two directions is equal") {
+                            var swipeCard: TestableSwipeCard!
+                            
                             beforeEach {
-                                swipeCard.testDragPercentage[direction1] = 0.1
-                                swipeCard.testDragPercentage[direction2] = 0.1
+                                swipeCard = self.setupSwipeCard(configure: { card in
+                                    card.testDragPercentage[direction1] = 0.1
+                                    card.testDragPercentage[direction2] = 0.1
+                                })
                             }
                             
                             it("should return an overlay percentage of 0% for both directions") {
@@ -426,9 +423,13 @@ class MGSwipeCardSpec: QuickSpec {
                         }
                         
                         context("and the drag percentage of the two directions is not equal") {
+                            var swipeCard: TestableSwipeCard!
+                            
                             beforeEach {
-                                swipeCard.testDragPercentage[direction1] = 0.2
-                                swipeCard.testDragPercentage[direction2] = 0.1
+                                swipeCard = self.setupSwipeCard(configure: { card in
+                                    card.testDragPercentage[direction1] = 0.2
+                                    card.testDragPercentage[direction2] = 0.1
+                                })
                             }
                             
                             it("should return an overlay percentage of 0% for one direction and a nonzero overlay percentage for the other") {
@@ -536,7 +537,7 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
-            describe("physical swipe change") { //DONE
+            describe("physical swipe change") {
                 for direction in SwipeDirection.allDirections {
                     context("when the parent view's continueSwiping method is called") {
                         let testOverlayPercentage: CGFloat = 0.5
@@ -663,8 +664,9 @@ class MGSwipeCardSpec: QuickSpec {
                             swipeCard.swipe(direction: direction, animated: false)
                         }
                         
-                        it("should not trigger a swipe animation") {
-                            expect(animator.swipeAnimationCalled).to(beFalse())
+                        it("should perform the swipe animation with duration equal to zero and the correct direction") {
+                            expect(animator.swipeCalled).to(beTrue())
+                            expect(animator.swipeDirection).to(equal(direction))
                         }
                         
                         it("should immediately call the didSwipe delegate method with the correct parameters") {
@@ -720,8 +722,8 @@ class MGSwipeCardSpec: QuickSpec {
                             swipeCard.reverseSwipe(from: direction, animated: false)
                         }
                         
-                        it("should not trigger a reverse swipe animation") {
-                            expect(animator.reverseSwipeCalled).to(beFalse())
+                        it("should perform the reverse swipe animation with duration equal to zero") {
+                            expect(animator.reverseSwipeCalled).to(beTrue())
                         }
                         
                         it("should immediately call the didReverseSwipe delegate with the correct direction") {
@@ -753,8 +755,8 @@ class MGSwipeCardSpec: QuickSpec {
                         }
                         
                         it("should trigger a reverse swipe animation from the correct direction") {
-                            expect(animator.reverseSwipeCalled).to(beTrue())
-                            expect(animator.reverseSwipeFromDirection).to(equal(direction))
+                            expect(animator.reverseSwipeAnimationCalled).to(beTrue())
+                            expect(animator.reverseSwipeAnimationDirection).to(equal(direction))
                         }
                         
                         it("should call the didSwipe delegate method with the correct parameters once the animation has completed") {
@@ -777,15 +779,10 @@ class MGSwipeCardSpec: QuickSpec {
 //MARK: - Setup
 
 extension MGSwipeCardSpec {
-    func setupSwipeCard(withAnimator animator: CardAnimatable? = nil,
+    func setupSwipeCard(withAnimator animator: CardAnimatable = CardAnimator(),
                         configure: (TestableSwipeCard) -> Void = { _ in } ) -> TestableSwipeCard {
         let parentView = UIView()
-        let swipeCard: TestableSwipeCard
-        if let animator = animator {
-            swipeCard = TestableSwipeCard(animator: animator)
-        } else {
-            swipeCard = TestableSwipeCard()
-        }
+        let swipeCard = TestableSwipeCard(animator: animator)
         parentView.addSubview(swipeCard)
         
         swipeCard.translatesAutoresizingMaskIntoConstraints = false

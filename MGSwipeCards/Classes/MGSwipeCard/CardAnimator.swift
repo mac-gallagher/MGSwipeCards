@@ -5,133 +5,164 @@
 //  Created by Mac Gallagher on 11/9/18.
 //
 
-import pop
-
 protocol CardAnimatable {
-    func swipe(direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?)
-    func reverseSwipe(from direction: SwipeDirection, completion: ((Bool) -> ())?)
-    func reset(completion: ((Bool) -> ())?)
-    func removeAllAnimations()
+    func animateSwipe(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?)
+    func swipe(_ card: MGSwipeCard, direction: SwipeDirection)
+    func animateReverseSwipe(_ card: MGSwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?)
+    func reverseSwipe(_ card: MGSwipeCard)
+    func animateReset(_ card: MGSwipeCard, completion: ((Bool) -> ())?)
+    func reset(_ card: MGSwipeCard)
+    func removeAllAnimations(on card: MGSwipeCard)
 }
 
 class CardAnimator: CardAnimatable {
-    private let card: MGSwipeCard
+    static let shared = CardAnimator()
     
-    private var options: CardAnimationOptions {
-        return card.animationOptions
-    }
-    
-    init(card: MGSwipeCard) {
-        self.card = card
-    }
-    
-    func swipe(direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
-//        removeAllAnimations()
-//
-//        for (swipeDirection, overlay) in card.overlays {
-//            if swipeDirection != direction {
-//                overlay.alpha = 0
-//            }
-//        }
-//
-//        let overlay = card.overlays[direction]
-//        let overlayDuration = forced && !(overlay == nil) ? options.overlayFadeAnimationDuration : 0
-//        let transform = CardAnimator.swipeTransform(forCard: card, forDirection: direction, forced: forced)
-//
-//        POPAnimator.applyFadeAnimation(to: overlay, toValue: 1, duration: overlayDuration, timingFunction: CAMediaTimingFunction(name: .easeOut), completionBlock: nil)
-//
-//        let swipeDuration = options.cardSwipeAnimationDuration
-//        POPAnimator.applyTransformAnimation(to: card, transform: transform, delay: overlayDuration, duration: swipeDuration) { _, finished in
-//            completion?(finished)
-//        }
-    }
-    
-    func reset(completion: ((Bool) -> ())?) {
-        removeAllAnimations()
+    func animateSwipe(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
+        removeAllAnimations(on: card)
         
-        for (direction, overlay) in card.overlays {
-            if direction != card.activeDirection {
+        for (overlayDirection, overlay) in card.overlays {
+            if overlayDirection != direction {
                 overlay.alpha = 0
             }
         }
         
-        let springBounciness = options.resetAnimationSpringBounciness
-        let springSpeed = options.resetAnimationSpringSpeed
+        let overlayDuration: TimeInterval = overlayFadeDuration(card, direction: direction, forced: forced)
+        let swipeDuration: TimeInterval = card.animationOptions.cardSwipeAnimationDuration
+        let totalDuration: TimeInterval = overlayDuration + swipeDuration
         
-        if let activeDirection = card.activeDirection {
-            POPAnimator.applySpringFadeAnimation(to: card.overlays[activeDirection], toValue: 0, springBounciness: springBounciness, springSpeed: springSpeed, completionBlock: nil)
-        }
-        
-        POPAnimator.applySpringTransformAnimation(to: card, transform: .identity, springBounciness: springBounciness, springSpeed: springSpeed) { _, finished in
+        UIView.animateKeyframes(withDuration: totalDuration, delay: 0.0, options: .calculationModeLinear, animations: {
+            let relativeOverlayDuration: TimeInterval = overlayDuration / totalDuration
+            
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: relativeOverlayDuration, animations: {
+                card.overlays[direction]?.alpha = 1
+            })
+            
+            UIView.addKeyframe(withRelativeStartTime: relativeOverlayDuration, relativeDuration: 1.0, animations: {
+                card.transform = self.swipeTransform(forCard: card, forDirection: direction, forced: forced)
+            })
+        }) { finished in
             completion?(finished)
         }
     }
     
-    func reverseSwipe(from direction: SwipeDirection, completion: ((Bool) -> ())?) {
-//        removeAllAnimations()
-//
-//        //recreate swipe
-//        card.transform = CardAnimator.swipeTransform(forCard: card, forDirection: direction, forced: true)
-//        for (swipeDirection, overlay) in card.overlays {
-//            overlay.alpha = swipeDirection == direction ? 1 : 0
-//        }
-//
-//        let swipeDuration = options.reverseSwipeAnimationDuration
-//        POPAnimator.applyTransformAnimation(to: card, transform: .identity, duration: swipeDuration, completionBlock: nil)
-//
-//        guard let overlay = card.overlays[direction] else {
-//            completion?(true)
-//            return
-//        }
-//
-//        let fadeDuration = options.overlayFadeAnimationDuration
-//        POPAnimator.applyFadeAnimation(to: overlay, toValue: 0, delay: swipeDuration, duration: fadeDuration, timingFunction: CAMediaTimingFunction(name: .easeIn)) { _, finished in
-//            completion?(finished)
-//        }
+    /// Performs the card swipe animation changes without animating them.
+    func swipe(_ card: MGSwipeCard, direction: SwipeDirection) {
+        removeAllAnimations(on: card)
+        for (overlayDirection, overlay) in card.overlays {
+            overlay.alpha = overlayDirection == direction ? 1 : 0
+        }
+        card.transform = swipeTransform(forCard: card, forDirection: direction, forced: true)
     }
     
-    func removeAllAnimations() {
-        card.pop_removeAllAnimations()
-        card.layer.pop_removeAllAnimations()
+    func animateReset(_ card: MGSwipeCard, completion: ((Bool) -> ())?) {
+        removeAllAnimations(on: card)
         
-        for (_, overlay) in card.overlays {
-            overlay.pop_removeAllAnimations()
-            overlay.layer.pop_removeAllAnimations()
+        let resetDuration: TimeInterval = card.animationOptions.resetAnimationSpringDuration
+        let resetSpringDamping: CGFloat = card.animationOptions.resetAnimationSpringDamping
+        
+        UIView.animate(withDuration: resetDuration, delay: 0.0, usingSpringWithDamping: resetSpringDamping, initialSpringVelocity: 0.0, options: [.curveLinear, .allowUserInteraction], animations: {
+            if let direction = card.activeDirection, let overlay = card.overlays[direction] {
+                overlay.alpha = 0
+            }
+            card.transform = .identity
+        }) { finished in
+            completion?(finished)
         }
     }
     
-//    private static func swipeTransform(forCard card: MGSwipeCard, forDirection direction: SwipeDirection, forced: Bool) -> CGAffineTransform {
-//        var transform = CGAffineTransform.identity.rotated(by: CardAnimator.rotationForSwipe(card: card, direction: direction, forced: forced))
-//        let dragTranslation = forced ? direction.point : card.panGestureRecognizer.translation(in: card.superview)
-//        let translation = CardAnimator.offScreenTranslation(forCard: card, direction: direction, dragTranslation: dragTranslation)
-//        transform = transform.concatenating(CGAffineTransform(translationX: translation.x, y: translation.y))
-//        return transform
-//    }
+    /// Performs the card reset animation changes without animating them.
+    func reset(_ card: MGSwipeCard) {
+        removeAllAnimations(on: card)
+        if let direction = card.activeDirection, let overlay = card.overlays[direction] {
+            overlay.alpha = 0
+        }
+        card.transform = .identity
+    }
     
-    ///Returns the translation for the swipe animation in points
-//    private static func offScreenTranslation(forCard card: MGSwipeCard, direction: SwipeDirection, dragTranslation: CGPoint) -> CGPoint {
-//        let cardDiagonalLength = CGPoint.zero.distance(to: CGPoint(x: card.bounds.width, y: card.bounds.height))
-//        let minimumOffscreenTranslation = CGPoint(x: UIScreen.main.bounds.width + cardDiagonalLength, y: UIScreen.main.bounds.height + cardDiagonalLength)
-//        let maxLength = max(abs(dragTranslation.x), abs(dragTranslation.y))
-//        let directionVector = CGPoint(x: dragTranslation.x / maxLength, y: dragTranslation.y / maxLength)
-//        let velocityFactor = max(1, card.dragSpeed(on: direction) / card.minimumSwipeSpeed)
-//        return CGPoint(x: velocityFactor * directionVector.x * minimumOffscreenTranslation.x, y: velocityFactor * directionVector.y * minimumOffscreenTranslation.y)
-//    }
+    func animateReverseSwipe(_ card: MGSwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?) {
+        removeAllAnimations(on: card)
+        
+        //recreate swipe
+        card.transform = swipeTransform(forCard: card, forDirection: direction)
+        for (overlayDirection, overlay) in card.overlays {
+            overlay.alpha = overlayDirection == direction ? 1 : 0
+        }
+        
+        let overlayDuration: TimeInterval = overlayFadeDuration(card, direction: direction, forced: true)
+        let reverseSwipeDuration: TimeInterval = card.animationOptions.reverseSwipeAnimationDuration
+        let totalDuration: TimeInterval = overlayDuration + reverseSwipeDuration
+            
+        UIView.animateKeyframes(withDuration: totalDuration, delay: 0.0, options: [.calculationModeLinear], animations: {
+            let relativeReverseSwipeDuration: TimeInterval = reverseSwipeDuration / totalDuration
+            
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: relativeReverseSwipeDuration, animations: {
+                card.transform = .identity
+            })
+            
+            UIView.addKeyframe(withRelativeStartTime: relativeReverseSwipeDuration, relativeDuration: 1.0, animations: {
+                card.overlays[direction]?.alpha = 0
+            })
+        }) { finished in
+            completion?(finished)
+        }
+    }
     
-    ///Returns the rotation for the swipe animation in radians.
-//    private static func rotationForSwipe(card: MGSwipeCard, direction: SwipeDirection, forced: Bool = false) -> CGFloat {
-//        if direction == .up || direction == .down { return 0 }
-//        if forced {
-//            if direction == .left {
-//                return -2 * options.maximumRotationAngle
-//            } else {
-//                return 2 * options.maximumRotationAngle
-//            }
-//        }
-//        let touchPoint = card.touchLocation ?? .zero
-//        if (direction == .left && touchPoint.y < card.bounds.height / 2) || (direction == .right && touchPoint.y >= card.bounds.height / 2) {
-//            return -2 * options.maximumRotationAngle
-//        }
-//        return 2 * options.maximumRotationAngle
-//    }
+    /// Performs the reverse swipe animation changes without animating them.
+    func reverseSwipe(_ card: MGSwipeCard) {
+        removeAllAnimations(on: card)
+        for overlay in card.overlays.values {
+            overlay.alpha = 0
+        }
+        card.transform = .identity
+    }
+    
+    /// Removes all animations currently attached to the card and its overlays.
+    func removeAllAnimations(on card: MGSwipeCard) {
+        card.layer.removeAllAnimations()
+        for overlay in card.overlays.values {
+            overlay.layer.removeAllAnimations()
+        }
+    }
+    
+    //MARK: - Swipe Calculations
+    
+    func overlayFadeDuration(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool) -> TimeInterval {
+        let overlay: UIView? = card.overlays[direction]
+        return (forced && overlay != nil) ? card.animationOptions.overlayFadeAnimationDuration : 0
+    }
+    
+    /// Returns the end card transform for the swipe animation.
+    func swipeTransform(forCard card: MGSwipeCard, forDirection direction: SwipeDirection, forced: Bool = true) -> CGAffineTransform {
+        let transform = CGAffineTransform.identity.rotated(by: rotationForSwipe(card: card, direction: direction, forced: forced))
+        let dragTranslation = forced ? direction.point : card.panGestureRecognizer.translation(in: card.superview)
+        let translation = translationForSwipe(card: card, direction: direction, translation: dragTranslation)
+        return transform.concatenating(CGAffineTransform(translationX: translation.x, y: translation.y))
+    }
+    
+    /// Returns the end card translation for the swipe animation in points. Based on speed and direction.
+    func translationForSwipe(card: MGSwipeCard, direction: SwipeDirection, translation: CGPoint) -> CGPoint {
+        let cardDiagonalLength: CGFloat = CGPoint.zero.distance(to: CGPoint(x: card.bounds.width, y: card.bounds.height))
+        let minimumOffscreenTranslation: CGPoint = CGPoint(x: UIScreen.main.bounds.width + cardDiagonalLength,
+                                                           y: UIScreen.main.bounds.height + cardDiagonalLength)
+        let maxLength: CGFloat = max(abs(translation.x), abs(translation.y))
+        let directionVector: CGPoint = (1 / maxLength) * translation
+        let velocityFactor: CGFloat = max(1, card.dragSpeed(on: direction) / card.minimumSwipeSpeed)
+        return velocityFactor * CGPoint(x: directionVector.x * minimumOffscreenTranslation.x,
+                                        y: directionVector.y * minimumOffscreenTranslation.y)
+    }
+    
+    /// Returns the end card rotation angle for the swipe animation in radians.
+    func rotationForSwipe(card: MGSwipeCard, direction: SwipeDirection, forced: Bool) -> CGFloat {
+        if direction == .up || direction == .down { return 0 }
+        if forced {
+            let rotationDirectionY: CGFloat = direction == .left ? -1 : 1
+            return 2 * rotationDirectionY * card.animationOptions.maximumRotationAngle
+        }
+        let touchPoint: CGPoint = card.touchLocation ?? .zero
+        if (direction == .left && touchPoint.y < card.bounds.height / 2) || (direction == .right && touchPoint.y >= card.bounds.height / 2) {
+            return -2 * card.animationOptions.maximumRotationAngle
+        }
+        return 2 * card.animationOptions.maximumRotationAngle
+    }
 }
