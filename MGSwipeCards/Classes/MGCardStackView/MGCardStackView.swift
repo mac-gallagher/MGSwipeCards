@@ -115,29 +115,28 @@ open class MGCardStackView: UIView {
     //MARK: - Main Methods
     
     public func swipe(_ direction: SwipeDirection, animated: Bool) {
-        guard let topCard = topCard else { return }
-        if !isUserInteractionEnabled { return }
-        topCard.swipe(direction: direction, animated: animated)
+//        if !isUserInteractionEnabled { return }
+        topCard?.swipe(direction: direction, animated: animated)
     }
     
     public func undoLastSwipe(animated: Bool) {
         guard let lastSwipe = currentState.previousSwipe else { return }
-        if !isUserInteractionEnabled { return }
-        delegate?.cardStack(self, didUndoCardAt: lastSwipe.index, from: lastSwipe.direction)
-        loadState(currentState.previousState!)
+//        if !isUserInteractionEnabled { return }
+//        delegate?.cardStack(self, didUndoCardAt: lastSwipe.index, from: lastSwipe.direction)
+//        loadState(currentState.previousState!)
         topCard?.reverseSwipe(from: lastSwipe.direction, animated: animated)
     }
     
     public func shift(withDistance distance: Int = 1, animated: Bool) {
-        if distance == 0 || visibleCards.count <= 1 { return }
-        if !isUserInteractionEnabled { return }
-        let newState = CardStackState(remainingIndices: currentState.remainingIndices.shift(withDistance: distance),
-                                             previousSwipe: currentState.previousSwipe,
-                                             previousState: currentState.previousState)
-        loadState(newState)
-        if animated {
-            BackgroundCardAnimator.shift(cardStack: self, withDistance: distance, completion: nil)
-        }
+//        if distance == 0 || visibleCards.count <= 1 { return }
+//        if !isUserInteractionEnabled { return }
+//        let newState = CardStackState(remainingIndices: currentState.remainingIndices.shift(withDistance: distance),
+//                                             previousSwipe: currentState.previousSwipe,
+//                                             previousState: currentState.previousState)
+//        loadState(newState)
+//        if animated {
+//            BackgroundCardAnimator.shift(cardStack: self, withDistance: distance, completion: nil)
+//        }
     }
     
     //MARK: - Data Source

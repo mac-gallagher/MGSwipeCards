@@ -11,7 +11,7 @@ import Nimble
 
 @testable import MGSwipeCards
 
-class MockCardAnimator: CardAnimatable {
+class MockCardAnimator: CardAnimator {
     
     var swipeCalled: Bool = false
     var swipeDirection: SwipeDirection?

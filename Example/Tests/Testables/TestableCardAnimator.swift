@@ -8,7 +8,7 @@
 
 @testable import MGSwipeCards
 
-class TestableCardAnimator: CardAnimator {
+class TestableCardAnimator: MGCardAnimator {
     
     var testTransformForSwipe: CGAffineTransform?
     override func swipeTransform(forCard card: MGSwipeCard, forDirection direction: SwipeDirection, forced: Bool) -> CGAffineTransform {
@@ -25,8 +25,13 @@ class TestableCardAnimator: CardAnimator {
         return testRotationForSwipe ?? super.rotationForSwipe(card: card, direction: direction, forced: forced)
     }
     
-    var testOverlayFadeDuration: TimeInterval?
-    override func overlayFadeDuration(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool) -> TimeInterval {
-        return testOverlayFadeDuration ?? super.overlayFadeDuration(card, direction: direction, forced: forced)
+    var testRelativeSwipeOverlayFadeDuration: TimeInterval?
+    override func relativeSwipeOverlayFadeDuration(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool) -> TimeInterval {
+        return testRelativeSwipeOverlayFadeDuration ?? super.relativeSwipeOverlayFadeDuration(card, direction: direction, forced: forced)
+    }
+    
+    var testRelativeReverseSwipeOverlayFadeDuration: TimeInterval?
+    override func relativeReverseSwipeOverlayFadeDuration(_ card: MGSwipeCard, direction: SwipeDirection) -> TimeInterval {
+        return testRelativeReverseSwipeOverlayFadeDuration ?? super.relativeReverseSwipeOverlayFadeDuration(card, direction: direction)
     }
 }

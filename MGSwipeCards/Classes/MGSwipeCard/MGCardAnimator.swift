@@ -5,7 +5,7 @@
 //  Created by Mac Gallagher on 11/9/18.
 //
 
-protocol CardAnimatable {
+protocol CardAnimator {
     func animateSwipe(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?)
     func swipe(_ card: MGSwipeCard, direction: SwipeDirection)
     func animateReverseSwipe(_ card: MGSwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?)
@@ -15,8 +15,8 @@ protocol CardAnimatable {
     func removeAllAnimations(on card: MGSwipeCard)
 }
 
-class CardAnimator: CardAnimatable {
-    static let shared = CardAnimator()
+class MGCardAnimator: CardAnimator {
+    static let shared: MGCardAnimator = MGCardAnimator()
     
     func animateSwipe(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
         removeAllAnimations(on: card)
@@ -27,18 +27,15 @@ class CardAnimator: CardAnimatable {
             }
         }
         
-        let overlayDuration: TimeInterval = overlayFadeDuration(card, direction: direction, forced: forced)
-        let swipeDuration: TimeInterval = card.animationOptions.cardSwipeAnimationDuration
-        let totalDuration: TimeInterval = overlayDuration + swipeDuration
+        let totalDuration: TimeInterval = card.animationOptions.totalSwipeDuration
+        let relativeOverlayDuration: TimeInterval = relativeSwipeOverlayFadeDuration(card, direction: direction, forced: forced)
         
         UIView.animateKeyframes(withDuration: totalDuration, delay: 0.0, options: .calculationModeLinear, animations: {
-            let relativeOverlayDuration: TimeInterval = overlayDuration / totalDuration
-            
             UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: relativeOverlayDuration, animations: {
                 card.overlays[direction]?.alpha = 1
             })
             
-            UIView.addKeyframe(withRelativeStartTime: relativeOverlayDuration, relativeDuration: 1.0, animations: {
+            UIView.addKeyframe(withRelativeStartTime: relativeOverlayDuration, relativeDuration: 1.0, animations: { [unowned self] in
                 card.transform = self.swipeTransform(forCard: card, forDirection: direction, forced: forced)
             })
         }) { finished in
@@ -58,10 +55,10 @@ class CardAnimator: CardAnimatable {
     func animateReset(_ card: MGSwipeCard, completion: ((Bool) -> ())?) {
         removeAllAnimations(on: card)
         
-        let resetDuration: TimeInterval = card.animationOptions.resetAnimationSpringDuration
-        let resetSpringDamping: CGFloat = card.animationOptions.resetAnimationSpringDamping
+        let totalDuration: TimeInterval = card.animationOptions.totalResetDuration
+        let resetSpringDamping: CGFloat = card.animationOptions.resetSpringDamping
         
-        UIView.animate(withDuration: resetDuration, delay: 0.0, usingSpringWithDamping: resetSpringDamping, initialSpringVelocity: 0.0, options: [.curveLinear, .allowUserInteraction], animations: {
+        UIView.animate(withDuration: totalDuration, delay: 0.0, usingSpringWithDamping: resetSpringDamping, initialSpringVelocity: 0.0, options: [.curveLinear, .allowUserInteraction], animations: {
             if let direction = card.activeDirection, let overlay = card.overlays[direction] {
                 overlay.alpha = 0
             }
@@ -82,24 +79,23 @@ class CardAnimator: CardAnimatable {
     
     func animateReverseSwipe(_ card: MGSwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?) {
         removeAllAnimations(on: card)
-        
+
         //recreate swipe
         card.transform = swipeTransform(forCard: card, forDirection: direction)
         for (overlayDirection, overlay) in card.overlays {
             overlay.alpha = overlayDirection == direction ? 1 : 0
         }
-        
-        let overlayDuration: TimeInterval = overlayFadeDuration(card, direction: direction, forced: true)
-        let reverseSwipeDuration: TimeInterval = card.animationOptions.reverseSwipeAnimationDuration
-        let totalDuration: TimeInterval = overlayDuration + reverseSwipeDuration
-            
+
+        let totalDuration: TimeInterval = card.animationOptions.totalReverseSwipeDuration
+        let relativeOverlayDuration: TimeInterval = relativeReverseSwipeOverlayFadeDuration(card, direction: direction)
+
         UIView.animateKeyframes(withDuration: totalDuration, delay: 0.0, options: [.calculationModeLinear], animations: {
-            let relativeReverseSwipeDuration: TimeInterval = reverseSwipeDuration / totalDuration
-            
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: relativeReverseSwipeDuration, animations: {
+            let relativeReverseSwipeDuration: TimeInterval = 1 - relativeOverlayDuration
+
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1 - relativeOverlayDuration, animations: {
                 card.transform = .identity
             })
-            
+
             UIView.addKeyframe(withRelativeStartTime: relativeReverseSwipeDuration, relativeDuration: 1.0, animations: {
                 card.overlays[direction]?.alpha = 0
             })
@@ -127,9 +123,16 @@ class CardAnimator: CardAnimatable {
     
     //MARK: - Swipe Calculations
     
-    func overlayFadeDuration(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool) -> TimeInterval {
+    func relativeSwipeOverlayFadeDuration(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool) -> TimeInterval {
         let overlay: UIView? = card.overlays[direction]
-        return (forced && overlay != nil) ? card.animationOptions.overlayFadeAnimationDuration : 0
+        let totalSwipeDuration: TimeInterval = card.animationOptions.totalSwipeDuration
+        return (forced && overlay != nil) ? (card.animationOptions.relativeSwipeOverlayFadeDuration * totalSwipeDuration) : 0
+    }
+    
+    func relativeReverseSwipeOverlayFadeDuration(_ card: MGSwipeCard, direction: SwipeDirection) -> TimeInterval {
+        let overlay: UIView? = card.overlays[direction]
+        let totalSwipeDuration: TimeInterval = card.animationOptions.totalReverseSwipeDuration
+        return (overlay != nil) ? (card.animationOptions.relativeReverseSwipeOverlayFadeDuration * totalSwipeDuration) : 0
     }
     
     /// Returns the end card transform for the swipe animation.

@@ -21,7 +21,7 @@ public protocol MGSwipeCardDelegate {
 open class MGSwipeCard: SwipeView {
     public var delegate: MGSwipeCardDelegate?
     
-    public var animationOptions: CardAnimationOptions = .defaultOptions
+    public var animationOptions: MGCardAnimationOptions = .defaultOptions
     
     public var isFooterTransparent: Bool = false {
         didSet {
@@ -79,7 +79,7 @@ open class MGSwipeCard: SwipeView {
     var overlayContainer = UIView()
     var overlays: [SwipeDirection: UIView] = [:]
     
-    private var animator: CardAnimatable = CardAnimator.shared
+    private var animator: CardAnimator = MGCardAnimator.shared
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -91,7 +91,7 @@ open class MGSwipeCard: SwipeView {
         initialize()
     }
     
-    convenience init(animator: CardAnimatable) {
+    convenience init(animator: CardAnimator) {
         self.init(frame: .zero)
         self.animator = animator
     }
@@ -107,6 +107,7 @@ open class MGSwipeCard: SwipeView {
             overlayContainer.addSubview(overlay)
             overlay.alpha = 0
         }
+        setNeedsLayout()
     }
     
     open override func layoutSubviews() {

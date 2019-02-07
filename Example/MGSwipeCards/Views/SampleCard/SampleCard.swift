@@ -26,7 +26,7 @@ class SampleCard: MGSwipeCard {
         isFooterTransparent = true
         footerHeight = 80
     
-        setOverlay(SampleCardOverlay.left(), forDirection: .left)
+//        setOverlay(SampleCardOverlay.left(), forDirection: .left)
         setOverlay(SampleCardOverlay.right(), forDirection: .right)
         setOverlay(SampleCardOverlay.up(), forDirection: .up)
     }

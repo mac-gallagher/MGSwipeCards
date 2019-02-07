@@ -42,49 +42,46 @@ extension MGCardStackView: MGSwipeCardDelegate {
     }
     
     public func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool) {
+        delegate?.cardStack(self, didSwipeCardAt: topCardIndex, with: direction)
+//        isUserInteractionEnabled = false
         
+        //remove swiped card
+        //        visibleCards.remove(at: 0)
+        
+        //set new state
+        let newCurrentState = CardStackState(remainingIndices: Array(currentState.remainingIndices.dropFirst()), previousSwipe: (index: topCardIndex, direction: direction), previousState: currentState)
+        currentState = newCurrentState
+        
+        //        //no cards left
+        //        if currentState.remainingIndices.count == 0 {
+        //            delegate?.didSwipeAllCards(self)
+        //            self.isUserInteractionEnabled = true
+        //            return
+        //        }
+        //
+        //        //insert new card (if needed)
+        //        if currentState.remainingIndices.count - visibleCards.count > 0 {
+        //            let bottomCardIndex = currentState.remainingIndices[visibleCards.count]
+        //            if let card = loadCard(at: bottomCardIndex) {
+        //                insertCard(card, at: visibleCards.count)
+        //            }
+        //        }
+        //
+        //        BackgroundCardAnimator.removeAllAnimations(cardStack: self)
+        //
+        //        //animate background cards, enable interaction once loaded
+        //        BackgroundCardAnimator.swipe(cardStack: self, forced: forced) { (finished) in
+        //            if finished {
+        //                self.topCard?.isUserInteractionEnabled = true
+        //                self.isUserInteractionEnabled = true
+        //            }
+        //        }
     }
     
     public func card(didReverseSwipe card: MGSwipeCard, from direction: SwipeDirection) {
         
     }
-//
-//    public func card(willSwipe card: MGSwipeCard, with direction: SwipeDirection, animated: Bool, forced: Bool) {
-//        delegate?.cardStack(self, didSwipeCardAt: topCardIndex, with: direction)
-//        isUserInteractionEnabled = false
-//
-//        //remove swiped card
-//        visibleCards.remove(at: 0)
-//
-//        //set new state
-//        let newCurrentState = CardStackState(remainingIndices: Array(currentState.remainingIndices.dropFirst()), previousSwipe: (index: topCardIndex, direction: direction), previousState: currentState)
-//        currentState = newCurrentState
-//
-//        //no cards left
-//        if currentState.remainingIndices.count == 0 {
-//            delegate?.didSwipeAllCards(self)
-//            self.isUserInteractionEnabled = true
-//            return
-//        }
-//
-//        //insert new card (if needed)
-//        if currentState.remainingIndices.count - visibleCards.count > 0 {
-//            let bottomCardIndex = currentState.remainingIndices[visibleCards.count]
-//            if let card = loadCard(at: bottomCardIndex) {
-//                insertCard(card, at: visibleCards.count)
-//            }
-//        }
-//
-//        BackgroundCardAnimator.removeAllAnimations(cardStack: self)
-//
-//        //animate background cards, enable interaction once loaded
-//        BackgroundCardAnimator.swipe(cardStack: self, forced: forced) { (finished) in
-//            if finished {
-//                self.topCard?.isUserInteractionEnabled = true
-//                self.isUserInteractionEnabled = true
-//            }
-//        }
-//    }
+    
 //
 //    public func card(willUndo card: MGSwipeCard, from direction: SwipeDirection) {
 //        isUserInteractionEnabled = false

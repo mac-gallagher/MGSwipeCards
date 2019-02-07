@@ -15,39 +15,49 @@ class SwipeViewSpec: QuickSpec {
     override func spec() {
         describe("SwipeView") {
             var subject: TestableSwipeView!
+            var testPanGestureRecognizer: TestablePanGestureRecognizer!
+            var testTapGestureRecognizer: TestableTapGestureRecognizer!
+            
+            beforeEach {
+                subject = TestableSwipeView()
+                testPanGestureRecognizer = subject.panGestureRecognizer as? TestablePanGestureRecognizer
+                testTapGestureRecognizer = subject.tapGestureRecognizer as? TestableTapGestureRecognizer
+            }
             
             describe("initialization") {
                 context("when initializing a new swipe view") {
+                    var swipeView: SwipeView!
+                    
                     beforeEach {
-                        subject = TestableSwipeView()
+                        swipeView = SwipeView()
                     }
                     
                     it("should have its swipe directions set to all directions") {
-                        expect(subject.swipeDirections).to(equal(SwipeDirection.allDirections))
+                        expect(swipeView.swipeDirections).to(equal(SwipeDirection.allDirections))
                     }
                     
                     it("should have a minimum swipe speed of 1100") {
-                        expect(subject.minimumSwipeSpeed).to(equal(1100))
+                        expect(swipeView.minimumSwipeSpeed).to(equal(1100))
                     }
                     
                     it("should not have an active swipe direction") {
-                        expect(subject.activeDirection).to(beNil())
+                        expect(swipeView.activeDirection).to(beNil())
                     }
                     
                     it("should have a minimum swipe margin of 0.5") {
-                        expect(subject.minimumSwipeMargin).to(equal(0.5))
+                        expect(swipeView.minimumSwipeMargin).to(equal(0.5))
                     }
                     
                     it("should not have an initial touch location") {
-                        expect(subject.touchLocation).to(beNil())
+                        expect(swipeView.touchLocation).to(beNil())
                     }
                     
                     it("should have a tap gesture recognizer") {
-                        expect(subject.tapGestureRecognizer).toNot(beNil())
+                        expect(swipeView.tapGestureRecognizer).toNot(beNil())
                     }
                     
                     it("should have a pan gesture recognizer") {
-                        expect(subject.panGestureRecognizer).toNot(beNil())
+                        expect(swipeView.panGestureRecognizer).toNot(beNil())
                     }
                 }
             }
@@ -55,13 +65,6 @@ class SwipeViewSpec: QuickSpec {
             //MARK: - Swipe Calculations
             
             describe("drag speed") {
-                var testPanGestureRecognizer: TestablePanGestureRecognizer!
-                
-                beforeEach {
-                    subject = TestableSwipeView()
-                    testPanGestureRecognizer = subject.panGestureRecognizer as? TestablePanGestureRecognizer
-                }
-                
                 for direction in SwipeDirection.allDirections {
                     context("when swiping with a nonzero velocity in the specified direction") {
                         beforeEach {
@@ -77,13 +80,6 @@ class SwipeViewSpec: QuickSpec {
             }
             
             describe("drag percentage") {
-                var testPanGestureRecognizer: TestablePanGestureRecognizer!
-                
-                beforeEach {
-                    subject = TestableSwipeView()
-                    testPanGestureRecognizer = subject.panGestureRecognizer as? TestablePanGestureRecognizer
-                }
-                
                 for direction in SwipeDirection.allDirections {
                     context("when swiping halfway across the screen in the specified direction") {
                         beforeEach {
@@ -126,18 +122,11 @@ class SwipeViewSpec: QuickSpec {
             }
             
             describe("active direction") {
-                var testPanGestureRecognizer: TestablePanGestureRecognizer!
                 let neighboringPairs: [(SwipeDirection, SwipeDirection)]
                     = [(.up, .right),
                        (.right, .down),
                        (.down, .left),
                        (.left, .up)]
-                
-                
-                beforeEach {
-                    subject = TestableSwipeView()
-                    testPanGestureRecognizer = subject.panGestureRecognizer as? TestablePanGestureRecognizer
-                }
                 
                 context("when the drag percentage is zero for all directions") {
                     let translation: CGPoint = .zero
@@ -185,13 +174,6 @@ class SwipeViewSpec: QuickSpec {
             //MARK: - Delegates
             
             describe("tap gesture") {
-                var testTapGestureRecognizer: TestableTapGestureRecognizer!
-                
-                beforeEach {
-                    subject = TestableSwipeView()
-                    testTapGestureRecognizer = subject.tapGestureRecognizer as? TestableTapGestureRecognizer
-                }
-                
                 context("when a tap gesture is recognized") {
                     let touchPoint = CGPoint(x: 50, y: 50)
                     
@@ -211,12 +193,6 @@ class SwipeViewSpec: QuickSpec {
             
             describe("pan gesture") {
                 let unsupportedStates: [UIPanGestureRecognizer.State] = [.cancelled, .failed, .possible, .recognized]
-                var testPanGestureRecognizer: TestablePanGestureRecognizer!
-                
-                beforeEach {
-                    subject = TestableSwipeView()
-                    testPanGestureRecognizer = subject.panGestureRecognizer as? TestablePanGestureRecognizer
-                }
                 
                 context("when a pan gesture begin is recognized") {
                     let touchPoint: CGPoint = CGPoint(x: 50, y: 50)
@@ -268,14 +244,10 @@ class SwipeViewSpec: QuickSpec {
             describe("swipe recognition") {
                 let minimumSwipeMargin: CGFloat = 0.3
                 let minimumSwipeSpeed: CGFloat = 500
-                var testPanGestureRecognizer: TestablePanGestureRecognizer!
                 
                 beforeEach {
-                    subject = TestableSwipeView()
                     subject.minimumSwipeMargin = minimumSwipeMargin
                     subject.minimumSwipeSpeed = minimumSwipeSpeed
-                    
-                    testPanGestureRecognizer = subject.panGestureRecognizer as? TestablePanGestureRecognizer
                 }
                 
                 context("when a pan gesture ended with no active direction") {
