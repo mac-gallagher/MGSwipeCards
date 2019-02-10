@@ -244,9 +244,9 @@ class MGSwipeCardSpec: QuickSpec {
             describe("drag rotation") {
                 for direction in [SwipeDirection.up, SwipeDirection.down] {
                     context("when the card is dragged vertically") {
-                        let translation: CGPoint = CGPoint(x: 0, y: direction.point.y * UIScreen.main.bounds.height)
                         
                         beforeEach {
+                            let translation: CGPoint = CGPoint(x: 0, y: direction.point.y * UIScreen.main.bounds.height)
                             testPanGestureRecognizer.performPan(withLocation: nil, translation: translation, velocity: nil, state: nil)
                         }
                         
@@ -281,9 +281,9 @@ class MGSwipeCardSpec: QuickSpec {
                             }
                             
                             context("at least the length of the screen's width") {
-                                let translation: CGPoint = CGPoint(x: direction.point.x * UIScreen.main.bounds.width, y: 0)
                                 
                                 beforeEach {
+                                    let translation: CGPoint = CGPoint(x: direction.point.x * UIScreen.main.bounds.width, y: 0)
                                     testPanGestureRecognizer.performPan(withLocation: nil, translation: translation, velocity: nil, state: nil)
                                 }
                                 
@@ -317,7 +317,8 @@ class MGSwipeCardSpec: QuickSpec {
             
             describe("overlay percentage") {
                 for direction in SwipeDirection.allDirections {
-                    context("when the card is dragged in exactly one direction") {
+                    context("when the drag percentage is nonzero in exactly one direction") {
+                        
                         beforeEach {
                             subject.testDragPercentage[direction] = 0.1
                         }
@@ -362,7 +363,7 @@ class MGSwipeCardSpec: QuickSpec {
                     }
                 }
                 
-                context("when the card is dragged in more than one direction") {
+                context("when the drag percentage is nonzero in more than one direction") {
                     let neighboringPairs: [(SwipeDirection, SwipeDirection)]
                         = [(.up, .right),
                            (.right, .down),
@@ -371,6 +372,7 @@ class MGSwipeCardSpec: QuickSpec {
                     
                     for (direction1, direction2) in neighboringPairs {
                         context("and the drag percentage of the two directions is equal") {
+                            
                             beforeEach {
                                 subject.testDragPercentage[direction1] = 0.1
                                 subject.testDragPercentage[direction2] = 0.1
@@ -383,6 +385,7 @@ class MGSwipeCardSpec: QuickSpec {
                         }
                         
                         context("and the drag percentage of the two directions is not equal") {
+                            
                             beforeEach {
                                 subject.testDragPercentage[direction1] = 0.2
                                 subject.testDragPercentage[direction2] = 0.1
@@ -399,10 +402,74 @@ class MGSwipeCardSpec: QuickSpec {
                 }
             }
             
+            //MARK: - Completions
+            
+            describe("animation completions") {
+                context("when the reset animation completion is called") {
+                    
+                    beforeEach {
+                        subject.resetCompletion(subject)
+                    }
+                    
+                    it("should call the didCancelSwipe delegate function") {
+                        expect(mockSwipeCardDelegate.didCancelSwipeCalled).to(beTrue())
+                    }
+                }
+                
+                for direction in SwipeDirection.allDirections {
+                    context("when the swipe animation completion is called") {
+                        context("and forced is true") {
+                            
+                            beforeEach {
+                                subject.swipeCompletion(subject, direction, true)
+                            }
+                            
+                            it("should call the didSwipe delegate method with the correct parameters") {
+                                expect(mockSwipeCardDelegate.didSwipeCalled).to(beTrue())
+                                expect(mockSwipeCardDelegate.didSwipeForced).to(beTrue())
+                                expect(mockSwipeCardDelegate.didSwipeDirection).to(equal(direction))
+                            }
+                        }
+                        
+                        context("and forced is false") {
+                            
+                            beforeEach {
+                                subject.swipeCompletion(subject, direction, false)
+                            }
+                            
+                            it("should call the didSwipe delegate method with the correct parameters") {
+                                expect(mockSwipeCardDelegate.didSwipeCalled).to(beTrue())
+                                expect(mockSwipeCardDelegate.didSwipeForced).to(beFalse())
+                                expect(mockSwipeCardDelegate.didSwipeDirection).to(equal(direction))
+                            }
+                        }
+                    }
+                }
+                
+                for direction in SwipeDirection.allDirections {
+                    context("when the reverse swipe animation completion is called") {
+                        
+                        beforeEach {
+                            subject.reverseSwipeCompletion(subject, direction)
+                        }
+                        
+                        it("should call the didSwipe delegate method with the correct parameters") {
+                            expect(mockSwipeCardDelegate.didReverseSwipeCalled).to(beTrue())
+                            expect(mockSwipeCardDelegate.didReverseSwipeDirection).to(equal(direction))
+                        }
+                        
+                        it("should enable user interaction on the card") {
+                            expect(subject.isUserInteractionEnabled).to(beTrue())
+                        }
+                    }
+                }
+            }
+            
             //MARK: - Gestures
             
             describe("tap gesture") {
-                context("when the parent view's didTap method is called") {
+                context("when the didTap method is called") {
+                    
                     beforeEach {
                         subject.didTap(recognizer: UITapGestureRecognizer())
                     }
@@ -414,7 +481,8 @@ class MGSwipeCardSpec: QuickSpec {
             }
             
             describe("physical swipe begin") {
-                context("when parent view's beginSwiping method is called") {
+                context("when the beginSwiping method is called") {
+                    
                     beforeEach {
                         subject.beginSwiping(recognizer: UIPanGestureRecognizer())
                     }
@@ -433,6 +501,7 @@ class MGSwipeCardSpec: QuickSpec {
                     let cardCenterY: CGFloat = cardHeight / 2
                     
                     context("and the touch point is in the first quadrant of the card's bounds") {
+                        
                         beforeEach {
                             subject.testTouchLocation = CGPoint(x: cardCenterX + 1, y: cardCenterY - 1)
                         }
@@ -443,6 +512,7 @@ class MGSwipeCardSpec: QuickSpec {
                     }
                     
                     context("and the touch point is in the second quadrant of the card's bounds") {
+                        
                         beforeEach {
                             subject.testTouchLocation = CGPoint(x: cardCenterX - 1, y: cardCenterY - 1)
                         }
@@ -453,6 +523,7 @@ class MGSwipeCardSpec: QuickSpec {
                     }
                     
                     context("and the touch point is in the third quadrant of the card's bounds") {
+                        
                         beforeEach {
                             subject.testTouchLocation = CGPoint(x: cardCenterX - 1, y: cardCenterY + 1)
                         }
@@ -463,6 +534,7 @@ class MGSwipeCardSpec: QuickSpec {
                     }
                     
                     context("and the touch point is in the fourth quadrant of the card's bounds") {
+                        
                         beforeEach {
                             subject.testTouchLocation = CGPoint(x: cardCenterX + 1, y: cardCenterY + 1)
                         }
@@ -476,7 +548,7 @@ class MGSwipeCardSpec: QuickSpec {
             
             describe("physical swipe change") {
                 for direction in SwipeDirection.allDirections {
-                    context("when the parent view's continueSwiping method is called") {
+                    context("when the continueSwiping method is called") {
                         let testOverlayPercentage: CGFloat = 0.5
                         let overlay: UIView = UIView()
                         let testTransform: CGAffineTransform = {
@@ -509,21 +581,19 @@ class MGSwipeCardSpec: QuickSpec {
             
             describe("physical swipe end") {
                 context("when the parent view's didCancelSwipe method is called") {
+                    
                     beforeEach {
                         subject.didCancelSwipe(recognizer: UIPanGestureRecognizer())
                     }
                     
-                    it("should animate the card back to its original position") {
+                    it("should call the animator's reset method") {
                         expect(mockCardAnimator.resetAnimationCalled).to(beTrue())
-                    }
-                    
-                    it("should call the didCancelSwipe delegate method after the card's reset animation is completed") {
-                        expect(mockSwipeCardDelegate.didCancelSwipeCalled).to(beTrue())
                     }
                 }
                 
                 for direction in SwipeDirection.allDirections {
                     context("when the parent view's didSwipe method is called") {
+                        
                         beforeEach {
                             subject.didSwipe(recognizer: UIPanGestureRecognizer(), with: direction)
                         }
@@ -536,12 +606,6 @@ class MGSwipeCardSpec: QuickSpec {
                             expect(mockCardAnimator.swipeAnimationCalled).to(beTrue())
                             expect(mockCardAnimator.swipeAnimationDirection).to(equal(direction))
                             expect(mockCardAnimator.swipeAnimationForced).to(beFalse())
-                        }
-                        
-                        it("should call the didSwipe delegate method with the correct parameters once the animation has completed") {
-                            expect(mockSwipeCardDelegate.didSwipeCalled).to(beTrue())
-                            expect(mockSwipeCardDelegate.didSwipeForced).to(beFalse())
-                            expect(mockSwipeCardDelegate.didSwipeDirection).to(equal(direction))
                         }
                     }
                 }
@@ -567,7 +631,8 @@ class MGSwipeCardSpec: QuickSpec {
             
             describe("programmatic swipe") {
                 for direction in SwipeDirection.allDirections {
-                    context("when the swipe method is called") {
+                    context("when the swipe method is called with no animation") {
+                        
                         beforeEach {
                             subject.swipe(direction: direction, animated: false)
                         }
@@ -575,40 +640,27 @@ class MGSwipeCardSpec: QuickSpec {
                         it("should disable the user interaction on the card") {
                             expect(subject.isUserInteractionEnabled).to(beFalse())
                         }
-                    }
-                    
-                    context("when the swipe method is called with no animation") {
-                        beforeEach {
-                            subject.swipe(direction: direction, animated: false)
-                        }
                         
-                        it("should perform the swipe animation with duration equal to zero and the correct direction") {
+                        it("call the animator's swipe method with the correct direction") {
                             expect(mockCardAnimator.swipeCalled).to(beTrue())
                             expect(mockCardAnimator.swipeDirection).to(equal(direction))
-                        }
-                        
-                        it("should immediately call the didSwipe delegate method with the correct parameters") {
-                            expect(mockSwipeCardDelegate.didSwipeCalled).to(beTrue())
-                            expect(mockSwipeCardDelegate.didSwipeForced).to(beTrue())
-                            expect(mockSwipeCardDelegate.didSwipeDirection).to(equal(direction))
                         }
                     }
                     
                     context("when the swipe method is called with an animation") {
+                        
                         beforeEach {
                             subject.swipe(direction: direction, animated: true)
+                        }
+                        
+                        it("should disable the user interaction on the card") {
+                            expect(subject.isUserInteractionEnabled).to(beFalse())
                         }
                         
                         it("should trigger a swipe animation with the correct parameters") {
                             expect(mockCardAnimator.swipeAnimationCalled).to(beTrue())
                             expect(mockCardAnimator.swipeAnimationDirection).to(equal(direction))
                             expect(mockCardAnimator.swipeAnimationForced).to(beTrue())
-                        }
-                        
-                        it("should call the didSwipe delegate method with the correct parameters once the animation has completed") {
-                            expect(mockSwipeCardDelegate.didSwipeCalled).to(beTrue())
-                            expect(mockSwipeCardDelegate.didSwipeForced).to(beTrue())
-                            expect(mockSwipeCardDelegate.didSwipeDirection).to(equal(direction))
                         }
                     }
                 }
@@ -617,45 +669,29 @@ class MGSwipeCardSpec: QuickSpec {
             describe("reverse swipe") {
                 for direction in SwipeDirection.allDirections {
                     context("when the reverse swipe method is called with no animation") {
+                        
                         beforeEach {
                             subject.reverseSwipe(from: direction, animated: false)
                         }
                         
-                        it("should perform the reverse swipe animation with duration equal to zero") {
+                        it("should call the animator's reverse swipe method") {
                             expect(mockCardAnimator.reverseSwipeCalled).to(beTrue())
-                        }
-                        
-                        it("should immediately call the didReverseSwipe delegate with the correct direction") {
-                            expect(mockSwipeCardDelegate.didReverseSwipeCalled).to(beTrue())
-                            expect(mockSwipeCardDelegate.didReverseSwipeDirection).to(equal(direction))
-                        }
-                        
-                        it("should enable user interaction on the card") {
-                            expect(subject.isUserInteractionEnabled).to(beTrue())
                         }
                     }
                     
                     context("when the reverse swipe method is called with an animation") {
+                        
                         beforeEach {
                             subject.reverseSwipe(from: direction, animated: true)
                         }
                         
-                        it("should immediately disable user interaction on the card") {
+                        it("should disable user interaction on the card") {
                             expect(subject.isUserInteractionEnabled).to(beFalse())
                         }
                         
                         it("should trigger a reverse swipe animation from the correct direction") {
                             expect(mockCardAnimator.reverseSwipeAnimationCalled).to(beTrue())
                             expect(mockCardAnimator.reverseSwipeAnimationDirection).to(equal(direction))
-                        }
-                        
-                        it("should call the didSwipe delegate method with the correct parameters once the animation has completed") {
-                            expect(mockSwipeCardDelegate.didReverseSwipeCalled).toEventually(beTrue())
-                            expect(mockSwipeCardDelegate.didReverseSwipeDirection).toEventually(equal(direction))
-                        }
-
-                        it("should enable user interaction on the card once the animation has completed") {
-                            expect(subject.isUserInteractionEnabled).toEventually(beTrue())
                         }
                     }
                 }

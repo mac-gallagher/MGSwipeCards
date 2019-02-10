@@ -25,16 +25,19 @@ class TestableSwipeCard: SwipeCard {
     private lazy var tapRecognizer = TestableTapGestureRecognizer(target: self, action: #selector(handleTap))
     
     var testActiveDirection: SwipeDirection?
+    
     override var activeDirection: SwipeDirection? {
         return testActiveDirection ?? super.activeDirection
     }
     
     var testTouchLocation: CGPoint?
+    
     override var touchLocation: CGPoint? {
         return testTouchLocation ?? super.touchLocation
     }
     
     var testRotationDirection: CGFloat?
+    
     override var rotationDirectionY: CGFloat {
         return testRotationDirection ?? super.rotationDirectionY
     }
@@ -42,26 +45,31 @@ class TestableSwipeCard: SwipeCard {
     //MARK: - Functions
     
     var testDragSpeed: CGFloat?
+    
     override func dragSpeed(on direction: SwipeDirection) -> CGFloat {
         return testDragSpeed ?? super.dragSpeed(on: direction)
     }
     
     var testDragPercentage = [SwipeDirection: CGFloat]()
+    
     override func dragPercentage(on direction: SwipeDirection) -> CGFloat {
         return testDragPercentage[direction] ?? super.dragPercentage(on: direction)
     }
     
     var testDragRotation: CGFloat?
+    
     override func dragRotationAngle(recognizer: UIPanGestureRecognizer) -> CGFloat {
         return testDragRotation ?? super.dragRotationAngle(recognizer: recognizer)
     }
     
     var testDragTransform: CGAffineTransform?
+    
     override func dragTransform(recognizer: UIPanGestureRecognizer) -> CGAffineTransform {
         return testDragTransform ?? super.dragTransform(recognizer: recognizer)
     }
     
     var testOverlayPercentage = [SwipeDirection: CGFloat]()
+    
     override func overlayPercentage(forDirection direction: SwipeDirection) -> CGFloat {
         return testOverlayPercentage[direction] ?? super.overlayPercentage(forDirection: direction)
     }

@@ -67,6 +67,12 @@ open class SwipeCard: SwipeView {
         return overlays[.down]
     }
     
+    typealias ResetCompletionBlock = (SwipeCard) -> Void
+    
+    typealias SwipeCompletionBlock = (SwipeCard, SwipeDirection, _ forced: Bool) -> Void
+    
+    typealias ReverseSwipeCompletionBlock = (SwipeCard, SwipeDirection) -> Void
+    
     var rotationDirectionY: CGFloat {
         if let touchPoint = touchLocation {
             return (touchPoint.y < bounds.height / 2) ? 1 : -1
@@ -74,11 +80,13 @@ open class SwipeCard: SwipeView {
         return 0
     }
     
-    var overlayContainer = UIView()
+    let overlayContainer = UIView()
     
     private var overlays: [SwipeDirection: UIView] = [:]
     
     private var animator: CardAnimator = DefaultCardAnimator.shared
+    
+    //MARK: - Initialization
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -101,6 +109,8 @@ open class SwipeCard: SwipeView {
     private func initialize() {
         addSubview(overlayContainer)
     }
+    
+    //MARK: - Layout
     
     public func setOverlay(_ overlay: UIView?, forDirection direction: SwipeDirection) {
         overlays[direction]?.removeFromSuperview()
@@ -176,9 +186,8 @@ open class SwipeCard: SwipeView {
     }
     
     override open func didCancelSwipe(recognizer: UIPanGestureRecognizer) {
-        animator.animateReset(self) { _ in
-            self.delegate?.card(didCancelSwipe: self)
-        }
+        super.didCancelSwipe(recognizer: recognizer)
+        animator.animateReset(self)
     }
     
     //MARK: - Transform Computations
@@ -206,6 +215,19 @@ open class SwipeCard: SwipeView {
     
     //MARK: - Main Methods
     
+    var resetCompletion: ResetCompletionBlock = { card in
+        card.delegate?.card(didCancelSwipe: card)
+    }
+    
+    var swipeCompletion: SwipeCompletionBlock = { card, direction, forced in
+        card.delegate?.card(didSwipe: card, with: direction, forced: forced)
+    }
+    
+    var reverseSwipeCompletion: ReverseSwipeCompletionBlock = { card, direction in
+        card.isUserInteractionEnabled = true
+        card.delegate?.card(didReverseSwipe: card, from: direction)
+    }
+    
     public func swipe(direction: SwipeDirection, animated: Bool) {
         swipeAction(direction: direction, animated: animated, forced: true)
     }
@@ -213,33 +235,18 @@ open class SwipeCard: SwipeView {
     private func swipeAction(direction: SwipeDirection, animated: Bool, forced: Bool) {
         isUserInteractionEnabled = false
         if animated {
-            animator.animateSwipe(self, direction: direction, forced: forced) { finished in
-                if finished {
-                    self.delegate?.card(didSwipe: self, with: direction, forced: forced)
-                }
-            }
+            animator.animateSwipe(self, direction: direction, forced: forced)
         } else {
             animator.swipe(self, direction: direction)
-            delegate?.card(didSwipe: self, with: direction, forced: forced)
         }
     }
     
     public func reverseSwipe(from direction: SwipeDirection, animated: Bool) {
         isUserInteractionEnabled = false
         if animated {
-            animator.animateReverseSwipe(self, from: direction) { finished in
-                if finished {
-                    self.finishReverseSwipe(direction: direction)
-                }
-            }
+            animator.animateReverseSwipe(self, from: direction)
         } else {
             animator.reverseSwipe(self)
-            finishReverseSwipe(direction: direction)
         }
-    }
-    
-    private func finishReverseSwipe(direction: SwipeDirection) {
-        isUserInteractionEnabled = true
-        delegate?.card(didReverseSwipe: self, from: direction)
     }
 }

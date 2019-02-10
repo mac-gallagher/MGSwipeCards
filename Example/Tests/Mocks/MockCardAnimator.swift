@@ -36,29 +36,23 @@ class MockCardAnimator: CardAnimator {
     var swipeAnimationDirection: SwipeDirection?
     var swipeAnimationForced: Bool?
     
-    func animateSwipe(_ card: SwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
+    func animateSwipe(_ card: SwipeCard, direction: SwipeDirection, forced: Bool) {
         swipeAnimationCalled = true
         swipeAnimationDirection = direction
         swipeAnimationForced = forced
-        completion?(true)
     }
     
-    let testReverseSwipeAnimationDuration: TimeInterval = 0.1
     var reverseSwipeAnimationCalled: Bool = false
     var reverseSwipeAnimationDirection: SwipeDirection?
     
-    func animateReverseSwipe(_ card: SwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?) {
+    func animateReverseSwipe(_ card: SwipeCard, from direction: SwipeDirection) {
         reverseSwipeAnimationCalled = true
         reverseSwipeAnimationDirection = direction
-        DispatchQueue.main.asyncAfter(deadline: .now() + testReverseSwipeAnimationDuration) {
-            completion?(true)
-        }
     }
     
     var resetAnimationCalled: Bool = false
-    func animateReset(_ card: SwipeCard, completion: ((Bool) -> ())?) {
+    func animateReset(_ card: SwipeCard) {
         resetAnimationCalled = true
-        completion?(true)
     }
     
     var removeAllAnimationsCalled: Bool = false

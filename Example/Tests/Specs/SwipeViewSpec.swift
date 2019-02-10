@@ -67,6 +67,7 @@ class SwipeViewSpec: QuickSpec {
             describe("drag speed") {
                 for direction in SwipeDirection.allDirections {
                     context("when swiping with a nonzero velocity in the specified direction") {
+                        
                         beforeEach {
                             let velocity: CGPoint = direction.point
                             testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: velocity, state: nil)
@@ -82,6 +83,7 @@ class SwipeViewSpec: QuickSpec {
             describe("drag percentage") {
                 for direction in SwipeDirection.allDirections {
                     context("when swiping halfway across the screen in the specified direction") {
+                        
                         beforeEach {
                             let translationX: CGFloat = direction.point.x * (UIScreen.main.bounds.size.width / 2)
                             let translationY: CGFloat = direction.point.y * (UIScreen.main.bounds.size.height / 2)
@@ -98,6 +100,7 @@ class SwipeViewSpec: QuickSpec {
                     }
                     
                     context("when swiping the full length of the screen in the specified direction") {
+                        
                         beforeEach {
                             let translationX = direction.point.x * UIScreen.main.bounds.size.width
                             let translationY = direction.point.y * UIScreen.main.bounds.size.height
@@ -205,6 +208,7 @@ class SwipeViewSpec: QuickSpec {
                 }
                 
                 context("when a pan gesture change is recognized") {
+                    
                     beforeEach {
                         testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: .changed)
                     }
@@ -216,6 +220,7 @@ class SwipeViewSpec: QuickSpec {
                 
                 for state in unsupportedStates {
                     context("when an unsupported pan gesture state is recognized") {
+                        
                         beforeEach {
                             testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: state)
                         }
@@ -245,6 +250,7 @@ class SwipeViewSpec: QuickSpec {
                 }
                 
                 context("when a pan gesture ended with no active direction") {
+                    
                     beforeEach {
                         testPanGestureRecognizer.performPan(withLocation: nil, translation: nil, velocity: nil, state: .ended)
                     }

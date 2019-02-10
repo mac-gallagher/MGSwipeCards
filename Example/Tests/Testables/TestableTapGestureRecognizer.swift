@@ -18,6 +18,7 @@ class TestableTapGestureRecognizer: UITapGestureRecognizer {
     }
     
     var testLocation: CGPoint?
+    
     override func location(in view: UIView?) -> CGPoint {
         return testLocation ?? super.location(in: view)
     }

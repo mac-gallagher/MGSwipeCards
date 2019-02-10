@@ -6,19 +6,19 @@
 //
 
 protocol CardAnimator {
-    func animateSwipe(_ card: SwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?)
     func swipe(_ card: SwipeCard, direction: SwipeDirection)
-    func animateReverseSwipe(_ card: SwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?)
+    func animateSwipe(_ card: SwipeCard, direction: SwipeDirection, forced: Bool)
     func reverseSwipe(_ card: SwipeCard)
-    func animateReset(_ card: SwipeCard, completion: ((Bool) -> ())?)
+    func animateReverseSwipe(_ card: SwipeCard, from direction: SwipeDirection)
     func reset(_ card: SwipeCard)
+    func animateReset(_ card: SwipeCard)
     func removeAllAnimations(on card: SwipeCard)
 }
 
 class DefaultCardAnimator: NSObject, CardAnimator {
     static let shared: DefaultCardAnimator = DefaultCardAnimator()
     
-    func animateSwipe(_ card: SwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
+    func animateSwipe(_ card: SwipeCard, direction: SwipeDirection, forced: Bool) {
         guard let options = card.animationOptions as? DefaultCardAnimationOptions else { return }
         
         removeAllAnimations(on: card)
@@ -31,15 +31,17 @@ class DefaultCardAnimator: NSObject, CardAnimator {
         let relativeOverlayDuration: TimeInterval = relativeSwipeOverlayFadeDuration(card, direction: direction, forced: forced)
         
         UIView.animateKeyframes(withDuration: totalDuration, delay: 0.0, options: .calculationModeLinear, animations: {
-            UIView.addKeyFrameAnimation(relativeDuration: relativeOverlayDuration, animations: {
+            self.addKeyFrameAnimation(relativeDuration: relativeOverlayDuration, animations: {
                 card.overlay(forDirection: direction)?.alpha = 1
             })
             
-            UIView.addKeyFrameAnimation(withRelativeStartTime: relativeOverlayDuration, relativeDuration: 1.0, animations: {
+            self.addKeyFrameAnimation(withRelativeStartTime: relativeOverlayDuration, relativeDuration: 1.0, animations: {
                 card.transform = self.swipeTransform(forCard: card, forDirection: direction, forced: forced)
             })
         }) { finished in
-            completion?(finished)
+            if finished {
+                card.swipeCompletion(card, direction, forced)
+            }
         }
     }
 
@@ -52,7 +54,7 @@ class DefaultCardAnimator: NSObject, CardAnimator {
         card.transform = swipeTransform(forCard: card, forDirection: direction, forced: true)
     }
     
-    func animateReset(_ card: SwipeCard, completion: ((Bool) -> ())?) {
+    func animateReset(_ card: SwipeCard) {
         guard let options = card.animationOptions as? DefaultCardAnimationOptions else { return }
         
         removeAllAnimations(on: card)
@@ -60,13 +62,13 @@ class DefaultCardAnimator: NSObject, CardAnimator {
         let totalDuration: TimeInterval = options.totalResetDuration
         let resetSpringDamping: CGFloat = options.resetSpringDamping
         
-        UIView.addSpringAnimation(withDuration: totalDuration, usingSpringWithDamping: resetSpringDamping, animations: {
+        self.addSpringAnimation(withDuration: totalDuration, usingSpringWithDamping: resetSpringDamping, animations: {
             if let direction = card.activeDirection, let overlay = card.overlay(forDirection: direction) {
                 overlay.alpha = 0
             }
             card.transform = .identity
-        }) { finished in
-            completion?(finished)
+        }) { _ in
+            card.resetCompletion(card)
         }
     }
     
@@ -79,7 +81,7 @@ class DefaultCardAnimator: NSObject, CardAnimator {
         card.transform = .identity
     }
     
-    func animateReverseSwipe(_ card: SwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?) {
+    func animateReverseSwipe(_ card: SwipeCard, from direction: SwipeDirection) {
         guard let options = card.animationOptions as? DefaultCardAnimationOptions else { return }
         
         removeAllAnimations(on: card)
@@ -96,15 +98,17 @@ class DefaultCardAnimator: NSObject, CardAnimator {
         UIView.animateKeyframes(withDuration: totalDuration, delay: 0.0, options: [.calculationModeLinear], animations: {
             let relativeReverseSwipeDuration: TimeInterval = 1 - relativeOverlayDuration
 
-            UIView.addKeyFrameAnimation(relativeDuration: relativeReverseSwipeDuration, animations: {
+            self.addKeyFrameAnimation(relativeDuration: relativeReverseSwipeDuration, animations: {
                 card.transform = .identity
             })
             
-            UIView.addKeyFrameAnimation(withRelativeStartTime: relativeReverseSwipeDuration, relativeDuration: 1.0, animations: {
+            self.addKeyFrameAnimation(withRelativeStartTime: relativeReverseSwipeDuration, relativeDuration: 1.0, animations: {
                 card.overlay(forDirection: direction)?.alpha = 0
             })
         }) { finished in
-            completion?(finished)
+            if finished {
+                card.reverseSwipeCompletion(card, direction)
+            }
         }
     }
     
@@ -178,12 +182,12 @@ class DefaultCardAnimator: NSObject, CardAnimator {
 
 //MARK: Testable Animation Helpers
 
-extension UIView {
-    static func addKeyFrameAnimation(withRelativeStartTime relativeStartTime: TimeInterval = 0.0, relativeDuration: TimeInterval, animations: @escaping () -> Void) {
+extension DefaultCardAnimator {
+    func addKeyFrameAnimation(withRelativeStartTime relativeStartTime: TimeInterval = 0.0, relativeDuration: TimeInterval, animations: @escaping () -> Void) {
         UIView.addKeyframe(withRelativeStartTime: relativeStartTime, relativeDuration: relativeDuration, animations: animations)
     }
     
-    static func addSpringAnimation(withDuration duration: TimeInterval, usingSpringWithDamping damping: CGFloat, animations: @escaping () -> Void, completion: ((Bool) -> Void)?) {
+    func addSpringAnimation(withDuration duration: TimeInterval, usingSpringWithDamping damping: CGFloat, animations: @escaping () -> Void, completion: ((Bool) -> Void)?) {
         UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: damping, initialSpringVelocity: 0.0, options: [.curveLinear, .allowUserInteraction], animations: animations, completion: completion)
     }
 }
