@@ -10,6 +10,7 @@ extension CGPoint {
         return sqrt(pow(point.x - self.x, 2) + pow(point.y - self.y, 2))
     }
     
+    /// Rename this (distance doesn't make sense here)
     /// Returns the point in the coordinate system -1 <= x,y <= 1 with the same relative position as in the provided frame
     func normalizedDistance(forSize size: CGSize) -> CGPoint {
         let x = 2 * (self.x / size.width)

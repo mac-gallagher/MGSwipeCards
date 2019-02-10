@@ -1,5 +1,5 @@
 //
-//  CardAnimatonOptionsSpec.swift
+//  DefaultCardAnimationOptionsSpec.swift
 //  MGSwipeCards_Example
 //
 //  Created by Mac Gallagher on 1/13/19.
@@ -10,13 +10,13 @@ import Quick
 import Nimble
 import MGSwipeCards
 
-class MGCardAnimationOptionsSpec: QuickSpec {
+class DefaultCardAnimationOptionsSpec: QuickSpec {
     override func spec() {
-        describe("MGCardAnimationOptions") {
-            var subject: MGCardAnimationOptions!
+        describe("DefaultCardAnimationOptions") {
+            var subject: DefaultCardAnimationOptions!
             
             beforeEach {
-                subject = MGCardAnimationOptions()
+                subject = DefaultCardAnimationOptions()
             }
             
             describe("initialization") {

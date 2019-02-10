@@ -8,7 +8,10 @@
 
 @testable import MGSwipeCards
 
-class TestableSwipeCard: MGSwipeCard {
+class TestableSwipeCard: SwipeCard {
+    
+    //MARK: - Variables
+    
     override var panGestureRecognizer: UIPanGestureRecognizer {
         return panRecognizer
     }
@@ -35,6 +38,8 @@ class TestableSwipeCard: MGSwipeCard {
     override var rotationDirectionY: CGFloat {
         return testRotationDirection ?? super.rotationDirectionY
     }
+    
+    //MARK: - Functions
     
     var testDragSpeed: CGFloat?
     override func dragSpeed(on direction: SwipeDirection) -> CGFloat {

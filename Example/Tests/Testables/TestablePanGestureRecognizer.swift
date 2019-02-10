@@ -1,6 +1,6 @@
 //
-//  TestableUIPanGestureRecognizer.swift
-//  MGSwipeCards
+//  TestablePanGestureRecognizer.swift
+//  MGSwipeCards_Tests
 //
 //  Created by Mac Gallagher on 1/12/19.
 //

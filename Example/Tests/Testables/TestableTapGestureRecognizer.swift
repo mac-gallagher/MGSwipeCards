@@ -1,6 +1,6 @@
 //
 //  TestableTapGestureRecognizer.swift
-//  MGSwipeCards
+//  MGSwipeCards_Tests
 //
 //  Created by Mac Gallagher on 1/12/19.
 //

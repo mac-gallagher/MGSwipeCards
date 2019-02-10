@@ -91,11 +91,8 @@ class SwipeViewSpec: QuickSpec {
                         
                         it("should return a percentage of 100% in the specified direction and 0% in all other directions") {
                             for swipeDirection in SwipeDirection.allDirections {
-                                if swipeDirection == direction {
-                                    expect(subject.dragPercentage(on: swipeDirection)).to(equal(1.0))
-                                } else {
-                                    expect(subject.dragPercentage(on: swipeDirection)).to(equal(0))
-                                }
+                                let expectedPercentage: CGFloat = swipeDirection == direction ? 1.0 : 0.0
+                                expect(subject.dragPercentage(on: swipeDirection)).to(equal(expectedPercentage))
                             }
                         }
                     }
@@ -110,11 +107,8 @@ class SwipeViewSpec: QuickSpec {
                         
                         it("should return a percentage of 200% in the specified direction and 0% in all other directions") {
                             for swipeDirection in SwipeDirection.allDirections {
-                                if swipeDirection == direction {
-                                    expect(subject.dragPercentage(on: swipeDirection)).to(equal(2.0))
-                                } else {
-                                    expect(subject.dragPercentage(on: swipeDirection)).to(equal(0))
-                                }
+                                let expectedPercentage: CGFloat = swipeDirection == direction ? 2.0 : 0.0
+                                expect(subject.dragPercentage(on: swipeDirection)).to(equal(expectedPercentage))
                             }
                         }
                     }

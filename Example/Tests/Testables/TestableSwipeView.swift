@@ -9,6 +9,9 @@
 @testable import MGSwipeCards
 
 class TestableSwipeView: SwipeView {
+    
+    //MARK: - Variables
+    
     override var panGestureRecognizer: UIPanGestureRecognizer {
         return panRecognizer
     }
@@ -20,6 +23,8 @@ class TestableSwipeView: SwipeView {
     }
     
     private lazy var tapRecognizer = TestableTapGestureRecognizer(target: self, action: #selector(handleTap))
+    
+    //MARK: - Functions
     
     var didTapCalled: Bool = false
     override func didTap(recognizer: UITapGestureRecognizer) {

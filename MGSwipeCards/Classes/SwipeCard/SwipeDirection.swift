@@ -11,6 +11,7 @@ public enum SwipeDirection: Int {
     
     public static let allDirections: [SwipeDirection] = [.left, .right, .up, .down]
     
+    /// The swipe direction represented as a direction vector.
     public var point: CGPoint {
         switch self {
         case .left:

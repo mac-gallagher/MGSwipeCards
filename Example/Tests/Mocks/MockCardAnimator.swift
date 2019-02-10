@@ -12,24 +12,23 @@ import Nimble
 @testable import MGSwipeCards
 
 class MockCardAnimator: CardAnimator {
-    
     var swipeCalled: Bool = false
     var swipeDirection: SwipeDirection?
     
-    func swipe(_ card: MGSwipeCard, direction: SwipeDirection) {
+    func swipe(_ card: SwipeCard, direction: SwipeDirection) {
         swipeCalled = true
         swipeDirection = direction
     }
     
     var reverseSwipeCalled: Bool = false
     
-    func reverseSwipe(_ card: MGSwipeCard) {
+    func reverseSwipe(_ card: SwipeCard) {
         reverseSwipeCalled = true
     }
     
     var resetCalled: Bool = false
     
-    func reset(_ card: MGSwipeCard) {
+    func reset(_ card: SwipeCard) {
         resetCalled = true
     }
     
@@ -37,36 +36,33 @@ class MockCardAnimator: CardAnimator {
     var swipeAnimationDirection: SwipeDirection?
     var swipeAnimationForced: Bool?
     
-    func animateSwipe(_ card: MGSwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
+    func animateSwipe(_ card: SwipeCard, direction: SwipeDirection, forced: Bool, completion: ((Bool) -> ())?) {
         swipeAnimationCalled = true
         swipeAnimationDirection = direction
         swipeAnimationForced = forced
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            completion?(true)
-        }
+        completion?(true)
     }
     
+    let testReverseSwipeAnimationDuration: TimeInterval = 0.1
     var reverseSwipeAnimationCalled: Bool = false
     var reverseSwipeAnimationDirection: SwipeDirection?
     
-    func animateReverseSwipe(_ card: MGSwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?) {
+    func animateReverseSwipe(_ card: SwipeCard, from direction: SwipeDirection, completion: ((Bool) -> ())?) {
         reverseSwipeAnimationCalled = true
         reverseSwipeAnimationDirection = direction
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + testReverseSwipeAnimationDuration) {
             completion?(true)
         }
     }
     
     var resetAnimationCalled: Bool = false
-    func animateReset(_ card: MGSwipeCard, completion: ((Bool) -> ())?) {
+    func animateReset(_ card: SwipeCard, completion: ((Bool) -> ())?) {
         resetAnimationCalled = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            completion?(true)
-        }
+        completion?(true)
     }
     
     var removeAllAnimationsCalled: Bool = false
-    func removeAllAnimations(on card: MGSwipeCard) {
+    func removeAllAnimations(on card: SwipeCard) {
         removeAllAnimationsCalled = true
     }
 }

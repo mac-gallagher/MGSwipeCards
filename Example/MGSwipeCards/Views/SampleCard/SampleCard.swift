@@ -9,7 +9,7 @@
 import UIKit
 import MGSwipeCards
 
-class SampleCard: MGSwipeCard {
+class SampleCard: SwipeCard {
     init(model: SampleCardModel) {
         super.init(frame: .zero)
         initialize()

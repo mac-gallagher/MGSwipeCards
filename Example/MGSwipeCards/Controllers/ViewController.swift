@@ -73,7 +73,7 @@ class ViewController: UIViewController {
 //MARK: Data Source + Delegates
 
 extension ViewController: MGCardStackViewDataSource, MGCardStackViewDelegate, ButtonStackViewDelegate {
-    func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> MGSwipeCard {
+    func cardStack(_ cardStack: MGCardStackView, cardForIndexAt index: Int) -> SwipeCard {
         return SampleCard(model: cardModels[index])
     }
     

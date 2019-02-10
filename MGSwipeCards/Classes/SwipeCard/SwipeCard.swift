@@ -6,22 +6,20 @@
 //  Copyright © 2018 Mac Gallagher. All rights reserved.
 //
 
-public protocol MGSwipeCardDelegate {
-    func card(didTap card: MGSwipeCard)
-    func card(didBeginSwipe card: MGSwipeCard)
-    func card(didContinueSwipe card: MGSwipeCard)
-    func card(didCancelSwipe card: MGSwipeCard)
-    func card(didSwipe card: MGSwipeCard, with direction: SwipeDirection, forced: Bool)
-    func card(didReverseSwipe card: MGSwipeCard, from direction: SwipeDirection)
+public protocol SwipeCardDelegate {
+    func card(didTap card: SwipeCard)
+    func card(didBeginSwipe card: SwipeCard)
+    func card(didContinueSwipe card: SwipeCard)
+    func card(didCancelSwipe card: SwipeCard)
+    func card(didSwipe card: SwipeCard, with direction: SwipeDirection, forced: Bool)
+    func card(didReverseSwipe card: SwipeCard, from direction: SwipeDirection)
 }
 
-/**
- A wrapper around `SwipeView` which provides UI customization and animations.
- */
-open class MGSwipeCard: SwipeView {
-    public var delegate: MGSwipeCardDelegate?
+/// A wrapper around `SwipeView` which provides UI customization and animations.
+open class SwipeCard: SwipeView {
+    public var delegate: SwipeCardDelegate?
     
-    public var animationOptions: MGCardAnimationOptions = .defaultOptions
+    public var animationOptions: CardAnimatonOptions = DefaultCardAnimationOptions.shared
     
     public var isFooterTransparent: Bool = false {
         didSet {
@@ -77,9 +75,10 @@ open class MGSwipeCard: SwipeView {
     }
     
     var overlayContainer = UIView()
-    var overlays: [SwipeDirection: UIView] = [:]
     
-    private var animator: CardAnimator = MGCardAnimator.shared
+    private var overlays: [SwipeDirection: UIView] = [:]
+    
+    private var animator: CardAnimator = DefaultCardAnimator.shared
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -91,9 +90,12 @@ open class MGSwipeCard: SwipeView {
         initialize()
     }
     
-    convenience init(animator: CardAnimator) {
+    /// This initializers is for testing purposes only.
+    convenience init(delegate: SwipeCardDelegate?, animator: CardAnimator, animationOptions: CardAnimatonOptions) {
         self.init(frame: .zero)
+        self.delegate = delegate
         self.animator = animator
+        self.animationOptions = animationOptions
     }
     
     private func initialize() {
@@ -108,6 +110,10 @@ open class MGSwipeCard: SwipeView {
             overlay.alpha = 0
         }
         setNeedsLayout()
+    }
+    
+    public func overlay(forDirection direction: SwipeDirection) -> UIView? {
+        return overlays[direction]
     }
     
     open override func layoutSubviews() {
@@ -164,6 +170,19 @@ open class MGSwipeCard: SwipeView {
         }
     }
     
+    override open func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {
+        super.didSwipe(recognizer: recognizer, with: direction)
+        swipeAction(direction: direction, animated: true, forced: false)
+    }
+    
+    override open func didCancelSwipe(recognizer: UIPanGestureRecognizer) {
+        animator.animateReset(self) { _ in
+            self.delegate?.card(didCancelSwipe: self)
+        }
+    }
+    
+    //MARK: - Transform Computations
+    
     func dragTransform(recognizer: UIPanGestureRecognizer) -> CGAffineTransform {
         let dragTranslation: CGPoint = recognizer.translation(in: self)
         let translation: CGAffineTransform = CGAffineTransform(translationX: dragTranslation.x, y: dragTranslation.y)
@@ -174,7 +193,7 @@ open class MGSwipeCard: SwipeView {
     func dragRotationAngle(recognizer: UIPanGestureRecognizer) -> CGFloat {
         let superviewTranslation: CGPoint = recognizer.translation(in: superview)
         let rotationStrength: CGFloat = min(superviewTranslation.x / UIScreen.main.bounds.width, 1)
-        return rotationDirectionY * rotationStrength * abs(animationOptions.maximumRotationAngle) 
+        return rotationDirectionY * rotationStrength * abs(animationOptions.maximumRotationAngle)
     }
     
     func overlayPercentage(forDirection direction: SwipeDirection) -> CGFloat {
@@ -183,17 +202,6 @@ open class MGSwipeCard: SwipeView {
             return percentage + dragPercentage(on: direction)
         }
         return min((2 * dragPercentage(on: direction) - totalPercentage) / minimumSwipeMargin, 1)
-    }
-    
-    override open func didSwipe(recognizer: UIPanGestureRecognizer, with direction: SwipeDirection) {
-        super.didSwipe(recognizer: recognizer, with: direction)
-        swipeAction(direction: direction, animated: true, forced: false)
-    }
-    
-    override open func didCancelSwipe(recognizer: UIPanGestureRecognizer) {
-        animator.animateReset(self) { _ in
-            self.delegate?.card(didCancelSwipe: self)
-        }
     }
     
     //MARK: - Main Methods
