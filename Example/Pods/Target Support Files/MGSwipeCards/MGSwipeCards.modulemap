@@ -1,6 +1,0 @@
-framework module MGSwipeCards {
-  umbrella header "MGSwipeCards-umbrella.h"
-
-  export *
-  module * { export * }
-}

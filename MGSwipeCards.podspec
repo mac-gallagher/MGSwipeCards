@@ -1,24 +1,21 @@
 Pod::Spec.new do |s|
 
   s.name         = "MGSwipeCards"
-  s.version      = "2.2.6"
+  s.version      = "0.0.1"
   s.platform     = :ios, "9.0"
-  s.summary      = "A modern swipeable card framework inspired by Tinder"
+  s.summary      = "A multi-directional card swiping library inspired by Tinder"
 
   s.description  = <<-DESC
-A modern swipeable card framework inspired by Tinder and built with Facebook's Pop animation library.
+A multi-directional card swiping library inspired by Tinder.
 DESC
 
   s.homepage     = "https://github.com/mac-gallagher/MGSwipeCards"
-  s.screenshots  = ["https://raw.githubusercontent.com/mac-gallagher/MGSwipeCards/master/Images/swipe_example.gif"]
-  s.documentation_url = "https://github.com/mac-gallagher/MGSwipeCards/tree/master/README.md"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { "Mac Gallagher" => "jmgallagher36@gmail.com" }
-  s.source       = { :git => "https://github.com/mac-gallagher/MGSwipeCards.git", :tag => "v2.2.6" }
+  s.source       = { :git => "https://github.com/mac-gallagher/MGSwipeCards.git", :tag => "v0.0.1" }
 
-  s.swift_version = "4.2"
+  s.swift_version = "5.0"
   s.source_files = "MGSwipeCards/Classes/**/*"
 
-  s.dependency "pop", "~> 1.0"
-
+  s.deprecated_in_favor_of = 'Shuffle-iOS'
 end
